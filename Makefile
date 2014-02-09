@@ -12,7 +12,7 @@ MAINO=./src/$(addsuffix .o,$(EXECUTABLE))
 
 all: $(EXECUTABLE) 
 
-$(EXECUTABLE) : $(MAINO) $(OBJECT) $(HEADERS)
+$(EXECUTABLE) : $(MAINO) $(OBJECTS) $(HEADERS)
 	@echo "Building $(EXECUTABLE)"
 	@$(CXX) -o $@ $^
 	@echo "Build succeed"
@@ -31,12 +31,10 @@ test:
 
 
 clean:
-	-rm -f $(DICTOBJ) $(OBJECT) $(EXTRAOBJS)
-	-rm -f *Dictionary.h
-	-rm -f *Dictionary.cc
-	-rm -f $(LIBRARY)
-	-rm -f *Parsed.cc
-	-rm -f *Parsed.o
+	-rm -f $(OBJECTS)
+	-rm -f $(MAINO)
+	-rm -f $(EXECUTABLE)
+
 sclean:
 	-rm *~
 	make clean
