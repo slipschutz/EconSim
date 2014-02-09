@@ -2,7 +2,7 @@
 #ifndef __PERSON_HH
 #define __PERSON_HH
 
-#include "Base.hh"
+#include "Unique.hh"
 #include "ErrorManager.hh"
 #include <sstream>
 
@@ -10,7 +10,7 @@
 using namespace std;
 
 
-class Person : public Base {
+class Person : public Unique {
 public:
   Person();
   ~Person();
@@ -22,13 +22,10 @@ public:
   void DumpConnections();
 
   inline map <int,Person*>* GetConnections(){return &rConnections;}
-  inline int GetUniqueId(){return rUniqueId;}
+  
 private:
   
   long rNumConnections;
-  int rUniqueId;
-  static int rNext_Id;
-  static int GetNextId();
 
   map <int,Person*> rConnections;
   

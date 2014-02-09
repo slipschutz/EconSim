@@ -2,10 +2,9 @@
 
 #include <Person.hh>
 
-int Person::rNext_Id=0;
 
 Person::Person() : rNumConnections(0){
-  rUniqueId=Person::GetNextId();
+  SetUniqueId(Person::GetNextId());
 }
 
 Person::~Person(){
@@ -39,17 +38,11 @@ bool Person::CheckConnection(Person* p){
 
 }
 
-int Person::GetNextId(){
-  int d = Person::rNext_Id++;
-  return d;
-}
-
-
 void Person::DumpConnections(){
-  cout<<"Connections For Person "<<rUniqueId<<endl;
+  cout<<"Connections For Person "<<this->GetUniqueId()<<endl;
   for (map<int,Person*>::iterator ii=rConnections.begin();ii!=rConnections.end();
        ++ii){
-    cout<<"Person "<<rUniqueId<<" connects to "<<ii->first<<" "<<ii->second->GetUniqueId()<<endl;
+    cout<<"Person "<<this->GetUniqueId()<<" connects to "<<ii->first<<" "<<ii->second->GetUniqueId()<<endl;
 
   }
 
