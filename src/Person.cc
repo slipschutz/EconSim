@@ -1,14 +1,14 @@
-
-
-#include <Person.hh>
+#include "Person.hh"
 
 
 Person::Person() : rNumConnections(0){
-  SetUniqueId(Person::GetNextId());
+  //  SetUniqueId(Person::GetNextId());
+  // cout<<"Person Constructor"<<endl;
 }
 
 Person::~Person(){
   rConnections.clear();
+  //  cout<<"Person Deconstructor"<<endl;
 }
 
 
@@ -19,30 +19,30 @@ void Person::Initialize(){
 
 void Person::MakeConnection(Person * p){
   if (CheckConnection(p) && p->CheckConnection(this)){  
-    rConnections[p->GetUniqueId()]=p;
-    ((*p->GetConnections())[this->GetUniqueId()])=this;
+    rConnections[p->GetBaseId()]=p;
+    (*(p->GetConnections()))[this->GetBaseId()]=this;
     this->IncrementConnections();
     p->IncrementConnections();
   } 
 }
 
 bool Person::CheckConnection(Person* p){
-  if (this->rConnections.count(p->GetUniqueId()) == 0){
+  if (this->rConnections.count(p->GetBaseId()) == 0){
     return true;
   } else {
-    stringstream ss;
-    ss<<"Attempted to add a duplicate connection between person "<<this->GetUniqueId()<<" and person "<<p->GetUniqueId();
-    ErrorManager::BoxPrint(ss.str());
+    //   stringstream ss;
+    //ss<<"Attempted to add a duplicate connection between person "<<this->GetBaseId()<<" and person "<<p->GetBaseId();
+    //ErrorManager::BoxPrint(ss.str());
     return false;
   }
 
 }
 
 void Person::DumpConnections(){
-  cout<<"Connections For Person "<<this->GetUniqueId()<<endl;
+  cout<<"Connections For Person "<<this->GetBaseId()<<endl;
   for (map<int,Person*>::iterator ii=rConnections.begin();ii!=rConnections.end();
        ++ii){
-    cout<<"Person "<<this->GetUniqueId()<<" connects to "<<ii->first<<" "<<ii->second->GetUniqueId()<<endl;
+    cout<<"    Person "<<this->GetBaseId()<<" connects to "<<ii->first<<endl;
 
   }
 

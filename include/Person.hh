@@ -10,7 +10,7 @@
 using namespace std;
 
 
-class Person : public Unique {
+class Person : public Base {
 public:
   Person();
   ~Person();
@@ -21,14 +21,15 @@ public:
   bool CheckConnection(Person*);
   void DumpConnections();
 
+  inline long GetNumConnections(){return rNumConnections;}
   inline map <int,Person*>* GetConnections(){return &rConnections;}
   
 private:
-  
+    
   long rNumConnections;
 
   map <int,Person*> rConnections;
-  
+  double rMoney;
 
 };
 #endif

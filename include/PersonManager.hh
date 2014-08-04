@@ -8,17 +8,26 @@
 
 
 #include "Base.hh"
+#include <vector>
+
+//Foward Declarations
+class Person;
+
 
 class PersonManager : public Base {
 public:
-  
-  PersonManager* GetInstance();
-  PersonManager* Get();
   PersonManager();
 
   ~PersonManager();
-private:
 
+  void BuildList(int NumberOfPeople);
+  void Initialize();
+
+  void PrintConnections();
+
+private:
+  int rInitialTopConectivity;
+  std::vector <Person> rTheListOfPeople;
 
 };
 
