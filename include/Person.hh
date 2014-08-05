@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include <map>
+#include <vector>
 using namespace std;
 
 
@@ -21,15 +22,27 @@ public:
   bool CheckConnection(Person*);
   void DumpConnections();
 
+  void MakeTransactions();
+
   inline long GetNumConnections(){return rNumConnections;}
   inline map <int,Person*>* GetConnections(){return &rConnections;}
   
+  void AddAGood(int GoodNumber);
+  void RemoveAGood(int GoodNumber);
+
+  void DumpHavesWants();
 private:
-    
+
+  bool CheckTransactionMatch(int,Person*);
+
   long rNumConnections;
 
   map <int,Person*> rConnections;
-  double rMoney;
+  int rMoney;
+  
+  map <int,bool> rWants;
+  map <int,bool> rHaves;
+  
 
 };
 #endif

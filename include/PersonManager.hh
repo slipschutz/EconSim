@@ -24,9 +24,14 @@ public:
   void Initialize();
 
   void PrintConnections();
+  void PrintHavesWants();
+  void PrintHavesWants(int);
+  void MakeTransactions();
 
 private:
   int rInitialTopConectivity;
+  int rNumInteractingPeoplePerStep;
+  int rNumPeople;
   std::vector <Person> rTheListOfPeople;
 
 };

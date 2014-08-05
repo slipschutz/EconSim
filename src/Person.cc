@@ -1,20 +1,56 @@
 #include "Person.hh"
-
+#include "RandomManager.hh"
 
 Person::Person() : rNumConnections(0){
-  //  SetUniqueId(Person::GetNextId());
-  // cout<<"Person Constructor"<<endl;
+  
 }
 
 Person::~Person(){
   rConnections.clear();
+  rWants.clear();
+  rHaves.clear();
   //  cout<<"Person Deconstructor"<<endl;
 }
 
 
 
 void Person::Initialize(){
-  std::cout<<"This is person Intializer"<<std::endl;
+  rMoney = RandomManager::GetRand(1000);
+  
+  int NumHaves=10;
+  int NumWants=10;
+  
+  rHaves.clear();
+  rWants.clear();
+  for (int i=0;i<NumHaves;i++){
+    int x = RandomManager::GetRand(100);
+    rHaves[x]=true;
+  }
+  for (int i=0;i<NumWants;i++){
+    int x = RandomManager::GetRand(100);
+    if (rHaves.count(x) ==0 ){ //if person does not already have this want
+      rWants[x]=true;
+    } else {
+      //Person already has this. So can't want it
+      i--;
+    }
+  }
+
+  
+}
+
+void Person::DumpHavesWants(){
+  cout<<"Wants for Person "<<this->GetBaseId()<<endl;
+  for (map<int,bool>::iterator ii=rWants.begin();ii!=rWants.end();ii++){
+    cout<<"  "<<ii->first;
+  }
+  cout<<endl;
+  cout<<"Haves for Person "<<this->GetBaseId()<<endl;
+  for (map<int,bool>::iterator ii=rHaves.begin();ii!=rHaves.end();ii++){
+    cout<<"  "<<ii->first;
+  }
+  cout<<endl;
+
 }
 
 void Person::MakeConnection(Person * p){
@@ -48,3 +84,61 @@ void Person::DumpConnections(){
 
 }
 
+void Person::MakeTransactions(){
+  cout<<"In Make Transaction for "<<this->GetBaseId()<<endl;
+  vector <int> GoodsToBeRemovedFromWants;
+  for (map<int,bool>::iterator it_wants = rWants.begin();it_wants!=rWants.end();it_wants++){
+    int thisWant= it_wants->first;
+    for (map<int,Person*>::iterator ii= rConnections.begin();
+	 ii!=rConnections.end();ii++){
+      if (CheckTransactionMatch(thisWant,ii->second)){
+	cout<<"Make Transactiion person "<<this->GetBaseId()<<" wants "<<thisWant<<" person "<< ii->first<<" has it "<<endl;
+	//Make a transcation 
+	this->AddAGood(thisWant);
+	GoodsToBeRemovedFromWants.push_back(thisWant);
+	ii->second->RemoveAGood(thisWant);
+	break;//End loop over people looking for thiswant
+      }
+    }
+  }
+  
+  for (int i=0;i<GoodsToBeRemovedFromWants.size();i++){
+    int GoodNumber=GoodsToBeRemovedFromWants[i];
+  
+    map<int,bool>::iterator ii =rWants.find(GoodNumber);
+    if (ii == rWants.end()){
+      //The Good being added is not in the list of wants
+      //Something has gone wrong
+      throw 1;
+    } else {
+      cout<<"Erasing "<<ii->first<<" from rWants in person "<<this->GetBaseId()<<endl;
+      rWants.erase(ii);
+    }
+  }
+}
+    
+void Person::AddAGood(int GoodNumber){
+  if (rHaves.count(GoodNumber)==0){
+    rHaves[GoodNumber]=true;
+    cout<<"Adding good "<<GoodNumber<<" to rHaves for person "<<this->GetBaseId()<<endl;
+  }else {
+    cout<<"Warning trying to add good "<<GoodNumber<<" when it is already in rHaves"<<endl;
+  }
+}
+
+void Person::RemoveAGood(int GoodNumber){
+  if (rHaves.count(GoodNumber)!=0){
+    rHaves.erase(GoodNumber);
+    cout<<"Removing good from rHaves "<<GoodNumber<<" for person "<<this->GetBaseId()<<endl;
+  } else {
+    cout<<"Trying to remove "<<GoodNumber<<" but it is not in rHaves"<<endl;
+  }
+}
+
+bool Person::CheckTransactionMatch(int num,Person* p){
+  if ( p->rHaves.count(num) == 1){
+    return true;
+  } else {
+    return false;
+  }
+}

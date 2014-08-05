@@ -14,7 +14,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE) : $(MAINO) $(OBJECTS) $(HEADERS)
 	@echo "Building $(EXECUTABLE)"
-	@$(CXX) -o $@ $^
+	@$(CXX) -o $@ $^ -g
 	@echo "Build succeed"
 
 %.o : %.cc
