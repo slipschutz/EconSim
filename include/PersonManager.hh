@@ -13,6 +13,8 @@
 //Foward Declarations
 class Person;
 
+#include "PersonLogger.hh"
+
 
 class PersonManager : public Base {
 public:
@@ -28,12 +30,18 @@ public:
   void PrintHavesWants(int);
   void MakeTransactions();
 
+  void SetPersonToLog(int v);
+  
+  PersonLogger* GetLogger();
+
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
   int rNumPeople;
   std::vector <Person> rTheListOfPeople;
 
+  int rPersonToLog;
+  PersonLogger * rTheLogger;
 };
 
 

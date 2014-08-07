@@ -18,15 +18,17 @@ int main(int argv, char ** argc){
   PersonManager theManager;
   
 
-  theManager.BuildList(100);
- 
+  theManager.BuildList(10000);
+  theManager.SetPersonToLog(66);
   theManager.PrintConnections();
   
-  theManager.PrintHavesWants(1);
-  for (int i=0;i<100;i++){
+
+  for (int i=0;i<500;i++){
     theManager.MakeTransactions();
   }
-  theManager.PrintHavesWants(1);
+  
+  theManager.GetLogger()->DumpLog();
 
+  
   return 0;
 }

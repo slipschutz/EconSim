@@ -3,6 +3,7 @@
 #define __PERSON_HH
 
 #include "Unique.hh"
+#include "Good.hh"
 #include "ErrorManager.hh"
 #include <sstream>
 
@@ -10,6 +11,7 @@
 #include <vector>
 using namespace std;
 
+class PersonLogger;
 
 class Person : public Base {
 public:
@@ -22,10 +24,13 @@ public:
   bool CheckConnection(Person*);
   void DumpConnections();
 
-  void MakeTransactions();
+  void MakeTransactions(PersonLogger*);
 
   inline long GetNumConnections(){return rNumConnections;}
   inline map <int,Person*>* GetConnections(){return &rConnections;}
+  
+  map<int,Good> GetWants(){return rWants;}
+  map<int,Good> GetHaves(){return rHaves;}
   
   void AddAGood(int GoodNumber);
   void RemoveAGood(int GoodNumber);
@@ -40,8 +45,8 @@ private:
   map <int,Person*> rConnections;
   int rMoney;
   
-  map <int,bool> rWants;
-  map <int,bool> rHaves;
+  map <int,Good> rWants;
+  map <int,Good> rHaves;
   
 
 };

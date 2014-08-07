@@ -5,11 +5,14 @@
 #include "RandomManager.hh"
 PersonManager::PersonManager() {
   srand(0);
-  rInitialTopConectivity=2;
+  rInitialTopConectivity=20;
   rNumInteractingPeoplePerStep=10;
+
+  rTheLogger = new PersonLogger();
 }
 
 PersonManager::~PersonManager(){
+  delete rTheLogger;
 
 }
 void PersonManager::Initialize(){
@@ -42,18 +45,17 @@ void PersonManager::MakeTransactions(){
   //of random people and those people will have transactions
 
   map <int,bool> tempPersonMap;
-  cout<<"_____BEGIN INTERACTION STEP______"<<endl;
+
   while (tempPersonMap.size() < rNumInteractingPeoplePerStep){
     int n = RandomManager::GetRand(rNumPeople);
     if (tempPersonMap.count(n) == 0 ){
       tempPersonMap[n]=true;
-      cout<<n<<"  ";
     }
   }
-  cout<<endl;
+  // cout<<endl;
   for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
        ii++){
-    rTheListOfPeople[ii->first].MakeTransactions();
+    rTheListOfPeople[ii->first].MakeTransactions(rTheLogger);
   }
 
 }
@@ -68,7 +70,6 @@ void PersonManager::PrintConnections(){
 }
 
 void PersonManager::PrintHavesWants(){
-
   for (int i=0;i<rTheListOfPeople.size();i++){
     rTheListOfPeople[i].DumpHavesWants();
   }
@@ -76,4 +77,12 @@ void PersonManager::PrintHavesWants(){
 
 void PersonManager::PrintHavesWants(int index){
     rTheListOfPeople[index].DumpHavesWants();
+}
+
+void PersonManager::SetPersonToLog(int v){
+  rTheLogger->SetPerson(v);
+}
+
+PersonLogger* PersonManager::GetLogger(){
+  return rTheLogger;
 }
