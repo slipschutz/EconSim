@@ -14,8 +14,10 @@ public:
   
   void Initialize();
   
-  void CheckAndLogTransaction(Person*,Person*,int GoodBeingTraded,int probNum);
+  void CheckAndLogTransaction(Person*,Person*,int GoodBeingTraded,double value2Buyer,double value2Seller);
   
+  void LogMoney(Person* p1,Person* p2);
+
   void DumpLog();
   
   void SetPerson(int v){rThePerson=v;}
@@ -26,7 +28,10 @@ private:
   std::vector <PersonSnapshot> rWantsSnapshots;
   std::vector <PersonSnapshot> rHasSnapshots;
   std::vector <int> rGoodBeingTraded;
-  std::vector <int> rProbForGood;
+  std::vector <double> rValue2Buyer;
+  std::vector <double> rValue2Seller;
+
+  std::vector <double> rMoneyLog;
 
 };
 

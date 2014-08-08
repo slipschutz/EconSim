@@ -34,6 +34,7 @@ public:
   
   PersonLogger* GetLogger();
 
+
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;

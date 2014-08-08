@@ -26,6 +26,8 @@ public:
 
   void MakeTransactions(PersonLogger*);
 
+  void EndOfStep();
+  
   inline long GetNumConnections(){return rNumConnections;}
   inline map <int,Person*>* GetConnections(){return &rConnections;}
   
@@ -36,6 +38,13 @@ public:
   void RemoveAGood(int GoodNumber);
 
   void DumpHavesWants();
+  
+  double GetWorth(Good);
+  
+  double GetMoney(){return rMoney;}
+  void SubtractMoney(double v){rMoney=rMoney-v;}
+  void AddMoney(double v){rMoney=rMoney+v;}
+
 private:
 
   bool CheckTransactionMatch(int,Person*);
@@ -48,6 +57,7 @@ private:
   map <int,Good> rWants;
   map <int,Good> rHaves;
   
+ 
 
 };
 #endif

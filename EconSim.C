@@ -18,13 +18,16 @@ int main(int argv, char ** argc){
   PersonManager theManager;
   
 
-  theManager.BuildList(10000);
+  theManager.BuildList(1000);
   theManager.SetPersonToLog(66);
-  theManager.PrintConnections();
+  //  theManager.PrintConnections();
   
 
-  for (int i=0;i<500;i++){
+  for (int i=0;i<10000;i++){
     theManager.MakeTransactions();
+    if (i%100==0){
+      cout<<"ON "<<i<<endl;
+    }
   }
   
   theManager.GetLogger()->DumpLog();

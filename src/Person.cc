@@ -2,6 +2,8 @@
 #include "RandomManager.hh"
 #include "PersonLogger.hh"
 
+int largestGoodNum=100;
+
 Person::Person() : rNumConnections(0){
   
 }
@@ -16,30 +18,36 @@ Person::~Person(){
 
 
 void Person::Initialize(){
-  rMoney = RandomManager::GetRand(1000);
-  
+  //Randomly Pick starting money 
+  //  rMoney = RandomManager::GetRand(1000);
+  rMoney =1000;
   int NumHaves=10;
   int NumWants=10;
   
   rHaves.clear();
   rWants.clear();
+  //Construct the initial haves for the person
   for (int i=0;i<NumHaves;i++){
-    int x = RandomManager::GetRand(100);
+    //Randomly Pick a good number
+    int x = RandomManager::GetRand(largestGoodNum);
     Good aGood;
-    //    aGood.SetPriority(RandomManager::GetRand(101));
-    //    aGood.SetPriority(50);
+    aGood.SetGoodId(x);
+    aGood.SetPriority(10);//Defult haves priority to 10 even though it is not used
+
     rHaves[x]=aGood;
   }
+
+  //Construct the initial wants for the person
   for (int i=0;i<NumWants;i++){
-    int x = RandomManager::GetRand(100);
+    int x = RandomManager::GetRand(largestGoodNum);
     if (rHaves.count(x) ==0 ){ //if person does not already have this want
       Good aGood;
-      //      aGood.SetPriority(RandomManager::GetRand(101));
-      aGood.SetPriority(50);
+      aGood.SetPriority(RandomManager::GetRand(101));
+      aGood.SetGoodId(x);
       rWants[x]=aGood;
     } else {
       //Person already has this. So can't want it
-      i--;
+      i--;//Decrease loop index to keep going untill it finds enough goods
     }
   }
 
@@ -99,15 +107,28 @@ void Person::MakeTransactions(PersonLogger *theLogger){
     for (map<int,Person*>::iterator ii= rConnections.begin();
 	 ii!=rConnections.end();ii++){
       if (CheckTransactionMatch(thisWant,ii->second)){
-	int num = RandomManager::GetRand(101);
-	if (num >= it_wants->second.GetPriority()){
-	  theLogger->CheckAndLogTransaction(this,ii->second,thisWant,num);
-
-	  //cout<<"Make Transactiion person "<<this->GetBaseId()<<" wants "<<thisWant<<" person "<< ii->first<<" has it "<<endl;
-	  //Make a transcation 
+	double Worth2Buyer = GetWorth(it_wants->second);
+	double Worth2Seller = GetWorth(ii->second->GetHaves()[thisWant]);
+	if (Worth2Buyer > Worth2Seller){
+	  //
+	  // Log the transaction 
+	  //
+	  theLogger->CheckAndLogTransaction(this,ii->second,thisWant,Worth2Buyer,Worth2Seller);
+	  
+	  //
+	  //Make the transcation 
+	  //
 	  this->AddAGood(thisWant);
 	  GoodsToBeRemovedFromWants.push_back(thisWant);
 	  ii->second->RemoveAGood(thisWant);
+	  
+	  double average = 0.5*(Worth2Buyer + Worth2Seller);
+	  
+	  ///Exchange the money
+	  this->SubtractMoney(average);
+	  ii->second->AddMoney(average);
+	  theLogger->LogMoney(this,ii->second);
+	  
 	  break;//End loop over people looking for thiswant
 	}
       }
@@ -153,4 +174,56 @@ bool Person::CheckTransactionMatch(int num,Person* p){
   } else {
     return false;
   }
+}
+
+
+
+void Person::EndOfStep(){
+  //Preform End of step things
+
+  
+  //increment the wants priorities
+  for (map<int,Good>::iterator ii = rWants.begin();ii!=rWants.end();ii++){
+    ii->second.IncrementPriority();
+  }
+  
+  ///Randomly add wants 
+  
+  if (RandomManager::GetRand(101)>90){
+    int newWant= RandomManager::GetRand(largestGoodNum);
+    if (rWants.count(newWant)==0){
+      Good aWant;
+      aWant.SetGoodId(newWant);
+      aWant.SetPriority(RandomManager::GetRand(101));
+      rWants[newWant]=aWant;
+    }
+  }
+
+  
+}
+
+double Person::GetWorth(Good theGood){
+  double Priority2Money =1.5;
+  double WantNumber2Money=1.5;
+
+  int GoodNumber = theGood.GetGoodId();
+  int Priority =theGood.GetPriority();
+
+  int NumberOfPeopleThatWantTheGood=0;
+  int NumberOfPeopleThatHaveTheGood=0;
+  
+  for (map<int,Person*>::iterator ii = rConnections.begin();
+       ii!=rConnections.end();ii++){
+    if (ii->second->GetWants().count(GoodNumber) !=0){
+      NumberOfPeopleThatWantTheGood++;
+    }
+    if (ii->second->GetHaves().count(GoodNumber) !=0){
+      NumberOfPeopleThatHaveTheGood++;
+    } 
+  }
+
+
+  return Priority2Money*Priority + WantNumber2Money*NumberOfPeopleThatWantTheGood;
+	   
+
 }
