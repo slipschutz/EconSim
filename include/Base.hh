@@ -2,17 +2,18 @@
 #define __BASE_HH
 #include <iostream>
 
-/*
+/**
 //  
-//  Abstract Base class 
+//  Abstract Base class for this program
 //
- */
+*/
 
 class Base {
 public:
   Base();
   Base( const Base& other ); //Copy Constructor
   virtual ~Base();
+
   
   virtual void Initialize()=0; 
   

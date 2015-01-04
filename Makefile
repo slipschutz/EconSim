@@ -1,6 +1,6 @@
-CFLAGS=-c -g -Wall -I./src -I./include 
+CFLAGS=-c -g -Wall -I./src -I./include -std=gnu++11
 CXX=g++
-EXECUTABLE=EconSim
+EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
 OBJECTS=$(SOURCES:.cc=.o) 
 HEADERS=$(shell ls ./include/*.hh)
@@ -14,7 +14,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE) : $(MAINO) $(OBJECTS) $(HEADERS)
 	@echo "Building $(EXECUTABLE)"
-	@$(CXX) -o $@ $^ -g
+	$(CXX) -std=c++11 -o $@ $^ -g
 	@echo "Build succeed"
 
 %.o : %.cc

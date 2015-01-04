@@ -11,7 +11,7 @@
 #include <vector>
 using namespace std;
 
-class PersonLogger;
+#include "PersonLogger.hh"
 
 class Person : public Base {
 public:
@@ -25,6 +25,8 @@ public:
   void DumpConnections();
 
   void MakeTransactions(PersonLogger*);
+
+  void MakeTransactions();
 
   void EndOfStep();
   

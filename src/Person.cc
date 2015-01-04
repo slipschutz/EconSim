@@ -1,8 +1,9 @@
 #include "Person.hh"
 #include "RandomManager.hh"
 #include "PersonLogger.hh"
-
-int largestGoodNum=100;
+#include "GoodManager.hh"
+#include "DataLogger.hh"
+int largestGoodNum=1;
 
 Person::Person() : rNumConnections(0){
   
@@ -20,49 +21,34 @@ Person::~Person(){
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
-  rMoney =1000;
-  int NumHaves=10;
-  int NumWants=10;
+  rMoney =100000;
+  int NumHaves=1;
+  int NumWants=1;
+
   
   rHaves.clear();
   rWants.clear();
-  //Construct the initial haves for the person
-  for (int i=0;i<NumHaves;i++){
-    //Randomly Pick a good number
-    int x = RandomManager::GetRand(largestGoodNum);
-    Good aGood;
-    aGood.SetGoodId(x);
-    aGood.SetPriority(10);//Defult haves priority to 10 even though it is not used
 
-    rHaves[x]=aGood;
-  }
+  // if(this->GetBaseId() == 6){ //Guy with all the stuff
+  //   rHaves[0]=GoodManager::Get()->MakeHave(RandomManager::GetRand(2),10);
+  // } else {
+  //   rWants[0]=GoodManager::Get()->MakeWant(0,400);
+  // }
 
-  //Construct the initial wants for the person
-  for (int i=0;i<NumWants;i++){
-    int x = RandomManager::GetRand(largestGoodNum);
-    if (rHaves.count(x) ==0 ){ //if person does not already have this want
-      Good aGood;
-      aGood.SetPriority(RandomManager::GetRand(101));
-      aGood.SetGoodId(x);
-      rWants[x]=aGood;
-    } else {
-      //Person already has this. So can't want it
-      i--;//Decrease loop index to keep going untill it finds enough goods
-    }
-  }
+  rHaves[0]=GoodManager::Get()->MakeHave(0,RandomManager::GetRand(8)+1);
+  rWants[0]=GoodManager::Get()->MakeWant(0,RandomManager::GetRand(800)+1);
 
-  
 }
 
 void Person::DumpHavesWants(){
-  cout<<"Wants for Person "<<this->GetBaseId()<<endl;
+  cout<<"Wants for Person "<<this->GetBaseId()<<":   ";
   for (map<int,Good>::iterator ii=rWants.begin();ii!=rWants.end();ii++){
-    cout<<"  "<<ii->first;
+    cout<<"  "<<ii->first<<"("<<ii->second.GetNumberOfCopies()<<")["<<ii->second.GetPriority()<<"]";
   }
   cout<<endl;
-  cout<<"Haves for Person "<<this->GetBaseId()<<endl;
+  cout<<"Haves for Person "<<this->GetBaseId()<<":   ";
   for (map<int,Good>::iterator ii=rHaves.begin();ii!=rHaves.end();ii++){
-    cout<<"  "<<ii->first;
+    cout<<"  "<<ii->first<<"("<<ii->second.GetNumberOfCopies()<<")["<<ii->second.GetPriority()<<"]";
   }
   cout<<endl;
 
@@ -109,7 +95,8 @@ void Person::MakeTransactions(PersonLogger *theLogger){
       if (CheckTransactionMatch(thisWant,ii->second)){
 	double Worth2Buyer = GetWorth(it_wants->second);
 	double Worth2Seller = GetWorth(ii->second->GetHaves()[thisWant]);
-	if (Worth2Buyer > Worth2Seller){
+	cout<<" Worth  "<<Worth2Buyer<<"  "<<Worth2Seller<<endl;
+	if (Worth2Buyer >= Worth2Seller && Worth2Seller <=rMoney ){
 	  //
 	  // Log the transaction 
 	  //
@@ -118,17 +105,20 @@ void Person::MakeTransactions(PersonLogger *theLogger){
 	  //
 	  //Make the transcation 
 	  //
-	  this->AddAGood(thisWant);
-	  GoodsToBeRemovedFromWants.push_back(thisWant);
-	  ii->second->RemoveAGood(thisWant);
+	  this->AddAGood(thisWant);//Add to haves
+	  GoodsToBeRemovedFromWants.push_back(thisWant);//Will remove from wants later
+
+	  ii->second->RemoveAGood(thisWant);//Remove from Haves of other person
 	  
-	  double average = 0.5*(Worth2Buyer + Worth2Seller);
+	  //	  double average = 0.5*(Worth2Buyer + Worth2Seller);
 	  
 	  ///Exchange the money
-	  this->SubtractMoney(average);
-	  ii->second->AddMoney(average);
+	  this->SubtractMoney(Worth2Seller);
+	  ii->second->AddMoney(Worth2Seller);
 	  theLogger->LogMoney(this,ii->second);
 	  
+	  DataLogger::Get()->PushGoodPrice(thisWant,Worth2Seller);
+
 	  break;//End loop over people looking for thiswant
 	}
       }
@@ -144,27 +134,120 @@ void Person::MakeTransactions(PersonLogger *theLogger){
       //Something has gone wrong
       throw 1;
     } else {
-      //cout<<"Erasing "<<ii->first<<" from rWants in person "<<this->GetBaseId()<<endl;
-      rWants.erase(ii);
+      //Removing a want from the world
+      //      rWants.erase(ii);
+      int t=ii->second.GetNumberOfCopies();
+      if (t ==1){ //Delete from list completely
+	rWants.erase(ii);
+      }else{
+	ii->second.SetNumberOfCopies(t-1);
+      }
+      //now remove the want from the global demand stored in the goodmanager
+      
+      (GoodManager::Get()->demand)[GoodNumber]--;
     }
   }
 }
     
+
+void Person::MakeTransactions(){
+  ///Loop over all connections and see if any of them have 
+  ///things to buy or sell
+
+  vector <int> GoodsToBeRemovedFromWants;
+
+  for (auto & connection : rConnections){
+    for (auto & thisWant : rWants ){
+      //Does this connection have this want
+      if (connection.second->GetHaves().count(thisWant.first) !=0){
+	//the connection has this want.  This person wants to buy it
+	double Worth2Buyer=GoodManager::Get()->GetWorthToBuyer(this,thisWant.first);
+	double Worth2Seller=GoodManager::Get()->GetWorthToSeller(connection.second,thisWant.first);
+
+
+	if(Worth2Buyer >= Worth2Seller && Worth2Seller <= this->GetMoney()){
+	  //Do the transaction where this person is buying the good from connection
+	  
+	  this->AddAGood(thisWant.first);//Add to haves
+	  connection.second->RemoveAGood(thisWant.first);//Remove from Haves of other person
+
+	  GoodsToBeRemovedFromWants.push_back(thisWant.first);//Will remove from wants later
+	  //can't remove things from map while iterating over it.
+	  
+	  ///Exchange the money
+	  this->SubtractMoney(Worth2Seller);
+	  connection.second->AddMoney(Worth2Seller);
+	  
+	  
+	  DataLogger::Get()->PushGoodPrice(thisWant.first,Worth2Seller);
+
+	  
+
+	}//End if Worth2Buyer>=Worth2Seller
+      }//End if connection has this good
+    }//End loop over Wants
+ 
+    //Clean up from this person buying a good.  Want for this p person needs to be removed
+
+    for (int i=0;i<GoodsToBeRemovedFromWants.size();i++){
+      int GoodNumber=GoodsToBeRemovedFromWants[i];
+  
+      map<int,Good>::iterator ii =rWants.find(GoodNumber);
+      if (ii == rWants.end()){
+	//The Good being added is not in the list of wants
+	//Something has gone wrong
+	throw 1;
+      } else {
+	//Removing a want from the world
+	//      rWants.erase(ii);
+	int t=ii->second.GetNumberOfCopies();
+	if (t ==1){ //Delete from list completely
+	  rWants.erase(ii);
+	}else{
+	  ii->second.SetNumberOfCopies(t-1);
+	}
+	//now remove the want from the global demand stored in the goodmanager
+	(GoodManager::Get()->demand)[GoodNumber]--;
+      }
+    }
+    GoodsToBeRemovedFromWants.clear();
+
+    for (auto & thisHave : rHaves){
+      //does this connection want this have
+      if (connection.second->GetWants().count(thisHave.first)!=0){
+	//the connection wants this have.  This person wants to sell it
+	double Worth2Seller=GoodManager::Get()->GetWorthToSeller(this,thisHave.first);
+	double Worth2Buyer=GoodManager::Get()->GetWorthToBuyer(connection.second,thisHave.first);
+	if(Worth2Buyer >= Worth2Seller && Worth2Seller <= connection.second->GetMoney()){
+	  //Do the transaction
+	}
+      }
+    }
+  }
+}
+
+
 void Person::AddAGood(int GoodNumber){
   if (rHaves.count(GoodNumber)==0){
-    rHaves[GoodNumber]=Good();
+    rHaves[GoodNumber]=GoodManager::Get()->ReplaceHave(GoodNumber,1);
     //cout<<"Adding good "<<GoodNumber<<" to rHaves for person "<<this->GetBaseId()<<endl;
   }else {
-    cout<<"Warning trying to add good "<<GoodNumber<<" when it is already in rHaves"<<endl;
+    //The good is already there person now has a second copy of the good
+    int t=rHaves[GoodNumber].GetNumberOfCopies() + 1;
+    rHaves[GoodNumber].SetNumberOfCopies(t);
   }
 }
 
 void Person::RemoveAGood(int GoodNumber){
   if (rHaves.count(GoodNumber)!=0){
-    rHaves.erase(GoodNumber);
-    //cout<<"Removing good from rHaves "<<GoodNumber<<" for person "<<this->GetBaseId()<<endl;
+    int t = rHaves[GoodNumber].GetNumberOfCopies();
+    if ( t ==1){
+      rHaves.erase(GoodNumber);
+    } else {
+      rHaves[GoodNumber].SetNumberOfCopies(t-1);
+    }
   } else {
-    cout<<"Trying to remove "<<GoodNumber<<" but it is not in rHaves"<<endl;
+    ///The good isn't there.  Silently do nothing
   }
 }
 
@@ -203,24 +286,15 @@ void Person::EndOfStep(){
 }
 
 double Person::GetWorth(Good theGood){
-  double Priority2Money =1.5;
+  double Priority2Money =0;
   double WantNumber2Money=1.5;
 
   int GoodNumber = theGood.GetGoodId();
   int Priority =theGood.GetPriority();
 
-  int NumberOfPeopleThatWantTheGood=0;
+  int NumberOfPeopleThatWantTheGood=GoodManager::Get()->demand[GoodNumber];
   int NumberOfPeopleThatHaveTheGood=0;
   
-  for (map<int,Person*>::iterator ii = rConnections.begin();
-       ii!=rConnections.end();ii++){
-    if (ii->second->GetWants().count(GoodNumber) !=0){
-      NumberOfPeopleThatWantTheGood++;
-    }
-    if (ii->second->GetHaves().count(GoodNumber) !=0){
-      NumberOfPeopleThatHaveTheGood++;
-    } 
-  }
 
 
   return Priority2Money*Priority + WantNumber2Money*NumberOfPeopleThatWantTheGood;

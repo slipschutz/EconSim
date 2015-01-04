@@ -2,11 +2,16 @@
 #include "PersonManager.hh"
 #include <cstdlib>
 #include "Person.hh"
+#include "PersonLogger.hh"
 #include "RandomManager.hh"
+#include "Settings.hh"
+
 PersonManager::PersonManager() {
   srand(0);
   rInitialTopConectivity=20;
-  rNumInteractingPeoplePerStep=10;
+  rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
+
+
 
   rTheLogger = new PersonLogger();
 }
@@ -40,6 +45,22 @@ void PersonManager::BuildList(int NumberOfPeople){
 
 }
 
+void PersonManager::BuildCompleteNetwork(int NumberOfPeople){
+  rNumPeople=NumberOfPeople;
+  rTheListOfPeople.resize(NumberOfPeople);
+  
+  for (int i=0;i<NumberOfPeople;i++){
+    rTheListOfPeople[i].Initialize();
+    for (int j=0;j<NumberOfPeople;j++){
+      if (i != j){
+	rTheListOfPeople[i].MakeConnection(&rTheListOfPeople[j]);
+      }
+    }
+  }
+
+}
+
+
 void PersonManager::MakeTransactions(){
   //Each call to make transactions will pick some number
   //of random people and those people will have transactions
@@ -55,7 +76,7 @@ void PersonManager::MakeTransactions(){
   // cout<<endl;
   for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
        ii++){
-    rTheListOfPeople[ii->first].MakeTransactions(rTheLogger);
+    rTheListOfPeople[ii->first].MakeTransactions();
   }
 
 }
@@ -71,7 +92,9 @@ void PersonManager::PrintConnections(){
 
 void PersonManager::PrintHavesWants(){
   for (int i=0;i<rTheListOfPeople.size();i++){
+    cout<<"-------------------------------------"<<endl;
     rTheListOfPeople[i].DumpHavesWants();
+    cout<<"-------------------------------------"<<endl;
   }
 }
 
@@ -79,6 +102,12 @@ void PersonManager::PrintHavesWants(int index){
     rTheListOfPeople[index].DumpHavesWants();
 }
 
+void PersonManager::PrintMoney(){
+  for ( auto &i : rTheListOfPeople){
+    cout<<"Person "<<i.GetBaseId()<<" "<<i.GetMoney()<<endl;
+  }
+
+}
 void PersonManager::SetPersonToLog(int v){
   rTheLogger->SetPerson(v);
 }

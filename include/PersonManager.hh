@@ -10,10 +10,12 @@
 #include "Base.hh"
 #include <vector>
 
+
+
 //Foward Declarations
 class Person;
+class PersonLogger;
 
-#include "PersonLogger.hh"
 
 
 class PersonManager : public Base {
@@ -23,11 +25,14 @@ public:
   ~PersonManager();
 
   void BuildList(int NumberOfPeople);
+  void BuildCompleteNetwork(int NumberOfPeople);
+
   void Initialize();
 
   void PrintConnections();
   void PrintHavesWants();
   void PrintHavesWants(int);
+  void PrintMoney();
   void MakeTransactions();
 
   void SetPersonToLog(int v);
