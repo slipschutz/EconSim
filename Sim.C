@@ -9,7 +9,7 @@
 #include "Person.hh"
 #include "MatrixMaker.hh"
 #include "Temp.hh"
-#include "PersonManager.hh"
+#include "EconomicActorManager.hh"
 #include "RandomManager.hh"
 
 #include "Settings.hh"
@@ -22,8 +22,8 @@ using namespace  std;
 int main(int argv, char ** argc){
 
 
-
-  PersonManager theManager;
+  
+  EconomicActorManager theManager;
   
   DataLogger::Get();
 

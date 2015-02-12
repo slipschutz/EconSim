@@ -1,12 +1,12 @@
 
-#include "PersonManager.hh"
+#include "EconomicActorManager.hh"
 #include <cstdlib>
 #include "Person.hh"
 
 #include "RandomManager.hh"
 #include "Settings.hh"
 
-PersonManager::PersonManager() {
+EconomicActorManager::EconomicActorManager() {
   srand(0);
   rInitialTopConectivity=20;
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
@@ -14,28 +14,28 @@ PersonManager::PersonManager() {
 
 }
 
-PersonManager::~PersonManager(){
+EconomicActorManager::~EconomicActorManager(){
 
 
 }
-void PersonManager::Initialize(){
+void EconomicActorManager::Initialize(){
 
 
 }
 
 
-void PersonManager::BuildList(int NumberOfPeople){
-  rTheListOfPeople.clear();//Clear the list 
+void EconomicActorManager::BuildList(int NumberOfPeople){
+  rTheListOfActors.clear();//Clear the list 
   rNumPeople=NumberOfPeople;
-  rTheListOfPeople.resize(NumberOfPeople);
+  rTheListOfActors.resize(NumberOfPeople);
 
   for (int i=0;i<NumberOfPeople;i++){
-    rTheListOfPeople[i].Initialize();
+    rTheListOfActors[i]->Initialize();
     int thisEntriesNumConnections = RandomManager::GetRand(rInitialTopConectivity);
     for (int j=0;j<thisEntriesNumConnections;j++){
       int n= RandomManager::GetRand(NumberOfPeople);
       if (n != i ){
-	rTheListOfPeople[i].MakeConnection(&rTheListOfPeople[n]);
+	rTheListOfActors[i]->MakeConnection(rTheListOfActors[n]);
       }
     }
   }
@@ -43,15 +43,15 @@ void PersonManager::BuildList(int NumberOfPeople){
 
 }
 
-void PersonManager::BuildCompleteNetwork(int NumberOfPeople){
+void EconomicActorManager::BuildCompleteNetwork(int NumberOfPeople){
   rNumPeople=NumberOfPeople;
-  rTheListOfPeople.resize(NumberOfPeople);
+  rTheListOfActors.resize(NumberOfPeople);
   
   for (int i=0;i<NumberOfPeople;i++){
-    rTheListOfPeople[i].Initialize();
+    rTheListOfActors[i]->Initialize();
     for (int j=0;j<NumberOfPeople;j++){
       if (i != j){
-	rTheListOfPeople[i].MakeConnection(&rTheListOfPeople[j]);
+	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
       }
     }
   }
@@ -59,7 +59,7 @@ void PersonManager::BuildCompleteNetwork(int NumberOfPeople){
 }
 
 
-void PersonManager::MakeTransactions(){
+void EconomicActorManager::MakeTransactions(){
   //Each call to make transactions will pick some number
   //of random people and those people will have transactions
 
@@ -74,35 +74,35 @@ void PersonManager::MakeTransactions(){
   // cout<<endl;
   for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
        ii++){
-    rTheListOfPeople[ii->first].DoStep();
+    rTheListOfActors[ii->first]->DoStep();
   }
 
 }
 
 
-void PersonManager::PrintConnections(){
-  int numPeople = rTheListOfPeople.size();
+void EconomicActorManager::PrintConnections(){
+  int numPeople = rTheListOfActors.size();
   for (int i=0;i<numPeople;i++){
-    rTheListOfPeople[i].DumpConnections();
+    rTheListOfActors[i]->DumpConnections();
   }
 
 }
 
-void PersonManager::PrintHavesWants(){
-  for (int i=0;i<rTheListOfPeople.size();i++){
+void EconomicActorManager::PrintHavesWants(){
+  for (int i=0;i<rTheListOfActors.size();i++){
     cout<<"-------------------------------------"<<endl;
-    rTheListOfPeople[i].DumpHavesWants();
+    //    rTheListOfActors[i]->DumpHavesWants();
     cout<<"-------------------------------------"<<endl;
   }
 }
 
-void PersonManager::PrintHavesWants(int index){
-    rTheListOfPeople[index].DumpHavesWants();
+void EconomicActorManager::PrintHavesWants(int index){
+  //rTheListOfActors[index]->DumpHavesWants();
 }
 
-void PersonManager::PrintMoney(){
-  for ( auto &i : rTheListOfPeople){
-    cout<<"Person "<<i.GetBaseId()<<" "<<i.GetMoney()<<endl;
+void EconomicActorManager::PrintMoney(){
+  for ( auto &i : rTheListOfActors){
+    cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
   }
 
 }

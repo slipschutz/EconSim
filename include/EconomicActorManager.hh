@@ -13,16 +13,16 @@ using namespace std;
 
 
 //Foward Declarations
-class Person;
+class EconomicActor;
 class PersonLogger;
 
 
 
-class PersonManager : public Base {
+class EconomicActorManager : public Base {
 public:
-  PersonManager();
+  EconomicActorManager();
 
-  ~PersonManager();
+  ~EconomicActorManager();
 
   void BuildList(int NumberOfPeople);
   void BuildCompleteNetwork(int NumberOfPeople);
@@ -36,7 +36,7 @@ public:
   void MakeTransactions();
 
   //  void SetPersonToLog(int v);
-  vector <Person> * GetList(){return &rTheListOfPeople;}
+  vector <EconomicActor*> * GetList(){return &rTheListOfActors;}
 
 
 
@@ -44,7 +44,7 @@ private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
   int rNumPeople;
-  std::vector <Person> rTheListOfPeople;
+  std::vector <EconomicActor*> rTheListOfActors;
 
   int rPersonToLog;
 
