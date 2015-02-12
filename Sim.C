@@ -16,12 +16,18 @@
 #include "DataLogger.hh"
 
 #include "GoodManager.hh"
-
+#include "MarketManager.hh"
 using namespace  std;
 
 int main(int argv, char ** argc){
 
-
+  MarketManager::Get()->PlaceSellOrder(3,1,4,4.1);
+  MarketManager::Get()->PlaceSellOrder(3,12,5,42.4);
+  MarketManager::Get()->PlaceSellOrder(44,13,6,45.4);
+  MarketManager::Get()->PlaceSellOrder(44,14,6,14.4);
+  
+  MarketManager::Get()->Dump();
+  return 0;
   
   EconomicActorManager theManager;
   

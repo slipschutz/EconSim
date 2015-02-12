@@ -33,6 +33,7 @@ public:
 
    */
   virtual void EndOfStep()=0;
+  virtual void BeginningOfStep()=0;
   virtual void Initialize()=0;
   virtual void DoStep()=0;
   virtual bool CheckTransactionMatch(int,EconomicActor*)=0;

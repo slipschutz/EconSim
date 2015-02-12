@@ -24,7 +24,7 @@ public:
   void DoStep();
 
   void EndOfStep();
-
+  void BeginningOfStep(){}
 
   bool CheckTransactionMatch(int,EconomicActor*);  
   

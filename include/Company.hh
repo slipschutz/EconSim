@@ -24,6 +24,7 @@ public:
   /**  required class from EconomicActor*/
   void Initialize();
   void EndOfStep(){}
+  void BeginningOfStep(){}
   void DoStep(){}
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
   int GetActorType(){return ActorTypes::Company;}

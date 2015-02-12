@@ -8,6 +8,7 @@ namespace Settings{
   extern int NumberOfPeople;
   extern int NumberOfSteps;
   extern int NumberOfInteractionsPerStep;
+  extern int MaxGoodNumber;
   extern double MaxGoodPriority;
 }
 
