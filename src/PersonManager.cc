@@ -2,7 +2,7 @@
 #include "PersonManager.hh"
 #include <cstdlib>
 #include "Person.hh"
-#include "PersonLogger.hh"
+
 #include "RandomManager.hh"
 #include "Settings.hh"
 
@@ -12,12 +12,10 @@ PersonManager::PersonManager() {
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
 
 
-
-  rTheLogger = new PersonLogger();
 }
 
 PersonManager::~PersonManager(){
-  delete rTheLogger;
+
 
 }
 void PersonManager::Initialize(){
@@ -76,7 +74,7 @@ void PersonManager::MakeTransactions(){
   // cout<<endl;
   for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
        ii++){
-    rTheListOfPeople[ii->first].MakeTransactions();
+    rTheListOfPeople[ii->first].DoStep();
   }
 
 }
@@ -108,10 +106,10 @@ void PersonManager::PrintMoney(){
   }
 
 }
-void PersonManager::SetPersonToLog(int v){
-  rTheLogger->SetPerson(v);
-}
+// void PersonManager::SetPersonToLog(int v){
+//   rTheLogger->SetPerson(v);
+// }
 
-PersonLogger* PersonManager::GetLogger(){
-  return rTheLogger;
-}
+// PersonLogger* PersonManager::GetLogger(){
+//   return rTheLogger;
+// }

@@ -9,7 +9,7 @@
 using namespace std;
 
 class Good;
-class Person;
+class EconomicActor;
 
 class GoodManager 
 {
@@ -18,24 +18,34 @@ public:
   virtual ~GoodManager();
 
   static GoodManager *theManager;
-
   static GoodManager * Get();
+
 
   map<int,int> supply;
   map<int,int> demand;
 
-  double GetWorthToBuyer(Person * thePerson,int GoodID);
-  double GetWorthToSeller(Person * thePerson,int GoodID);
+
+
+  double GetWorthToBuyer(EconomicActor * theEconomicActor,int GoodID);
+  double GetWorthToSeller(EconomicActor * theEconomicActor,int GoodID);
+
+
   
-  Good MakeWant(int id, int copies);
-  Good MakeHave(int id, int copies);
+  Good MakeDemand(int id, int copies);
+  Good MakeSupply(int id, int copies);
+
+  void RemoveSupply(int id, int copies);
+  void RemoveDemand(int id, int copies);
+
+  void AddSupply(int id, int copies);
+  void AddDemand(int id, int copies);
 
   Good ReplaceHave(int id, int copies);
  
 private:
   
 
-  GoodManager();  
+  GoodManager();//This is a static singleton
 };
 
 

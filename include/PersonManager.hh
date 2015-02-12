@@ -9,7 +9,7 @@
 
 #include "Base.hh"
 #include <vector>
-
+using namespace std;
 
 
 //Foward Declarations
@@ -35,9 +35,9 @@ public:
   void PrintMoney();
   void MakeTransactions();
 
-  void SetPersonToLog(int v);
-  
-  PersonLogger* GetLogger();
+  //  void SetPersonToLog(int v);
+  vector <Person> * GetList(){return &rTheListOfPeople;}
+
 
 
 private:
@@ -47,7 +47,7 @@ private:
   std::vector <Person> rTheListOfPeople;
 
   int rPersonToLog;
-  PersonLogger * rTheLogger;
+
 };
 
 

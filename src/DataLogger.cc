@@ -4,7 +4,7 @@
 #include "DataLogger.hh"
 
 #include "TransactionRecord.hh"
-
+#include "EconomicActor.hh"
 DataLogger * DataLogger::theLogger = NULL;
 
 
@@ -39,9 +39,9 @@ DataLogger * DataLogger::Get(){
 
 
 
-void DataLogger::PushGoodPrice(int GoodNumber,double price){
+void DataLogger::PushGoodPrice(int GoodNumber,double price, int supply){
 
-  theGoodPrices.push_back(TransactionRecord(GoodNumber,price));
+  theGoodPrices.push_back(TransactionRecord(GoodNumber,price,supply));
 
   if (theGoodPrices.size() >= pBufferSize){
     pWriteToDisk();
@@ -53,9 +53,17 @@ void DataLogger::PushGoodPrice(int GoodNumber,double price){
 void DataLogger::pWriteToDisk(){
   
   for (auto & i : theGoodPrices){
-    pFileForGoodPrices<<i.Price<<endl;
+    pFileForGoodPrices<<i.Price<<" "<<i.Supply<<endl;
 
   }
+
+
+}
+
+
+
+void DataLogger::LogEndingMoneyDistribution(vector <EconomicActor>* list){
+
 
 
 }

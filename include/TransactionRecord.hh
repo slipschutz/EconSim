@@ -10,12 +10,12 @@ using namespace std;
 class TransactionRecord 
 {
 public:
-  TransactionRecord(int g,double p) : GoodNumber(g), Price(p) {}
+  TransactionRecord(int g,double p,double s) : GoodNumber(g), Price(p),Supply(s) {}
   virtual ~TransactionRecord(){;}
   
   int GoodNumber;
   double Price;
-  
+  double Supply;
 };
 
 

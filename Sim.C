@@ -15,22 +15,26 @@
 #include "Settings.hh"
 #include "DataLogger.hh"
 
+#include "GoodManager.hh"
+
 using namespace  std;
 
 int main(int argv, char ** argc){
-    
+
+
+
   PersonManager theManager;
   
   DataLogger::Get();
 
   theManager.BuildCompleteNetwork(Settings::NumberOfPeople);
-  theManager.SetPersonToLog(3);
+  //  theManager.SetPersonToLog(3);
 
-  //theManager.PrintConnections();
+  //  theManager.PrintConnections();
 
   cout<<"BUILT NETWORK"<<endl;
 
-  theManager.PrintHavesWants();
+  // theManager.PrintHavesWants();
 
   for (int i=0;i<Settings::NumberOfSteps;i++){
     //theManager.PrintHavesWants();
@@ -43,9 +47,10 @@ int main(int argv, char ** argc){
     }
   }
 
-  theManager.PrintMoney();
+  //theManager.PrintMoney();
   // theManager.PrintHavesWants();
-  
+  //  DataLogger::Get()->LogEndingMoneyDistribution(theManager.GetList());
+
   if (DataLogger::Get() != NULL){
     delete DataLogger::Get();
   }
