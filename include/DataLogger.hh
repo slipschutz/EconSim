@@ -8,7 +8,7 @@
 #include <fstream>
 
 class TransactionRecord;
-
+class EconomicActor;
 using namespace std;
 
 class DataLogger 
@@ -22,8 +22,9 @@ public:
   static DataLogger * Get();
 
 
-  void PushGoodPrice(int GoodNumber,double price);
+  void PushGoodPrice(int GoodNumber,double price,int supply);
   
+  void LogEndingMoneyDistribution( vector <EconomicActor>* list);
 private:
   DataLogger();
 
