@@ -1,4 +1,4 @@
-CFLAGS=-c -g -Wall -I./src -I./include -std=gnu++11
+CFLAGS=-c -g -Wall -I./src -I./include -std=c++11
 CXX=g++
 EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
@@ -12,7 +12,7 @@ MAINO=./src/$(addsuffix .o,$(EXECUTABLE))
 
 all: $(EXECUTABLE) 
 
-$(EXECUTABLE) : $(MAINO) $(OBJECTS) $(HEADERS)
+$(EXECUTABLE) : $(MAINO) $(OBJECTS)
 	@echo "Building $(EXECUTABLE)"
 	$(CXX) -std=c++11 -o $@ $^ -g
 	@echo "Build succeed"
