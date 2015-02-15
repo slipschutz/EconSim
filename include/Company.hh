@@ -14,6 +14,11 @@ using namespace std;
 #include "EconomicActor.hh"
 
 
+/**ABC for the company chain of classe.  Will be base class
+   for the different types of companies.  Manufacturer, retailer ect...
+
+ */
+
 class Company : public EconomicActor{
 
 public:
@@ -21,14 +26,19 @@ public:
   virtual ~Company();
 
   
-  /**  required class from EconomicActor*/
-  void Initialize();
-  void EndOfStep(){}
-  void BeginningOfStep(){}
-  void DoStep(){}
-  bool CheckTransactionMatch(int, EconomicActor*){return true;}
-  int GetActorType(){return ActorTypes::Company;}
+  /**  */
+  // virutal void Initialize();
+  // void EndOfStep(){}
+  // void BeginningOfStep();
+  // void DoStep(){}
+  // bool CheckTransactionMatch(int, EconomicActor*){return true;}
+  // virtual int GetActorType(){return ActorTypes::Company;}
+
  
+protected:
+ 
+  map<EconomicActor*,double> Employees2Salary;
+  
   
 };
 

@@ -1,21 +1,49 @@
 
 #include "EconomicActor.hh"
 
-#include "RandomManager.hh"
+#include "Good.hh"
 
+#include "RandomManager.hh"
 #include "DataLogger.hh"
 #include "GoodManager.hh"
+#include "Settings.hh"
 
 EconomicActor::EconomicActor() : fNumConnections(0){
   fConnections.clear();
   fDemands.clear();
   fSupplies.clear();
   fGoodPriorities.clear();
+  
+  fGoodPriorities.resize(Settings::MaxGoodNumber);
+  for (auto & i : fGoodPriorities){
+    i=5;
+  }
+  //Fill the maps of Demands and supplies 
+  //with goods that have 0 quantity.
+  //this way Later checks won't have to look
+  //to see if the demand/supply exists in the map
+  //The Priorities though are not being set
+  //Those will be set at latter times in the
+  //sub classes
+  for ( int i=0;i<Settings::MaxGoodNumber;i++){
+    // fSupplies[i]=Good(i,0);
+    // fDemands[i]=Good(i,0);
+
+  }
 
 }
 
 EconomicActor::~EconomicActor(){
+  //  cout<<"IN ~EconomicActor()"<<endl;
   fConnections.clear();
+
+  for (auto & i : fDemands){
+    i.second.Clear();
+  }
+  for (auto & i: fSupplies){
+    i.second.Clear();
+  }
+
   fDemands.clear();
   fSupplies.clear();
   fGoodPriorities.clear();
@@ -57,53 +85,129 @@ void EconomicActor::DumpConnections(){
   }
 }
 
+void EconomicActor::DumpSupplies(){
+  PrintLine('v',30);
+  cout<<"The Supplies for EconomicActor "<<this->GetBaseId()<<endl;
+    for (auto & ii :fSupplies){
+    cout<<"     Good "<<ii.first<<" copies "<<ii.second.GetNumberOfCopies()<<" priority "<<ii.second.GetPriority()<<endl;
+  }
+  PrintLine('^',30);
+}
+void EconomicActor::DumpDemands(){
+  PrintLine('v',30);
+  cout<<"The Demands for EconomicActor "<<this->GetBaseId()<<endl;
+  for (auto & ii : fDemands ){
+    cout<<"     Good "<<ii.first<<" copies "<<ii.second.GetNumberOfCopies()<<" priority "<<ii.second.GetPriority()<<endl;     
+  }
+  cout<<"The Priorities map"<<endl;
+  for (auto & ii : fDemandPriorities2GoodNum){
+    cout<<"     Priority "<<ii.first<<" GoodNum "<<ii.second<<endl;
+  }
+
+  PrintLine('^',30);
+}
 
 
+void EconomicActor::AddDemand(int GoodNumber,int copies){
+  //Regardless of wether the actor has this demand already
+  //Get the good from the GoodManager so that the total
+  //Demand is updated properly
 
-void EconomicActor::AddAGood(int GoodNumber){
-  //Add a good 
-  //Get the good from the good managner so that the supply gets updated
-  if (fSupplies.count(GoodNumber)==0){
-    fSupplies[GoodNumber]=GoodManager::Get()->MakeSupply(GoodNumber,1);
-    //cout<<"Adding good "<<GoodNumber<<" to rHaves for person "<<this->GetBaseId()<<endl;
+  //  Good temp =GoodManager::Get()->MakeDemand(GoodNumber,copies,this);
+
+
+  Good temp(GoodNumber,copies,fGoodPriorities[GoodNumber],"demand");
+
+  //if the actor already demands this good just add the copies 
+  auto theDemand = fDemands.find(GoodNumber);
+  if (theDemand == fDemands.end()){//The demand wasn't there
+    fDemands[GoodNumber]=temp;
+  }else {// the good was there
+    theDemand->second.AddCopies(copies);
+  }
+  //Now put the demand in the priority map
+  int tempNum = temp.GetPriority();
+
+  fDemandPriorities2GoodNum.insert(make_pair(tempNum,GoodNumber));
+  
+}
+
+// void EconomicActor::fAddASupply(int GoodNumber){
+
+
+// }
+
+
+void EconomicActor::RemoveSupply(int GoodNumber,int Quantity){
+  if (fSupplies.count(GoodNumber) == 0){
+    cout<<"Trying to remove supply "<<GoodNumber<<" from "<<this->GetBaseId()<<" when supply isn't there"<<endl;
+    throw 2;
+  }
+  
+  auto theSupply = fSupplies.find(GoodNumber);
+  if (theSupply->second.GetNumberOfCopies() < Quantity){
+    cout<<"Trying to remove "<<Quantity <<" copies of "<<GoodNumber <<" from "<<this->GetBaseId()<<" but there are only "<<
+      theSupply->second.GetNumberOfCopies()<<endl;
+    throw 3;
+  }
+
+  theSupply->second.RemoveCopies(Quantity);
+
+  
+}
+
+
+void EconomicActor::AddSupply(int GoodNumber,int Quantity){
+  
+  if (fSupplies.count(GoodNumber) == 0){
+    //The supply wasn't in the map so just add it
+    Good temp(GoodNumber,Quantity,fGoodPriorities[GoodNumber],"supply");
+    //    fSupplies[GoodNumber]=temp;
+    //    stlMap.insert( map< string, X >::value_type( "test", x ) );
+    fSupplies.insert( map<int,Good>::value_type(GoodNumber,temp));
   }else {
-    //The good is already there person now has a second copy of the good
-    int t=fSupplies[GoodNumber].GetNumberOfCopies() + 1;
-    GoodManager::Get()->AddSupply(GoodNumber,1);
-    fSupplies[GoodNumber].SetNumberOfCopies(t);
+    //The supply was in the map.  increase the quantity
+    auto theSupply = fSupplies.find(GoodNumber);
+    theSupply->second.AddCopies(Quantity);
   }
+  
+
 }
+void EconomicActor::RemoveDemand(int GoodNumber,int Quantity){
 
-
-
-void EconomicActor::RemoveAGood(int GoodNumber){
-  if (fSupplies.count(GoodNumber)!=0){
-    int t = fSupplies[GoodNumber].GetNumberOfCopies();
-    if ( t ==1){
-      fSupplies.erase(GoodNumber);
-    } else {
-      fSupplies[GoodNumber].SetNumberOfCopies(t-1);
+  auto theDemand = fDemands.find(GoodNumber);
+  
+  if (theDemand == fDemands.end()){
+    //The good is not in the map
+    cout<<"Trying to remove demand "<<GoodNumber<< " from "<<this->GetBaseId()<<" but it is not there"<<endl;
+    throw 3;
+  }else {
+    int temp = theDemand->second.GetNumberOfCopies();
+    if ( temp < Quantity){
+      cout<<"Trying to remove "<<Quantity <<" copies of "<<GoodNumber <<" form "<<this->GetBaseId()<<" but there are only "<<temp<<endl;
+      throw 3;
     }
-  } else {
-    ///The good isn't there.  Silently do nothing
+    theDemand->second.RemoveCopies(Quantity);
   }
-}
 
+  //Also need to deal with the fDemandPriorities2GoodNum
+  //If the demand quantity is 0 then remove the priorirty from
+  //the list of priorities 
+  if (fDemands[GoodNumber].GetNumberOfCopies()==0){
+    //need to make sure that if there are two things with the same 
+    //priority that we remove the correct one.  
+    //Get the range of things with same prioriry
+    int prior=fDemands[GoodNumber].GetPriority();
 
-
-
-
-void EconomicActor::AddAGoodAndRemoveDemand(int GoodNumber){
-  AddAGood(GoodNumber);
-  if (fDemands.count(GoodNumber) == 0 ){
-    //Something is wrong.  Person doesn't want this good
-    throw 1;
+    auto range = fDemandPriorities2GoodNum.equal_range(prior);
+    //range is a pair of iterators.  the first one points to the 
+    //first element with the same key and the second is the end
+    for (auto it = range.first;it != range.second;it++){
+      if (it->second == GoodNumber){//This is the one
+	fDemandPriorities2GoodNum.erase(it);
+	break;
+      }
+    }
   }
-  int t =fDemands[GoodNumber].GetNumberOfCopies();
-  if (t == 1){
-    fDemands.erase(GoodNumber);
-  } else{
-    fDemands[GoodNumber].SetNumberOfCopies(t-1);
 
-  }
 }

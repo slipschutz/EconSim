@@ -1,13 +1,13 @@
 
 
-#ifndef __PERSONSNAPSHOT_HH
-#define __PERSONSNAPSHOT_HH
+#ifndef __ACTORSNAPSHOT_HH
+#define __ACTORSNAPSHOT_HH
 
 #include <map>
 #include "Base.hh"
 #include "Good.hh"
 
-class PersonSnapshot : public Base{
+class ActorSnapshot : public Base{
 public:
 
   void Initialize();

@@ -5,16 +5,21 @@
 
 #include "Base.hh"
 #include "Settings.hh"
+#include <string>
+using namespace std;
 class Good : public Base {
 public:
   Good();
-  Good(int id, int copies);
+  Good(int id, int copies,int,string);
   ~Good();
-  
+  Good(const Good &aGood);//Copy constructor
+  void Clear();
+  Good& operator= (const Good &aGood);
+
   void Initialize();
 
   inline int GetGoodId(){return rGoodId;}
-  inline void SetGoodId(int v){rGoodId=v;}
+  inline void SetGoodIdAndType(int v,string t){rGoodId=v;rType=t;}
 
   inline void IncrementPriority(){SetPriority(rPriority+1);}
   inline void SetPriority(int v){
@@ -30,17 +35,20 @@ public:
   inline double GetNormPriority(){return (Settings::MaxGoodPriority-rPriority)/(Settings::MaxGoodPriority);}
 
   inline int GetNumberOfCopies(){return rCopiesOfGood;}
-  inline void SetNumberOfCopies(int v){rCopiesOfGood=v;}
   
+
+  void AddCopies(int num);
+  void RemoveCopies(int num);
 
 
 private:
   int rGoodId;
-  
-  int rPriority;
-  
   int rCopiesOfGood;
+  int rPriority;
+  string rType;
 
+  void rUpdateManagerAdd(int change);
+  void rUpdateManagerRemove(int change);
 };
 
 

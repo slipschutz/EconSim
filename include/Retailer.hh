@@ -1,0 +1,40 @@
+
+
+
+#ifndef __RETAILER_HH
+#define __RETAILER_HH
+
+#include <vector>
+#include <iostream>
+#include <string>
+
+#include "Company.hh"
+#include "Settings.hh"
+#include "RandomManager.hh"
+using namespace std;
+
+class Retailer : public Company 
+{
+public:
+  Retailer(){}
+  virtual ~Retailer(){}
+  
+  void Initialize(){
+    cout<<"The good priorities has size "<<fGoodPriorities.size()<<endl;
+    cout<<"Max Good number "<<Settings::MaxGoodNumber<<endl;
+    for (int i=0;i<fGoodPriorities.size();i++){
+      fGoodPriorities[i]=RandomManager::GetRand(Settings::MaxGoodPriority);
+    }
+  }
+
+  bool EndOfStep(){}
+  void BeginningOfStep(){};
+  void DoStep(){}
+  bool CheckTransactionMatch(int, EconomicActor*){return true;}
+  int GetActorType(){return 111;}
+
+};
+
+
+
+#endif /* __RETAILER_HH */

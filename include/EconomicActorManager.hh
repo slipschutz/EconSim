@@ -33,12 +33,17 @@ public:
   void PrintHavesWants();
   void PrintHavesWants(int);
   void PrintMoney();
-  void MakeTransactions();
+
+  void DoAStep();
+
+  void KillActor(EconomicActor*);
 
   //  void SetPersonToLog(int v);
   vector <EconomicActor*> * GetList(){return &rTheListOfActors;}
 
-
+  void Test(){
+    KillActor(rTheListOfActors[4]);
+  }
 
 private:
   int rInitialTopConectivity;
@@ -48,6 +53,7 @@ private:
 
   int rPersonToLog;
 
+  int rNumberOfDeaths;
 };
 
 

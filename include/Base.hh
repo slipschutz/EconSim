@@ -23,6 +23,11 @@ public:
   static int GetNumDeletes(){return Base::rNumDeletes;}
   static int GetCurrentId(){return Base::rNextBase_Id;}
 
+  void PrintLine(char c,int l){
+    for (int i=0;i<l;++i){
+      std::cout<<c;
+    }std::cout<<std::endl;
+  }
 private:
   int rBaseId;
 

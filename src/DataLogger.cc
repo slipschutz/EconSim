@@ -62,8 +62,11 @@ void DataLogger::pWriteToDisk(){
 
 
 
-void DataLogger::LogEndingMoneyDistribution(vector <EconomicActor>* list){
-
+void DataLogger::LogEndingMoneyDistribution(vector <EconomicActor*>* list){
+  
+  for (auto & i : *list){
+    pFileForEndingMoneyDistribution<<i->GetActorType()<<" " <<i->GetMoney()<<endl;
+  }
 
 
 }

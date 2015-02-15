@@ -14,8 +14,9 @@ class OrderInfo{
 public:
   int SellerId;
   int Quantity;
-  OrderInfo(int id,int q) : SellerId(id), Quantity(q){}
-  OrderInfo() : SellerId(-1),Quantity(-1){}
+  double Price;
+  OrderInfo(int id,int q,double p) : SellerId(id), Quantity(q),Price(p){}
+  OrderInfo() : SellerId(-1),Quantity(-1),Price(-1){}
 };
 
 /**This class will be responsible for holding by and sell orders from companies and 
@@ -33,13 +34,22 @@ public:
 
   void PlaceSellOrder(int GoodNumber,int SellerID, int Quantity,double Price);
   
+  int GetCheapestSeller(int GoodNumber,OrderInfo & Info);
+
+  void CleanUpOrder(int GoodNumber,double price, int SellerId,int quantity);
+ 
+  void ClearMarket(){
+    for (auto & i : rSellPrices){
+      i.clear();
+    }
+  }
   void Dump();
   
 private:
   MarketManager();
 
   //For each good make a map of prices to GLOBAL ID
-  vector < map <double,OrderInfo> > rSellPrices;
+  vector < multimap <double,OrderInfo> > rSellPrices;
   
 };
 

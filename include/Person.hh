@@ -23,8 +23,8 @@ public:
   void DumpConnections();
   void DoStep();
 
-  void EndOfStep();
-  void BeginningOfStep(){}
+  bool EndOfStep();
+  void BeginningOfStep();
 
   bool CheckTransactionMatch(int,EconomicActor*);  
   

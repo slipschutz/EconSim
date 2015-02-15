@@ -24,7 +24,7 @@ public:
 
   void PushGoodPrice(int GoodNumber,double price,int supply);
   
-  void LogEndingMoneyDistribution( vector <EconomicActor>* list);
+  void LogEndingMoneyDistribution( vector <EconomicActor*>* list);
 private:
   DataLogger();
 

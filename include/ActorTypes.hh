@@ -5,7 +5,7 @@
 namespace ActorTypes{
   extern int Person;
   extern int Company;
-  
+  extern int Manufacturer;
 }
 
 
