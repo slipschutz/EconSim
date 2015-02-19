@@ -24,10 +24,12 @@ EconomicActorManager::EconomicActorManager() {
 
 EconomicActorManager::~EconomicActorManager(){
   
-  cout<<"IN ~EconomicActorManager()"<<endl;
+
 
   for (int i=0;i<rTheListOfActors.size();i++){
+
     delete rTheListOfActors[i];
+
   }
 
   rTheListOfActors.clear();
@@ -66,7 +68,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     rTheListOfActors.push_back( new Person());
   }
   ActorLogger::Get()->thePerson=rTheListOfActors[0]->GetBaseId();
-  for (int i=0;i<1.55*NumberOfActors;i++){
+  for (int i=0;i<1*NumberOfActors;i++){
       rTheListOfActors.push_back(new Manufacturer());
   }
   rNumPeople=rTheListOfActors.size();
@@ -84,7 +86,6 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 
 void EconomicActorManager::DoAStep(){
-  
 
   //First in each step call begin of step for all economic actors
 
@@ -96,18 +97,11 @@ void EconomicActorManager::DoAStep(){
   // rTheListOfActors[0]->DumpDemands();
   
   // GoodManager::Get()->Dump();
-  // MarketManager::Get()->Dump();
-
   //Each call to make transactions will pick some number
   //of random people and those people will have transactions
-  map <int,bool> tempPersonMap;
-  while (tempPersonMap.size() < rNumInteractingPeoplePerStep){
-    //GetRand(10) goes from 0->9
-    int n = RandomManager::GetRand(rNumPeople);
-    if (tempPersonMap.count(n) == 0 ){
-      tempPersonMap[n]=true;
-    }
-  }
+  
+  //  MarketManager::Get()->Dump();
+
   // cout<<endl;
   // for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
   //      ii++){
@@ -116,8 +110,9 @@ void EconomicActorManager::DoAStep(){
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
 
-  std::random_shuffle ( rTheListOfActors.begin(), rTheListOfActors.end(),RandomManager::GetRand );
+  //  std::random_shuffle ( rTheListOfActors.begin(), rTheListOfActors.end(),RandomManager::GetRand );
 
+  
   for (auto & i : rTheListOfActors ){
     i->DoStep();
   }
@@ -129,26 +124,39 @@ void EconomicActorManager::DoAStep(){
   // int t;cin>>t;
   
 
-
+  vector <int> ToBeKilled;
   //Call end of step for every actor in the list 
   for (int i=0;i<rTheListOfActors.size();i++){
     if (rTheListOfActors[i]->EndOfStep()){
+
       //This actor died
       //Remove reference to it from everyone else 
       //Replace the pointer to a DeadActor object
       //This way we don't need to move the vector
       //IE don't need to call erase
       KillActor(rTheListOfActors[i]);
+
+      delete rTheListOfActors[i];
+      ToBeKilled.push_back(i);
+      //Make pointer point to an empty class
+      //      rTheListOfActors[i]=new DeadActor();
       rNumberOfDeaths++;
     }
   }
+  
+  cout<<"before "<<rTheListOfActors.size()<<" "<<ToBeKilled.size()<<endl;
+  for (auto i : ToBeKilled){
+    rTheListOfActors.erase(rTheListOfActors.begin()+i);
+  }
+  cout<<"after "<<rTheListOfActors.size()<<endl;
 
 
 }
 
-void  EconomicActorManager::KillActor(EconomicActor* act){
+void EconomicActorManager::KillActor(EconomicActor* act){
   //This method will remove all connections the actor has 
   int DeadMansBaseId=act->GetBaseId();
+
   //Loop over the connections and remove this actor from
   //the list of everyone else
   for ( auto & ii : (*act->GetConnections())){
@@ -156,9 +164,6 @@ void  EconomicActorManager::KillActor(EconomicActor* act){
     //    ii.second should be pointer to connection
     ii.second->GetConnections()->erase(DeadMansBaseId);
   }
-  delete act;
-  //Make pointer point to an empty class
-  act = new DeadActor();
 }
 
 void EconomicActorManager::PrintConnections(){

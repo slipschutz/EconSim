@@ -14,6 +14,8 @@
 
 #include "Manufacturer.hh"
 
+#include "DeadActor.hh"
+
 #include "Settings.hh"
 #include "DataLogger.hh"
 #include "Calendar.hh"
@@ -75,27 +77,29 @@ void TestGoodStuff(){
 int main(int argv, char ** argc){
   // TestGoodStuff();
 
-  // return 3 ;
+  // vector<EconomicActor*> v;
+  // for (int i=0;i<100;i++){
+  //   v.push_back(new DeadActor());
+  // }
+  // cout<<"Done"<<endl;
+  // for (int i=0;i<v.size();i++){
+  //   delete v[i];
+  // }
 
-  EconomicActorManager theManager;
+  // return 3;
+
+  EconomicActorManager *  theManager = new EconomicActorManager();
   
   DataLogger::Get();
 
-  theManager.BuildCompleteNetwork(Settings::NumberOfPeople);
-  //  theManager.SetPersonToLog(3);
+  theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
+
   cout<<"BUILT NETWORK"<<endl;
 
-
-
-
-
-  // return 0;
   
   for (int i=0;i<Settings::NumberOfSteps;i++){
     
-    theManager.DoAStep();
-
-    
+    theManager->DoAStep();
     if (i%100==0){
       cout<<"ON "<<i<<endl;
     }
@@ -103,12 +107,15 @@ int main(int argv, char ** argc){
     Calendar::DayNumber++;
   }
 
+
   GoodManager::Get()->Dump();
 
   //theManager.PrintMoney();
   // theManager.PrintHavesWants();
-  DataLogger::Get()->LogEndingMoneyDistribution(theManager.GetList());
+  DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
 
+  delete theManager;
+  
   ActorLogger::Get()->DumpLog();
 
   if (DataLogger::Get() != NULL){

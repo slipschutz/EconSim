@@ -16,7 +16,7 @@ EconomicActor::EconomicActor() : fNumConnections(0){
   
   fGoodPriorities.resize(Settings::MaxGoodNumber);
   for (auto & i : fGoodPriorities){
-    i=5;
+    i=RandomManager::GetRand(Settings::MaxGoodPriority - 4);//-4 to keep things away from 100%
   }
   //Fill the maps of Demands and supplies 
   //with goods that have 0 quantity.
@@ -34,14 +34,18 @@ EconomicActor::EconomicActor() : fNumConnections(0){
 }
 
 EconomicActor::~EconomicActor(){
-  //  cout<<"IN ~EconomicActor()"<<endl;
+  //cout<<"IN ~EconomicActor()"<<endl;
   fConnections.clear();
 
-  for (auto & i : fDemands){
-    i.second.Clear();
+  if (fDemands.size()!=0){
+    for (auto & i : fDemands){
+      i.second.Clear();
+    }
   }
-  for (auto & i: fSupplies){
-    i.second.Clear();
+  if (fSupplies.size()!=0){
+    for (auto & i: fSupplies){
+      i.second.Clear();
+    }
   }
 
   fDemands.clear();
@@ -50,6 +54,7 @@ EconomicActor::~EconomicActor(){
 
   fNumConnections=0;
   fMoney=0;
+
 }
 
 
@@ -121,14 +126,28 @@ void EconomicActor::AddDemand(int GoodNumber,int copies){
   //if the actor already demands this good just add the copies 
   auto theDemand = fDemands.find(GoodNumber);
   if (theDemand == fDemands.end()){//The demand wasn't there
-    fDemands[GoodNumber]=temp;
+    //    fDemands[GoodNumber]=temp;
+    fDemands.insert(make_pair(GoodNumber,temp));
   }else {// the good was there
     theDemand->second.AddCopies(copies);
   }
   //Now put the demand in the priority map
   int tempNum = temp.GetPriority();
 
+  //need to make sure that this is not a second copy of the same thing
+  //if one is adding demand for a good that is already demanded then
+  //it does not need to in this map again.
+  auto range = fDemandPriorities2GoodNum.equal_range(tempNum);
+  for (auto it = range.first;it != range.second;it++){
+    if (it->second ==GoodNumber){
+      //It is already there
+      return;
+    }
+  }
+  //it made it through the search.  Therefore it the demand
+  //is not already there.  Add it
   fDemandPriorities2GoodNum.insert(make_pair(tempNum,GoodNumber));
+
   
 }
 

@@ -33,6 +33,11 @@ void ActorLogger::LogBeforeStepState(EconomicActor* a){
     s<<"   Good "<<i.first<<" ("<<i.second.GetNumberOfCopies()<<") priority "<<i.second.GetPriority()<<endl;
   }
 
+  s<<"Priortiy list "<<endl;
+  for (auto & i : *a->GetDemandPriorities() ){
+    s<<"   Priority "<<i.first<<" good "<<i.second<<endl;
+  }
+
   s<<"Money "<<a->GetMoney()<<endl;
   
   rBeforeState.push_back(s.str());
@@ -79,6 +84,7 @@ void ActorLogger::DumpLog(){
     cout<<"At the start of the day I had"<<endl;
     cout<<rBeforeState[i]<<endl;
 
+    cout<<rDuringMessage[i]<<endl;
     cout<<"At the end of the day I had"<<endl;
     cout<<rAfterState[i]<<endl;
 

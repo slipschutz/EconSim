@@ -3,7 +3,9 @@
 
 #include "MarketManager.hh"
 #include "Settings.hh"
-
+#include "EconomicActor.hh"
+#include "Company.hh"
+#include "Person.hh"
 
 //Initialize the singleton pointer
 
@@ -23,6 +25,7 @@ MarketManager::~MarketManager(){
 MarketManager * MarketManager::Get(){
   
   if (theManager== NULL){
+    cout<<"MarketManager Made"<<endl;
     theManager=new MarketManager();
   }
   return theManager;
@@ -69,6 +72,42 @@ void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int q
 
 }
 
+void MarketManager::PlaceJobPosting(double salary, int EmployerId){
+  //JobInfo(Id,salary)
+  rJobListings.insert(make_pair(salary,JobInfo(EmployerId,salary)));
+
+}
+
+void MarketManager::BrokerJob(Person * employee, Company * employer,double salary){
+  employer->AddEmployee(employee,salary);
+  //Now do clean up of job posting
+  
+  auto range = rJobListings.equal_range(salary);
+  
+  for (auto i = range.first;i!=range.second;i++){
+    if (i->second.EmployerID ==employer->GetBaseId()){
+      //This is the one or an identical copy of the 
+      //one
+      rJobListings.erase(i);
+      break;
+    }
+  }
+
+}
+JobInfo MarketManager::GetBestJob(){
+  if(rJobListings.size()==0){
+    return JobInfo(-1,0);
+  }
+  auto it= rJobListings.end();
+  it--;
+  
+  double s=it->first;
+  int id =it->second.EmployerID;
+  //JobInfo id salary
+  return JobInfo(id,s);
+
+}
+
 void MarketManager::Dump(){
   
   for ( int i=0;i < rSellPrices.size();i++){
@@ -79,10 +118,11 @@ void MarketManager::Dump(){
       cout<<i.first<<"["<<i.second.Quantity<<"](ID="<<i.second.SellerId<<") ";
     }
     cout<<endl;
-
-
   }
   
-  
+  for (auto & i : rJobListings){
+    cout<<"Salary "<<i.first<<" from "<<i.second.EmployerID<<endl;
+
+  }
 
 }

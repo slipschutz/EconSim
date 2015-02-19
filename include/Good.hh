@@ -12,9 +12,9 @@ public:
   Good();
   Good(int id, int copies,int,string);
   ~Good();
-  Good(const Good &aGood);//Copy constructor
+  //  Good(const Good &aGood);//Copy constructor
   void Clear();
-  Good& operator= (const Good &aGood);
+  //  Good& operator= (const Good &aGood);
 
   void Initialize();
 

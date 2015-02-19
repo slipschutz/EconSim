@@ -17,8 +17,11 @@ using namespace std;
 
 class DeadActor : public EconomicActor{
 public:
-  DeadActor(){}
-  virtual ~DeadActor(){}
+  DeadActor(){
+  }
+  virtual ~DeadActor(){
+    //    cout<<"in ~Dead Actor "<<this<<endl;
+  }
 
   void Initialize(){}
   

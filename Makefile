@@ -12,9 +12,9 @@ MAINO=./src/$(addsuffix .o,$(EXECUTABLE))
 
 all: $(EXECUTABLE) 
 
-$(EXECUTABLE) : $(MAINO) $(OBJECTS)
+$(EXECUTABLE) : $(MAINO) $(OBJECTS) 
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) -std=c++11 -o $@ $^ -g
+	$(CXX) -g -std=c++11 -o $@ $^ 
 	@echo "Build succeed"
 
 %.o : %.cc

@@ -30,7 +30,7 @@ public:
   
   /**Required Abstract methods */
   void Initialize();
-  bool EndOfStep(){return false;}
+  bool EndOfStep();
   void BeginningOfStep();
   void DoStep(){}
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
@@ -51,7 +51,7 @@ private:
   
   int MaxVolume;//Max amount of good that company can make
   
-  
+  int rStartingSalary;
 };
 
 

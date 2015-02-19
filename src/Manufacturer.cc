@@ -10,10 +10,10 @@
 
 #include "MarketManager.hh"
 #include "GoodManager.hh"
-
+#include "Person.hh"
 #include "Good.hh"
 void Manufacturer::Initialize(){
-  
+  fMoney=10000;
 
   //Pick a good to manufacturer
   GoodToManufacture=RandomManager::GetRand(Settings::MaxGoodNumber);
@@ -30,6 +30,8 @@ void Manufacturer::Initialize(){
 
   fSupplies.clear();
   fDemands.clear();
+
+  rStartingSalary=RandomManager::GetRand(100);
 }
 
 
@@ -39,7 +41,9 @@ void Manufacturer::BeginningOfStep(){
   // if the company has employees it can manufacture goods  //
   ////////////////////////////////////////////////////////////
   
-  if ( Employees2Salary.size() == 0 ){
+  
+  
+  if ( Employees2Salary.size() >10 ){
     
     if (fSupplies.find(GoodToManufacture) == fSupplies.end()){
       //Good isn't there yet
@@ -55,28 +59,48 @@ void Manufacturer::BeginningOfStep(){
       fSupplies[GoodToManufacture].AddCopies(t);
       
     }
-  }
-  if ( fSupplies[GoodToManufacture].GetNumberOfCopies()<0){
-    cout<<"Less than zero"<<endl;
-
-    throw 1;
-  }
-
-  //Now post something to the market.  As first test always post all the goods that company has
-
-  //  cout<<"THIS IS SUPPLIES "<<fSupplies[GoodToManufacture].GetNumberOfCopies()<<endl;
-
-
-  if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
-    MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
-					 fSupplies[GoodToManufacture].GetNumberOfCopies(),
-					 fSupplies[GoodToManufacture].GetNormPriority());
-  }
   
+    if ( fSupplies[GoodToManufacture].GetNumberOfCopies()<0){
+      cout<<"Less than zero"<<endl;
+      throw 1;
+    }
+    if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
+      MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
+					   fSupplies[GoodToManufacture].GetNumberOfCopies(),
+					   fSupplies[GoodToManufacture].GetNormPriority()*100);
+    }
+  } else { //Try to hire people
+    for (int i=0;i<10-Employees2Salary.size();i++){
+      MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
+    }
+  }
 }
 
 
-
+bool Manufacturer::EndOfStep(){
+  //Pay the employees
+  bool GoingBankrupt=false;
+  for (auto & i : Employees2Salary ){
+    double moneyToPay=i.second;
+    if (moneyToPay > fMoney){
+      //Can't pay that going bankrupt
+      GoingBankrupt=true;
+    }else {
+      i.first->AddMoney(moneyToPay);
+      this->SubtractMoney(moneyToPay);
+    }
+  }
+  
+  if(GoingBankrupt){
+    for (auto & i : Employees2Salary){
+      i.first->YourFired();
+    }
+    
+    return true;
+  }else{
+    return false;
+  }
+}
 
 
 void Manufacturer::DumpConnections(){

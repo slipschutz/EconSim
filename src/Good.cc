@@ -3,11 +3,19 @@
 using namespace std;
 
 Good::Good(){
-  Initialize();
+  rGoodId=-1;
+  rPriority=0;
+  rCopiesOfGood=0;
+  rType="!!!__";
+
 }
 
-Good::Good(int id, int copies,int prior,string t) : rGoodId(id), rCopiesOfGood(copies),rPriority(prior),rType(t){
+Good::Good(int id, int copies,int prior,string t){// : rGoodId(id), rCopiesOfGood(copies),rPriority(prior),rType(t){
 
+  rGoodId=id;
+  rCopiesOfGood=copies;
+  rPriority=prior;
+  rType=t;
   rUpdateManagerAdd(copies);
 }
 Good::~Good(){
@@ -16,25 +24,27 @@ Good::~Good(){
 
 }
 void Good::Clear(){
+
+
   rUpdateManagerRemove(rCopiesOfGood);
 }
 
-Good::Good(const Good &aGood){//Copy constructor
-  this->rGoodId = aGood.rGoodId;
-  this->rCopiesOfGood=aGood.rCopiesOfGood;
-  this->rPriority=aGood.rPriority;
-  this->rType=aGood.rType;
+// Good::Good(const Good &aGood){//Copy constructor
+//   this->rGoodId = aGood.rGoodId;
+//   this->rCopiesOfGood=aGood.rCopiesOfGood;
+//   this->rPriority=aGood.rPriority;
+//   this->rType=aGood.rType;
 
-}
+// }
 
-Good& Good::operator= (const Good &aGood){
-  this->rGoodId = aGood.rGoodId;
-  this->rCopiesOfGood=aGood.rCopiesOfGood;
-  this->rPriority=aGood.rPriority;
-  this->rType=aGood.rType;
+// Good& Good::operator= (const Good &aGood){
+//   this->rGoodId = aGood.rGoodId;
+//   this->rCopiesOfGood=aGood.rCopiesOfGood;
+//   this->rPriority=aGood.rPriority;
+//   this->rType=aGood.rType;
   
-  return *this;
-}
+//   return *this;
+// }
 
 
 void Good::Initialize(){
@@ -88,7 +98,7 @@ void Good::rUpdateManagerRemove(int change){
   }else if (rType == "supply"){
     GoodManager::Get()->RemoveSupply(rGoodId,change);
   }else {
-    cout<<"<Good::rUpdateManagerAdd> Invaid type "<<rType<<endl;
+    cout<<"<Good::rUpdateManagerRemove> Invaid type "<<rType<<endl;
     throw 1;
   }
 }

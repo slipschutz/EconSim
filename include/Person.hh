@@ -33,10 +33,16 @@ public:
   void DumpHavesWants();
   
   double GetWorth(Good);
+  void YourFired(){rHaveAJob=false;}
   
-
 private:
 
+  //Some person specific traits
+  //all things 0-100
+  int rRestlessness;//How likely person will develop a want other than food
+  int rGluttoness;//How much food some one eats
+  
+  bool rHaveAJob;
   
 
 };

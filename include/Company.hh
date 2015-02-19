@@ -13,7 +13,7 @@ using namespace std;
 //Include local headers
 #include "EconomicActor.hh"
 
-
+class Person;
 /**ABC for the company chain of classe.  Will be base class
    for the different types of companies.  Manufacturer, retailer ect...
 
@@ -33,11 +33,11 @@ public:
   // void DoStep(){}
   // bool CheckTransactionMatch(int, EconomicActor*){return true;}
   // virtual int GetActorType(){return ActorTypes::Company;}
-
+  void AddEmployee(Person * ,double salary);
  
 protected:
  
-  map<EconomicActor*,double> Employees2Salary;
+  map<Person*,double> Employees2Salary;
   
   
 };

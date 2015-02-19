@@ -20,6 +20,7 @@ GoodManager::~GoodManager(){
 
 GoodManager* GoodManager::Get(){
   if (theManager == (GoodManager*)NULL){
+    cout<<"GoodManager Made"<<endl;
     theManager = new GoodManager();
   }
 
@@ -66,7 +67,7 @@ void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buye
   //The Seller needs to have the goods removed from it's supplies and the buyer needs
   //to have the good removed from its demand
   // cout<<"\n\n DO the trade \n\n"<<endl;
-  cout<<"Buyer "<<Buyer->GetBaseId()<< " is buying "<<quantity<<" of good "<<good<<" from "<<Seller->GetBaseId()<<endl;
+  //  cout<<"Buyer "<<Buyer->GetBaseId()<< " is buying "<<quantity<<" of good "<<good<<" from "<<Seller->GetBaseId()<<endl;
   Seller->RemoveSupply(good,quantity);
   Buyer->AddSupply(good,quantity);
   Buyer->RemoveDemand(good,quantity);

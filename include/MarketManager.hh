@@ -9,6 +9,10 @@
 #include <iostream>
 #include <string>
 using namespace std;
+class EconomicActor;
+class Company;
+class Person;
+
 
 class OrderInfo{
 public:
@@ -17,6 +21,18 @@ public:
   double Price;
   OrderInfo(int id,int q,double p) : SellerId(id), Quantity(q),Price(p){}
   OrderInfo() : SellerId(-1),Quantity(-1),Price(-1){}
+};
+
+class JobInfo{
+public:
+  JobInfo(){}
+
+  JobInfo(int d,double s) :EmployerID(d),salary(s){}
+
+  int EmployerID;
+  double salary;
+
+
 };
 
 /**This class will be responsible for holding by and sell orders from companies and 
@@ -37,19 +53,27 @@ public:
   int GetCheapestSeller(int GoodNumber,OrderInfo & Info);
 
   void CleanUpOrder(int GoodNumber,double price, int SellerId,int quantity);
- 
+
+  void BrokerJob(Person * employee, Company * employer,double salary);
+  void PlaceJobPosting(double salary, int EmployerId);
+
+  JobInfo GetBestJob();
+
   void ClearMarket(){
     for (auto & i : rSellPrices){
       i.clear();
     }
+    rJobListings.clear();
   }
   void Dump();
   
+
 private:
   MarketManager();
 
-  //For each good make a map of prices to GLOBAL ID
+  //For each good make a map of prices
   vector < multimap <double,OrderInfo> > rSellPrices;
+  multimap <double,JobInfo> rJobListings;
   
 };
 

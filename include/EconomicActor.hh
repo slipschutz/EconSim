@@ -55,7 +55,8 @@ public:
 
   map<int,Good> * GetDemands(){return &fDemands;}
   map<int,Good> * GetSupplies(){return &fSupplies;}
-
+  
+  multimap<int,int> * GetDemandPriorities(){return &fDemandPriorities2GoodNum;}
   
   inline long GetNumConnections(){return fNumConnections;}
   void IncrementConnections(){fNumConnections++;}
@@ -69,6 +70,7 @@ public:
   void AddMoney(double v){fMoney=fMoney+v;}
 
   inline int GetGoodPriority(int GoodId){return fGoodPriorities[GoodId];}
+
 protected:
 
 

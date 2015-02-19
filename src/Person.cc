@@ -6,6 +6,8 @@
 #include "MarketManager.hh"
 #include "Calendar.hh"
 
+#include "Company.hh"
+
 int largestGoodNum=1;
 
 Person::Person() {
@@ -23,26 +25,23 @@ Person::~Person(){
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
-  fMoney =100000;
-  int NumHaves=1;
-  int NumWants=1;
+  fMoney =1000;
 
-  
   fSupplies.clear();
   fDemands.clear();
-  // if(this->GetBaseId() == 6){ //Guy with all the stuff
-  //   fSupplies[0]=GoodManager::Get()->MakeHave(RandomManager::GetRand(2),10);
-  // } else {
-  //   rWants[0]=GoodManager::Get()->MakeWant(0,400);
-  // }
-
-  // fSupplies[0]=GoodManager::Get()->MakeSupply(0,RandomManager::GetRand(8)+1);
-  // fDemands[0]=GoodManager::Get()->MakeDemand(0,RandomManager::GetRand(800)+1);
-
 
   //Good ID 0 is food and should have the highest prioriry 
   fGoodPriorities[0]=Settings::MaxGoodPriority;
-  fGoodPriorities[1]=Settings::MaxGoodPriority;
+
+
+  AddSupply(0,100);
+  
+  //Initialize Person specific Traits 
+  
+  rRestlessness=RandomManager::GetRand(100);
+  rGluttoness=RandomManager::GetRand(10)+1;
+  
+  rHaveAJob=false;
 }
 
 void Person::DumpHavesWants(){
@@ -72,6 +71,7 @@ void Person::DumpConnections(){
 
 
 void Person::BeginningOfStep(){
+
   //Check to see if this person has food (GOOD ID=0)
 
   if (fSupplies.count(0) == 0) {
@@ -81,14 +81,20 @@ void Person::BeginningOfStep(){
   }
 
   stringstream s;
-  s<<"Today is "<<Calendar::DayNumber<<endl;
-  if (fSupplies[0].GetNumberOfCopies()==0){
+  s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
+
+  if (fSupplies[0].GetNumberOfCopies() < rGluttoness){
     //There are no copies of food in the supply
-    int n=RandomManager::GetRand(50)+10;
+    int n=RandomManager::GetRand(10)+rGluttoness;
     AddDemand(0,n);//Add the demand for food
-    //cout<<"Made "<<n<<" food for person "<<this->GetBaseId()<<endl;
-    
+
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
+  }
+  
+  if (RandomManager::GetRand(100) < rRestlessness){
+    int d=RandomManager::GetRand(Settings::MaxGoodNumber);
+    AddDemand(d,1);
+    s<<"Diary I just have to have a new "<<d<<" or else no one will like me"<<endl;
   }
 
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
@@ -100,56 +106,99 @@ void Person::BeginningOfStep(){
 
 void Person::DoStep(){
   //check priorties list for things to buy
+  stringstream dayNotes;
   if (fDemandPriorities2GoodNum.size()==0){
     //Person doesn't want anything done with step
-    return;
-  }
+    dayNotes<<"All of my wants are fulfilled.  Today I will do nothing"<<endl;
+  } else {
   
-  //Buy the thing that has the most priority 
-  auto it= fDemandPriorities2GoodNum.end();
-  //move iterator 1 back from the end to get last elment
-  it--;
-  int Good2Buy = it->second;//this is the good number that has the highest priority
-  int AmountOfGoodIWant = fDemands[Good2Buy].GetNumberOfCopies();
-  int AmountOfGoodBought=0;
-  //  cout<<"This is person "<<this->GetBaseId()<<" I want "<<AmountOfGoodIWant<<endl;
-  while (AmountOfGoodIWant >0){
-    OrderInfo info;
-    int Seller=MarketManager::Get()->GetCheapestSeller(Good2Buy,info);
-    if (Seller == -1 ){// there is no seller 
-      // cout<<"NO SELLER FOR "<<this->GetBaseId()<<endl;
-      break;
+    //Buy the thing that has the most priority 
+    auto it= fDemandPriorities2GoodNum.end();
+    //move iterator 1 back from the end to get last elment
+    it--;
+    int Good2Buy = it->second;//this is the good number that has the highest priority
+    int totalWant= fDemands[Good2Buy].GetNumberOfCopies();
+    int AmountOfGoodIWant =totalWant;
+
+    //  cout<<"This is person "<<this->GetBaseId()<<" I want "<<AmountOfGoodIWant<<endl;
+    while (AmountOfGoodIWant >0){
+      OrderInfo info;
+      int Seller=MarketManager::Get()->GetCheapestSeller(Good2Buy,info);
+      if (Seller == -1 ){// there is no seller 
+	// cout<<"NO SELLER FOR "<<this->GetBaseId()<<endl;
+	dayNotes<<"I wanted to buy "<<totalWant<<" of good "<<Good2Buy<<" but can't find seller "<<endl
+		<<" at the end of the day I still want "<<AmountOfGoodIWant<<endl;
+	break;
+      } else if (info.Price*AmountOfGoodIWant > fMoney){
+	//This price is always the current cheapest price
+	//if I don't have enought money to buy what I want then 
+	//Not sale
+	dayNotes<<"I wanted to buy "<<info.Price*AmountOfGoodIWant<<" worth of good "<<Good2Buy<<endl
+		<<"but I only have "<<fMoney<<endl;
+	if (AmountOfGoodIWant > 5)
+	  AmountOfGoodIWant-=5;
+	else
+	  break;
+
+      } else{
+	if (AmountOfGoodIWant <= info.Quantity ){
+	  //All of the remaining good can be bought from this seller
+	  double totalCost=(AmountOfGoodIWant)*info.Price;
+	  //Move the money
+	  fConnections[Seller]->AddMoney(totalCost);
+	  this->SubtractMoney(totalCost);
+      
+	  //Remove the Supply from seller
+
+	  GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,AmountOfGoodIWant);
+	  MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,AmountOfGoodIWant);
+	  dayNotes<<"Haza I bought "<<AmountOfGoodIWant<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
+		  <<info.Price<<" totaling "<<totalCost<<endl;
+	  AmountOfGoodIWant=0;
+	} else {
+      
+	  int PartOfWhatIWant=info.Quantity; // Buying everything this seller can offer
+
+	  //This seller can only provide part of the order
+	  double totalCost=(PartOfWhatIWant)*info.Price;
+	  //Move the money
+	  fConnections[Seller]->AddMoney(totalCost);
+	  this->SubtractMoney(totalCost);
+      
+	  //Remove the Supply from seller
+	  GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,PartOfWhatIWant);
+	  MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,PartOfWhatIWant);
+	  AmountOfGoodIWant-=PartOfWhatIWant;
+	  dayNotes<<"Less Haza I bought "<<info.Quantity<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
+		  <<info.Price<<" totaling "<<totalCost<<endl;
+	}
+      }
     }
-    if (AmountOfGoodIWant <= info.Quantity ){
-      //All of the remaining good can be bought from this seller
-      double totalCost=(AmountOfGoodIWant)*info.Price;
-      //Move the money
-      fConnections[Seller]->AddMoney(totalCost);
-      this->SubtractMoney(totalCost);
-      
-      //Remove the Supply from seller
-
-      GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,AmountOfGoodIWant);
-      MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,AmountOfGoodIWant);
-      AmountOfGoodIWant=0;
-    } else {
-      
-      int PartOfWhatIWant=info.Quantity; // Buying everything this seller can offer
-
-      //This seller can only provide part of the order
-      double totalCost=(PartOfWhatIWant)*info.Price;
-      //Move the money
-      fConnections[Seller]->AddMoney(totalCost);
-      this->SubtractMoney(totalCost);
-      
-      //Remove the Supply from seller
-      GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,PartOfWhatIWant);
-      MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,PartOfWhatIWant);
-      AmountOfGoodIWant-=PartOfWhatIWant;
-    }
- 
-
   }
+
+  //Check to see if this person is employed
+  if (!rHaveAJob){
+
+    //    cout<<"Hello from "<<this->GetBaseId()<<" in get job"<<endl;
+
+    //Get a job
+    JobInfo jInfo= MarketManager::Get()->GetBestJob();
+    if (jInfo.EmployerID==-1){
+      cout<<"No jobs "<<endl;
+      
+    }else{
+      rHaveAJob=true;
+      MarketManager::Get()->BrokerJob(this,(Company*)fConnections[jInfo.EmployerID],jInfo.salary);
+      dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<endl;
+    }
+  }
+
+
+  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
+    ActorLogger::Get()->DuringMessage(dayNotes.str());
+  }
+
+    
 }
 
 bool Person::EndOfStep(){
@@ -157,14 +206,14 @@ bool Person::EndOfStep(){
   stringstream s;
   //Preform End of step things
   bool ret;
-  if (fSupplies[0].GetNumberOfCopies()< 1){
+  if (fSupplies[0].GetNumberOfCopies()< rGluttoness){
     //cout<<"\n\n\nI DIED"<<endl;
     s<<"I have died :( "<<endl;
     ret=true;
   }else {
-    fSupplies[0].RemoveCopies(1);
+    fSupplies[0].RemoveCopies(rGluttoness);
     //    GoodManager::Get()->RemoveSupply(0,1);
-    s<<"I ate a food "<<endl;
+    s<<"I ate "<<rGluttoness<<" foods "<<endl;
     ret=false;
   }
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
