@@ -26,9 +26,9 @@ EconomicActorManager::~EconomicActorManager(){
   
 
 
-  for (int i=0;i<rTheListOfActors.size();i++){
+  for (auto i : rTheListOfActors){
 
-    delete rTheListOfActors[i];
+    delete i.second;
 
   }
 
@@ -44,18 +44,19 @@ void EconomicActorManager::Initialize(){
 void EconomicActorManager::BuildList(int NumberOfPeople){
   rTheListOfActors.clear();//Clear the list 
   rNumPeople=NumberOfPeople;
-  rTheListOfActors.resize(NumberOfPeople);
+ 
+  //rTheListOfActors.resize(NumberOfPeople);
 
-  for (int i=0;i<NumberOfPeople;i++){
-    rTheListOfActors[i]->Initialize();
-    int thisEntriesNumConnections = RandomManager::GetRand(rInitialTopConectivity);
-    for (int j=0;j<thisEntriesNumConnections;j++){
-      int n= RandomManager::GetRand(NumberOfPeople);
-      if (n != i ){
-	rTheListOfActors[i]->MakeConnection(rTheListOfActors[n]);
-      }
-    }
-  }
+  // for (int i=0;i<NumberOfPeople;i++){
+  //   rTheListOfActors[i]->Initialize();
+  //   int thisEntriesNumConnections = RandomManager::GetRand(rInitialTopConectivity);
+  //   for (int j=0;j<thisEntriesNumConnections;j++){
+  //     int n= RandomManager::GetRand(NumberOfPeople);
+  //     if (n != i ){
+  // 	rTheListOfActors[i]->MakeConnection(rTheListOfActors[n]);
+  //     }
+  //   }
+  // }
 
 
 }
@@ -65,11 +66,13 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   //  rTheListOfActors.resize(NumberOfActors);
 
   for (int i=0;i<NumberOfActors;i++){
-    rTheListOfActors.push_back( new Person());
+    EconomicActor * a = new Person();
+    rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
   }
-  ActorLogger::Get()->thePerson=rTheListOfActors[0]->GetBaseId();
+  ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
   for (int i=0;i<1*NumberOfActors;i++){
-      rTheListOfActors.push_back(new Manufacturer());
+    EconomicActor * a = new Manufacturer();
+    rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
   }
   rNumPeople=rTheListOfActors.size();
   
@@ -77,7 +80,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     rTheListOfActors[i]->Initialize();
     for (int j=0;j<rTheListOfActors.size();j++){
       if (i != j){
-	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
+  	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
       }
     }
   }
@@ -89,8 +92,12 @@ void EconomicActorManager::DoAStep(){
 
   //First in each step call begin of step for all economic actors
 
-  for (int i=0;i<rTheListOfActors.size();i++){
-    rTheListOfActors[i]->BeginningOfStep();
+  // for (int i=0;i<rTheListOfActors.size();i++){
+  //   rTheListOfActors[i]->BeginningOfStep();
+  // }
+
+  for (auto i : rTheListOfActors){
+    i.second->BeginningOfStep();
   }
 
   // rTheListOfActors[0]->DumpSupplies();
@@ -114,7 +121,7 @@ void EconomicActorManager::DoAStep(){
 
   
   for (auto & i : rTheListOfActors ){
-    i->DoStep();
+    i.second->DoStep();
   }
 
   // for (auto & i : rTheListOfActors){
@@ -126,27 +133,30 @@ void EconomicActorManager::DoAStep(){
 
   vector <int> ToBeKilled;
   //Call end of step for every actor in the list 
-  for (int i=0;i<rTheListOfActors.size();i++){
-    if (rTheListOfActors[i]->EndOfStep()){
+  for (auto i : rTheListOfActors){
+
+    if (i.second->EndOfStep()){
 
       //This actor died
       //Remove reference to it from everyone else 
       //Replace the pointer to a DeadActor object
       //This way we don't need to move the vector
       //IE don't need to call erase
-      KillActor(rTheListOfActors[i]);
+      KillActor(i.second);
 
-      delete rTheListOfActors[i];
-      ToBeKilled.push_back(i);
+      delete i.second;
+      ToBeKilled.push_back(i.first);
       //Make pointer point to an empty class
-      //      rTheListOfActors[i]=new DeadActor();
+      EconomicActor * a = new DeadActor();
+      rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+
       rNumberOfDeaths++;
     }
   }
   
   cout<<"before "<<rTheListOfActors.size()<<" "<<ToBeKilled.size()<<endl;
   for (auto i : ToBeKilled){
-    rTheListOfActors.erase(rTheListOfActors.begin()+i);
+    //  rTheListOfActors.erase(rTheListOfActors.begin()+i);
   }
   cout<<"after "<<rTheListOfActors.size()<<endl;
 
@@ -188,7 +198,7 @@ void EconomicActorManager::PrintHavesWants(int index){
 
 void EconomicActorManager::PrintMoney(){
   for ( auto &i : rTheListOfActors){
-    cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
+    //   cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
   }
 
 }

@@ -2,7 +2,10 @@
 #ifndef __DATALOGGER_HH
 #define __DATALOGGER_HH
 
+#include <map>
 #include <vector>
+
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -24,7 +27,7 @@ public:
 
   void PushGoodPrice(int GoodNumber,double price,int supply);
   
-  void LogEndingMoneyDistribution( vector <EconomicActor*>* list);
+  void LogEndingMoneyDistribution( map <int,EconomicActor*>* list);
 private:
   DataLogger();
 

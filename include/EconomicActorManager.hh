@@ -9,6 +9,7 @@
 
 #include "Base.hh"
 #include <vector>
+#include <map>
 using namespace std;
 
 
@@ -39,17 +40,17 @@ public:
   void KillActor(EconomicActor*);
 
   //  void SetPersonToLog(int v);
-  vector <EconomicActor*> * GetList(){return &rTheListOfActors;}
+  map <int,EconomicActor*> * GetList(){return &rTheListOfActors;}
 
   void Test(){
-    KillActor(rTheListOfActors[4]);
+    //    KillActor(rTheListOfActors[4]);
   }
 
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
   int rNumPeople;
-  std::vector <EconomicActor*> rTheListOfActors;
+  std::map <int,EconomicActor*> rTheListOfActors;
 
   int rPersonToLog;
 
