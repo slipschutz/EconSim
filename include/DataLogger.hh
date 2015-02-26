@@ -4,7 +4,7 @@
 
 #include <map>
 #include <vector>
-
+#include <unordered_map>
 
 #include <iostream>
 #include <string>
@@ -27,7 +27,7 @@ public:
 
   void PushGoodPrice(int GoodNumber,double price,int supply);
   
-  void LogEndingMoneyDistribution( map <int,EconomicActor*>* list);
+  void LogEndingMoneyDistribution( unordered_map <int,EconomicActor*>* list);
 private:
   DataLogger();
 

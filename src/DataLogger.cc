@@ -62,7 +62,7 @@ void DataLogger::pWriteToDisk(){
 
 
 
-void DataLogger::LogEndingMoneyDistribution(map <int,EconomicActor*>* list){
+void DataLogger::LogEndingMoneyDistribution(unordered_map <int,EconomicActor*>* list){
   
   for (auto & i : *list){
     pFileForEndingMoneyDistribution<<i.second->GetActorType()<<" " <<i.second->GetMoney()<<endl;

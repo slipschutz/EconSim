@@ -40,7 +40,8 @@ void Person::Initialize(){
   
   rRestlessness=RandomManager::GetRand(100);
   rGluttoness=RandomManager::GetRand(10)+1;
-  
+  rInvestmentLevel=RandomManager::GetRand(100);
+
   rHaveAJob=false;
 }
 
@@ -70,8 +71,9 @@ void Person::DumpConnections(){
 }
 
 
-void Person::BeginningOfStep(){
+ActorActions Person::BeginningOfStep(){
 
+  ActorActions ret=ActorActions::None;
   //Check to see if this person has food (GOOD ID=0)
 
   if (fSupplies.count(0) == 0) {
@@ -96,12 +98,19 @@ void Person::BeginningOfStep(){
     AddDemand(d,1);
     s<<"Diary I just have to have a new "<<d<<" or else no one will like me"<<endl;
   }
+  
+
+  if (RandomManager::GetRand(100)< 30){
+    s<<"Diary it is time i started a compnay"<<endl;
+    ret=ActorActions::StartedCompany;
+  }
 
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
     ActorLogger::Get()->LogBeforeStepState(this);
     ActorLogger::Get()->BeforeMessage(s.str());
   }
 
+  return ret;
 }
 
 void Person::DoStep(){
@@ -201,20 +210,20 @@ void Person::DoStep(){
     
 }
 
-bool Person::EndOfStep(){
+ActorActions Person::EndOfStep(){
   //cout<<"IN end of step for "<<this->GetBaseId()<<" SUpply "<<fSupplies[0].GetNumberOfCopies()<<endl;
   stringstream s;
   //Preform End of step things
-  bool ret;
+  ActorActions ret;
   if (fSupplies[0].GetNumberOfCopies()< rGluttoness){
     //cout<<"\n\n\nI DIED"<<endl;
     s<<"I have died :( "<<endl;
-    ret=true;
+    ret=ActorActions::Died;
   }else {
     fSupplies[0].RemoveCopies(rGluttoness);
     //    GoodManager::Get()->RemoveSupply(0,1);
     s<<"I ate "<<rGluttoness<<" foods "<<endl;
-    ret=false;
+    ret=ActorActions::None;
   }
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
     ActorLogger::Get()->LogAfterStepState(this);

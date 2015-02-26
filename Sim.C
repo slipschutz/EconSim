@@ -24,13 +24,14 @@
 #include "MarketManager.hh"
 
 #include "ActorLogger.hh"
+#include "Exceptions.hh"
 using namespace  std;
 
 void TestGoodStuff(){
   Person aPerson;
   
-  Manufacturer aManu;
-  Manufacturer anotherManu;
+  Manufacturer aManu(1000);
+  Manufacturer anotherManu(1000);
   
   anotherManu.Initialize();
   aPerson.Initialize();
@@ -74,52 +75,55 @@ void TestGoodStuff(){
 
 
 }
+
+
+
 int main(int argv, char ** argc){
   // TestGoodStuff();
 
-  // vector<EconomicActor*> v;
-  // for (int i=0;i<100;i++){
-  //   v.push_back(new DeadActor());
-  // }
-  // cout<<"Done"<<endl;
-  // for (int i=0;i<v.size();i++){
-  //   delete v[i];
-  // }
 
-  // return 3;
+  //  return 3;
 
-  EconomicActorManager *  theManager = new EconomicActorManager();
-  
-  DataLogger::Get();
-
-  theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
-
-  cout<<"BUILT NETWORK"<<endl;
-
-  
-  for (int i=0;i<Settings::NumberOfSteps;i++){
+  try{
+    EconomicActorManager *  theManager = new EconomicActorManager();
     
-    theManager->DoAStep();
-    if (i%100==0){
-      cout<<"ON "<<i<<endl;
-    }
-    MarketManager::Get()->ClearMarket();
-    Calendar::DayNumber++;
-  }
-
-
-  GoodManager::Get()->Dump();
-
-  //theManager.PrintMoney();
-  // theManager.PrintHavesWants();
-  DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
-
-  delete theManager;
+    DataLogger::Get();
+    
+    theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
   
-  ActorLogger::Get()->DumpLog();
+    cout<<"BUILT NETWORK"<<endl;
 
-  if (DataLogger::Get() != NULL){
-    delete DataLogger::Get();
+  
+    for (int i=0;i<Settings::NumberOfSteps;i++){
+    
+      theManager->DoAStep();
+      if (i%100==0){
+	cout<<"ON "<<i<<endl;
+      }
+      MarketManager::Get()->ClearMarket();
+      Calendar::DayNumber++;
+    }
+
+
+ 
+    GoodManager::Get()->Dump();
+
+    //theManager.PrintMoney();
+    // theManager.PrintHavesWants();
+    DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
+
+    delete theManager;
+  
+    ActorLogger::Get()->DumpLog();
+
+    if (DataLogger::Get() != NULL){
+      delete DataLogger::Get();
+    }
+  } catch (exception &e){
+    cout<<"Fatal Exception Must exit"<<endl;
+    cout<<e.what()<<endl;
   }
-  return 0;
+  
+
+   return 0;
 }

@@ -15,6 +15,13 @@
 using namespace std;
 
 
+enum class ActorActions{
+  Died,
+  None,
+  StartedCompany
+};
+  
+
 class EconomicActor : public Base {
 public:
   EconomicActor();
@@ -37,8 +44,8 @@ public:
   //that actor has died.  for people this will mean
   //they ran out of food.  for company's ran out of money
   //means there dead
-  virtual bool EndOfStep()=0;
-  virtual void BeginningOfStep()=0;
+  virtual ActorActions EndOfStep()=0;
+  virtual ActorActions BeginningOfStep()=0;
   virtual void Initialize()=0;
   virtual void DoStep()=0;
   virtual bool CheckTransactionMatch(int,EconomicActor*)=0;

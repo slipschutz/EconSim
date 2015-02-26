@@ -27,8 +27,8 @@ public:
     }
   }
 
-  bool EndOfStep(){}
-  void BeginningOfStep(){};
+  ActorActions EndOfStep(){return ActorActions::None;}
+  ActorActions BeginningOfStep(){return ActorActions::None;};
   void DoStep(){}
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
   int GetActorType(){return 111;}

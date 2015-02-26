@@ -23,8 +23,8 @@ public:
   void DumpConnections();
   void DoStep();
 
-  bool EndOfStep();
-  void BeginningOfStep();
+  ActorActions EndOfStep();
+  ActorActions BeginningOfStep();
 
   bool CheckTransactionMatch(int,EconomicActor*);  
   
@@ -35,12 +35,16 @@ public:
   double GetWorth(Good);
   void YourFired(){rHaveAJob=false;}
   
+  double GetCompanyInvestment(){return (rInvestmentLevel/100.)*fMoney;}
+
 private:
 
   //Some person specific traits
   //all things 0-100
   int rRestlessness;//How likely person will develop a want other than food
   int rGluttoness;//How much food some one eats
+  
+  int rInvestmentLevel;
   
   bool rHaveAJob;
   

@@ -10,6 +10,7 @@
 #include "Base.hh"
 #include <vector>
 #include <map>
+#include <unordered_map>
 using namespace std;
 
 
@@ -38,9 +39,10 @@ public:
   void DoAStep();
 
   void KillActor(EconomicActor*);
+  void MakeActor(EconomicActor*);
 
   //  void SetPersonToLog(int v);
-  map <int,EconomicActor*> * GetList(){return &rTheListOfActors;}
+  unordered_map <int,EconomicActor*> * GetList(){return &rTheListOfActors;}
 
   void Test(){
     //    KillActor(rTheListOfActors[4]);
@@ -50,11 +52,14 @@ private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
   int rNumPeople;
-  std::map <int,EconomicActor*> rTheListOfActors;
+  std::unordered_map <int,EconomicActor*> rTheListOfActors;
+
+  vector <int> rTheIds;///<Vector that is used to determine the order that the Actors act in
 
   int rPersonToLog;
 
   int rNumberOfDeaths;
+  int rNumberOfBirths;
 };
 
 

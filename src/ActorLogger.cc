@@ -73,7 +73,7 @@ void ActorLogger::DumpLog(){
     cout<<"NO MATCH"<<endl;
     cout<<"Before "<<size<<endl;
     cout<<"after "<<size2<<endl;
-    throw;
+    //    throw;
   }
 
   for (int i=0;i<size;i++){

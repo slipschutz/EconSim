@@ -25,8 +25,8 @@ public:
 
   void Initialize(){}
   
-  void BeginningOfStep(){}
-  bool EndOfStep(){return false;}//Already dead can't die again
+  ActorActions BeginningOfStep(){return ActorActions::None;}
+  ActorActions EndOfStep(){return ActorActions::None;}//Already dead can't die again
   void Intialize(){}
   void DoStep(){}
   bool CheckTransactionMatch(int,EconomicActor*){return false;}

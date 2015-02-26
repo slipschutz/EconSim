@@ -20,8 +20,8 @@ using namespace std;
 
 class Manufacturer : public Company {
 public:
-  Manufacturer(){
-
+  Manufacturer(double money){
+    fMoney=money;
   };
   virtual ~Manufacturer(){
     //    cout<<"IN ~Manufacture()"<<endl;
@@ -30,8 +30,8 @@ public:
   
   /**Required Abstract methods */
   void Initialize();
-  bool EndOfStep();
-  void BeginningOfStep();
+  ActorActions EndOfStep();
+  ActorActions BeginningOfStep();
   void DoStep(){}
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
 
@@ -41,7 +41,7 @@ public:
 
 
   void DumpConnections();
-
+  int GetGoodToManufacture(){return GoodToManufacture;}
 private:
 
   int GoodToManufacture;

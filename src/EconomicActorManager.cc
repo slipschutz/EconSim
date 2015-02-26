@@ -14,17 +14,21 @@
 #include "MarketManager.hh"
 #include "GoodManager.hh"
 
+#include "Exceptions.hh"
+
 EconomicActorManager::EconomicActorManager() {
   //  srand(0);
   rInitialTopConectivity=20;
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
 
   rNumberOfDeaths=0;
+  rNumberOfBirths=0;
+  
+
 }
 
 EconomicActorManager::~EconomicActorManager(){
   
-
 
   for (auto i : rTheListOfActors){
 
@@ -34,6 +38,7 @@ EconomicActorManager::~EconomicActorManager(){
 
   rTheListOfActors.clear();
   cout<<"There were "<<rNumberOfDeaths<<" deaths"<<endl;
+  cout<<"There were "<<rNumberOfBirths<<" births"<<endl;
 }
 void EconomicActorManager::Initialize(){
 
@@ -64,23 +69,41 @@ void EconomicActorManager::BuildList(int NumberOfPeople){
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   rNumPeople=NumberOfActors;
   //  rTheListOfActors.resize(NumberOfActors);
+  
 
+  
   for (int i=0;i<NumberOfActors;i++){
     EconomicActor * a = new Person();
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+    rTheIds.push_back(a->GetBaseId());
   }
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
-  for (int i=0;i<1*NumberOfActors;i++){
-    EconomicActor * a = new Manufacturer();
+  for (int i=0;i<0.1*NumberOfActors;i++){
+    EconomicActor * a = new Manufacturer(1000);//Have these initial companies start with 1000 dollars
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+    rTheIds.push_back(a->GetBaseId());
   }
   rNumPeople=rTheListOfActors.size();
   
-  for (int i=0;i<rTheListOfActors.size();i++){
-    rTheListOfActors[i]->Initialize();
-    for (int j=0;j<rTheListOfActors.size();j++){
-      if (i != j){
-  	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
+  if (rTheIds.size() !=rNumPeople){
+    MessageException e("<EconomicActorManager::BuildCompleteNetwor> Length of id list does not match number of actors");
+    throw e;
+  }
+
+  // for (int i=0;i<rTheListOfActors.size();i++){
+  //   rTheListOfActors[i]->Initialize();
+  //   for (int j=0;j<rTheListOfActors.size();j++){
+  //     if (i != j){
+  // 	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
+  //     }
+  //   }
+  // }
+
+  for (auto  i : rTheListOfActors){
+    i.second->Initialize();
+    for (auto j : rTheListOfActors){
+      if (i.first != j.first){
+	i.second->MakeConnection(j.second);
       }
     }
   }
@@ -95,10 +118,22 @@ void EconomicActorManager::DoAStep(){
   // for (int i=0;i<rTheListOfActors.size();i++){
   //   rTheListOfActors[i]->BeginningOfStep();
   // }
+  
+
 
   for (auto i : rTheListOfActors){
-    i.second->BeginningOfStep();
+    ActorActions a =i.second->BeginningOfStep();
+    if (a == ActorActions::StartedCompany){
+      double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
+      Manufacturer * c = new Manufacturer(startup);
+      c->Initialize();
+      i.second->SubtractMoney(startup);
+
+      MakeActor(c);
+    }
+
   }
+
 
   // rTheListOfActors[0]->DumpSupplies();
   // rTheListOfActors[0]->DumpDemands();
@@ -116,50 +151,51 @@ void EconomicActorManager::DoAStep(){
   // }
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
-
-  //  std::random_shuffle ( rTheListOfActors.begin(), rTheListOfActors.end(),RandomManager::GetRand );
+  std::random_shuffle ( rTheIds.begin(), rTheIds.end(),RandomManager::GetRand );
 
   
-  for (auto & i : rTheListOfActors ){
-    i.second->DoStep();
+  for (auto & i : rTheIds ){
+    auto it=rTheListOfActors.find(i);
+    if (it != rTheListOfActors.end()){
+      it->second->DoStep();
+    }
   }
-
-  // for (auto & i : rTheListOfActors){
-  //   cout<<i->GetBaseId()<<"("<<i->GetActorType()<<") ";
-  // }
-  // cout<<endl;
-  // int t;cin>>t;
   
 
   vector <int> ToBeKilled;
   //Call end of step for every actor in the list 
-  for (auto i : rTheListOfActors){
+  for (auto & i : rTheListOfActors){
 
-    if (i.second->EndOfStep()){
+    if (i.second->EndOfStep()==ActorActions::Died ){
 
       //This actor died
       //Remove reference to it from everyone else 
       //Replace the pointer to a DeadActor object
       //This way we don't need to move the vector
       //IE don't need to call erase
-      KillActor(i.second);
-
-      delete i.second;
       ToBeKilled.push_back(i.first);
-      //Make pointer point to an empty class
-      EconomicActor * a = new DeadActor();
-      rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
 
-      rNumberOfDeaths++;
+      KillActor(i.second);
+      delete i.second;
+
+      //Make pointer point to an empty class
+      
+      // EconomicActor * a = new DeadActor();
+      // rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+
+
     }
   }
   
-  cout<<"before "<<rTheListOfActors.size()<<" "<<ToBeKilled.size()<<endl;
-  for (auto i : ToBeKilled){
-    //  rTheListOfActors.erase(rTheListOfActors.begin()+i);
-  }
-  cout<<"after "<<rTheListOfActors.size()<<endl;
+  // for (int i=0;i<ToBeKilled.size();i++){
+  //   cout<<ToBeKilled[i]<<" ";
+  // }cout<<endl;
 
+
+ 
+  for (auto i : ToBeKilled){
+    rTheListOfActors.erase(i);
+  }
 
 }
 
@@ -174,12 +210,29 @@ void EconomicActorManager::KillActor(EconomicActor* act){
     //    ii.second should be pointer to connection
     ii.second->GetConnections()->erase(DeadMansBaseId);
   }
+
+      rNumberOfDeaths++;
+}
+
+void EconomicActorManager::MakeActor(EconomicActor* act){
+  //need to integrate this actor into all the lists and
+  //add it to the connections of everyone in the network
+  act->Initialize();
+  rTheListOfActors.insert(make_pair(act->GetBaseId(),act));
+  rTheIds.push_back(act->GetBaseId());
+  
+  for (auto it : rTheListOfActors){
+    if (it.second->GetBaseId() !=act->GetBaseId()){
+      act->MakeConnection(it.second);
+    }
+  }
+  rNumberOfBirths++;
 }
 
 void EconomicActorManager::PrintConnections(){
-  int numPeople = rTheListOfActors.size();
-  for (int i=0;i<numPeople;i++){
-    rTheListOfActors[i]->DumpConnections();
+
+  for (auto i: rTheListOfActors){
+    i.second->DumpConnections();
   }
 
 }

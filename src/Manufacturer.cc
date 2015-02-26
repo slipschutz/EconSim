@@ -13,7 +13,7 @@
 #include "Person.hh"
 #include "Good.hh"
 void Manufacturer::Initialize(){
-  fMoney=10000;
+
 
   //Pick a good to manufacturer
   GoodToManufacture=RandomManager::GetRand(Settings::MaxGoodNumber);
@@ -35,7 +35,7 @@ void Manufacturer::Initialize(){
 }
 
 
-void Manufacturer::BeginningOfStep(){
+ActorActions Manufacturer::BeginningOfStep(){
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
@@ -52,7 +52,9 @@ void Manufacturer::BeginningOfStep(){
       int t=RandomManager::GetRand(MaxVolume);
       Good temp(GoodToManufacture,t,fGoodPriorities[GoodToManufacture],"supply");
       fSupplies[GoodToManufacture]=temp;
-      
+      if(GoodToManufacture !=0){
+	cout<<"Made a "<<GoodToManufacture<<endl;
+      }
     } else {
       int AmountOfGood=fSupplies[GoodToManufacture].GetNumberOfCopies();
       int t=RandomManager::GetRand(MaxVolume);
@@ -74,32 +76,33 @@ void Manufacturer::BeginningOfStep(){
       MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
     }
   }
+
+  return ActorActions::None;
 }
 
 
-bool Manufacturer::EndOfStep(){
+ActorActions Manufacturer::EndOfStep(){
   //Pay the employees
-  bool GoingBankrupt=false;
+  ActorActions ret=ActorActions::None;
   for (auto & i : Employees2Salary ){
     double moneyToPay=i.second;
     if (moneyToPay > fMoney){
       //Can't pay that going bankrupt
-      GoingBankrupt=true;
+      ret=ActorActions::Died;
     }else {
       i.first->AddMoney(moneyToPay);
       this->SubtractMoney(moneyToPay);
     }
   }
   
-  if(GoingBankrupt){
+  if(ret==ActorActions::Died){
     for (auto & i : Employees2Salary){
       i.first->YourFired();
     }
-    
-    return true;
-  }else{
-    return false;
   }
+  return ret;
+    
+
 }
 
 
