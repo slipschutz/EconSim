@@ -33,21 +33,25 @@ public:
   void DumpHavesWants();
   
   double GetWorth(Good);
-  void YourFired(){rHaveAJob=false;}
+  void YourFired(){rHaveAJob=false;rEmployerId=-1;rWasFiredInPreviousStep=true;}
   
   double GetCompanyInvestment(){return (rInvestmentLevel/100.)*fMoney;}
 
+  void PrintInfo();
 private:
 
   //Some person specific traits
   //all things 0-100
   int rRestlessness;//How likely person will develop a want other than food
   int rGluttoness;//How much food some one eats
-  
+
+
   int rInvestmentLevel;
   
   bool rHaveAJob;
   
+  int rEmployerId;
 
+  bool rWasFiredInPreviousStep;
 };
 #endif

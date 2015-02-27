@@ -43,6 +43,8 @@ void Person::Initialize(){
   rInvestmentLevel=RandomManager::GetRand(100);
 
   rHaveAJob=false;
+  rEmployerId=-1;
+  rWasFiredInPreviousStep=false;
 }
 
 void Person::DumpHavesWants(){
@@ -100,11 +102,16 @@ ActorActions Person::BeginningOfStep(){
   }
   
 
-  if (RandomManager::GetRand(100)< 30){
+  if (RandomManager::GetRand(100)< 2){
     s<<"Diary it is time i started a compnay"<<endl;
     ret=ActorActions::StartedCompany;
   }
-
+  
+  if (rWasFiredInPreviousStep==true){
+    rWasFiredInPreviousStep=false;
+    s<<"Diary i was fired in yesterday"<<endl;
+  }
+  
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
     ActorLogger::Get()->LogBeforeStepState(this);
     ActorLogger::Get()->BeforeMessage(s.str());
@@ -187,17 +194,14 @@ void Person::DoStep(){
 
   //Check to see if this person is employed
   if (!rHaveAJob){
-
-    //    cout<<"Hello from "<<this->GetBaseId()<<" in get job"<<endl;
-
     //Get a job
     JobInfo jInfo= MarketManager::Get()->GetBestJob();
     if (jInfo.EmployerID==-1){
       cout<<"No jobs "<<endl;
-      
     }else{
       rHaveAJob=true;
       MarketManager::Get()->BrokerJob(this,(Company*)fConnections[jInfo.EmployerID],jInfo.salary);
+      rEmployerId=jInfo.EmployerID;
       dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<endl;
     }
   }
@@ -232,6 +236,15 @@ ActorActions Person::EndOfStep(){
   return ret;
 }
 
+
+void Person::PrintInfo(){
+  PrintLine('v',30);
+  cout<<"Info for <Person> Base id "<<this->GetBaseId()<<" actor type "<<this->GetActorType()<<endl;
+  cout<<"Has Job? "<<rHaveAJob<<" employer "<<rEmployerId<<endl;
+  cout<<"I have "<<fMoney<<" monies"<<endl;
+  //  DumpSupplies();
+  PrintLine('^',30);
+}
  
 /*
 void DoBuy(int good,int connection){

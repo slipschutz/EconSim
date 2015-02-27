@@ -111,7 +111,11 @@ void EconomicActor::DumpDemands(){
 
   PrintLine('^',30);
 }
-
+void EconomicActor::PrintInfo(){
+  PrintLine('v',30);
+  cout<<"Info for <EconomicActor> Base Id "<<this->GetBaseId()<<" it is a "<<this->GetActorType()<<endl;
+  PrintLine('^',30);
+}
 
 void EconomicActor::AddDemand(int GoodNumber,int copies){
   //Regardless of wether the actor has this demand already

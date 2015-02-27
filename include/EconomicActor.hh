@@ -37,6 +37,7 @@ public:
   virtual void DumpSupplies();
   virtual void DumpDemands();
 
+  virtual void PrintInfo();
   /** Abstract Methods 
 
    */

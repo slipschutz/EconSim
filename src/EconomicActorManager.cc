@@ -15,6 +15,7 @@
 #include "GoodManager.hh"
 
 #include "Exceptions.hh"
+#include "Calendar.hh"
 
 EconomicActorManager::EconomicActorManager() {
   //  srand(0);
@@ -118,20 +119,29 @@ void EconomicActorManager::DoAStep(){
   // for (int i=0;i<rTheListOfActors.size();i++){
   //   rTheListOfActors[i]->BeginningOfStep();
   // }
-  
 
+
+  // for (auto i : rTheListOfActors){
+  //   i.second->PrintInfo();
+  // }
+  if (Calendar::DayNumber % 10 == 0){
+    GoodManager::Get()->Dump();
+    int dd;cin>>dd;
+  }
+
+  vector <EconomicActor*> listOfNewActors;
 
   for (auto i : rTheListOfActors){
     ActorActions a =i.second->BeginningOfStep();
-    if (a == ActorActions::StartedCompany){
+    if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
       double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
-      Manufacturer * c = new Manufacturer(startup);
-      c->Initialize();
       i.second->SubtractMoney(startup);
-
-      MakeActor(c);
+      listOfNewActors.push_back(new Manufacturer(startup));
     }
-
+  }
+  
+  for (auto & i : listOfNewActors){
+    MakeActor(i);
   }
 
 

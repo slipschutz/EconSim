@@ -24,6 +24,8 @@ void Manufacturer::Initialize(){
 
   MaxVolume = RandomManager::GetRand(5)+1000;///CAN"T BE 0
 
+  rTotalVolumeCreated=0;
+
   for (int i=0;i<fGoodPriorities.size();i++){
     fGoodPriorities[i]=RandomManager::GetRand(Settings::MaxGoodPriority);
   }
@@ -43,7 +45,7 @@ ActorActions Manufacturer::BeginningOfStep(){
   
   
   
-  if ( Employees2Salary.size() >10 ){
+  if ( Employees2Salary.size() > 0 ){
     
     if (fSupplies.find(GoodToManufacture) == fSupplies.end()){
       //Good isn't there yet
@@ -52,6 +54,7 @@ ActorActions Manufacturer::BeginningOfStep(){
       int t=RandomManager::GetRand(MaxVolume);
       Good temp(GoodToManufacture,t,fGoodPriorities[GoodToManufacture],"supply");
       fSupplies[GoodToManufacture]=temp;
+      rTotalVolumeCreated+=t;
       if(GoodToManufacture !=0){
 	cout<<"Made a "<<GoodToManufacture<<endl;
       }
@@ -59,7 +62,7 @@ ActorActions Manufacturer::BeginningOfStep(){
       int AmountOfGood=fSupplies[GoodToManufacture].GetNumberOfCopies();
       int t=RandomManager::GetRand(MaxVolume);
       fSupplies[GoodToManufacture].AddCopies(t);
-      
+      rTotalVolumeCreated+=t;
     }
   
     if ( fSupplies[GoodToManufacture].GetNumberOfCopies()<0){
@@ -96,6 +99,8 @@ ActorActions Manufacturer::EndOfStep(){
   }
   
   if(ret==ActorActions::Died){
+    cout<<"I am a manufacturer going out of business "<<GetBaseId()<<endl;
+    cout<<"I had "<<Employees2Salary.size()<<" employees"<<endl;
     for (auto & i : Employees2Salary){
       i.first->YourFired();
     }
@@ -113,4 +118,13 @@ void Manufacturer::DumpConnections(){
   }
 
 
+}
+
+void Manufacturer::PrintInfo(){
+  PrintLine('v',30);
+  cout<<"Info for <Manufacturer> base id "<<this->GetBaseId()<<" actor type "<<this->GetActorType()<<endl;
+  cout<<"I have "<<Employees2Salary.size()<<" employees.  I make "<<GoodToManufacture<<endl;
+  cout<<"My Maximum volume is "<<MaxVolume<<" I have made "<<rTotalVolumeCreated<<" total"<<endl;
+  cout<<"I have "<<fMoney<<" monies"<<endl;
+  PrintLine('^',30);
 }
