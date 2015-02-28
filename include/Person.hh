@@ -10,7 +10,7 @@ using namespace std;
 
 
 #include "EconomicActor.hh"
-
+class Company;
 
 class Person : public EconomicActor {
 public:
@@ -33,7 +33,7 @@ public:
   void DumpHavesWants();
   
   double GetWorth(Good);
-  void YourFired(){rHaveAJob=false;rEmployerId=-1;rWasFiredInPreviousStep=true;}
+  void YourFired(){rHaveAJob=false;rEmployerId=-1;rWasFiredInPreviousStep=true;rEmployer=NULL;}
   
   double GetCompanyInvestment(){return (rInvestmentLevel/100.)*fMoney;}
 
@@ -51,6 +51,7 @@ private:
   bool rHaveAJob;
   
   int rEmployerId;
+  Company * rEmployer;
 
   bool rWasFiredInPreviousStep;
 };

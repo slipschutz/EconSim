@@ -201,6 +201,7 @@ void Person::DoStep(){
     }else{
       rHaveAJob=true;
       MarketManager::Get()->BrokerJob(this,(Company*)fConnections[jInfo.EmployerID],jInfo.salary);
+      rEmployer=(Company*)fConnections[jInfo.EmployerID];
       rEmployerId=jInfo.EmployerID;
       dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<endl;
     }
@@ -222,6 +223,10 @@ ActorActions Person::EndOfStep(){
   if (fSupplies[0].GetNumberOfCopies()< rGluttoness){
     //cout<<"\n\n\nI DIED"<<endl;
     s<<"I have died :( "<<endl;
+    if (rEmployer!=NULL){
+       rEmployer->RemoveEmployee(this);
+    }
+    
     ret=ActorActions::Died;
   }else {
     fSupplies[0].RemoveCopies(rGluttoness);

@@ -34,7 +34,7 @@ public:
   // bool CheckTransactionMatch(int, EconomicActor*){return true;}
   // virtual int GetActorType(){return ActorTypes::Company;}
   void AddEmployee(Person * ,double salary);
- 
+  void RemoveEmployee(Person *);
 protected:
  
   map<Person*,double> Employees2Salary;

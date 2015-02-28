@@ -27,3 +27,13 @@ void Company::AddEmployee(Person *a ,double salary){
     Employees2Salary.insert(make_pair(a,salary));
   }
 }
+
+
+void Company::RemoveEmployee(Person * p){
+  auto it = Employees2Salary.find(p);
+  
+  if (it != Employees2Salary.end()){//Employees is there
+    Employees2Salary.erase(it);
+  }
+
+}

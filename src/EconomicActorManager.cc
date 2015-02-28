@@ -126,7 +126,7 @@ void EconomicActorManager::DoAStep(){
   // }
   if (Calendar::DayNumber % 10 == 0){
     GoodManager::Get()->Dump();
-    int dd;cin>>dd;
+
   }
 
   vector <EconomicActor*> listOfNewActors;
