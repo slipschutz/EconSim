@@ -22,7 +22,7 @@ void Manufacturer::Initialize(){
   Conservativeness=RandomManager::GetRand(1000)/1000.0;
   Steadfastness=RandomManager::GetRand(1000)/1000.0;
 
-  MaxVolume = RandomManager::GetRand(5)+1000;///CAN"T BE 0
+  MaxVolume = RandomManager::GetRand(5)+10;///CAN"T BE 0
 
   rTotalVolumeCreated=0;
 
@@ -42,11 +42,8 @@ ActorActions Manufacturer::BeginningOfStep(){
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
   ////////////////////////////////////////////////////////////
-  
-  
-  
-  if ( Employees2Salary.size() > 0 ){
     
+  if ( Employees2Salary.size() > 0 ){
     if (fSupplies.find(GoodToManufacture) == fSupplies.end()){
       //Good isn't there yet
       //Only manufacturers should be able to make goods
@@ -55,9 +52,6 @@ ActorActions Manufacturer::BeginningOfStep(){
       Good temp(GoodToManufacture,t,fGoodPriorities[GoodToManufacture],"supply");
       fSupplies[GoodToManufacture]=temp;
       rTotalVolumeCreated+=t;
-      if(GoodToManufacture !=0){
-	cout<<"Made a "<<GoodToManufacture<<endl;
-      }
     } else {
       int AmountOfGood=fSupplies[GoodToManufacture].GetNumberOfCopies();
       int t=RandomManager::GetRand(MaxVolume);
@@ -70,6 +64,7 @@ ActorActions Manufacturer::BeginningOfStep(){
       throw 1;
     }
     if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
+
       MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
 					   fSupplies[GoodToManufacture].GetNumberOfCopies(),
 					   fSupplies[GoodToManufacture].GetNormPriority()*100);
@@ -92,6 +87,7 @@ ActorActions Manufacturer::EndOfStep(){
     if (moneyToPay > fMoney){
       //Can't pay that going bankrupt
       ret=ActorActions::Died;
+      break;
     }else {
       i.first->AddMoney(moneyToPay);
       this->SubtractMoney(moneyToPay);
@@ -99,14 +95,12 @@ ActorActions Manufacturer::EndOfStep(){
   }
   
   if(ret==ActorActions::Died){
-    cout<<"I am a manufacturer going out of business "<<GetBaseId()<<endl;
-    cout<<"I had "<<Employees2Salary.size()<<" employees"<<endl;
     for (auto & i : Employees2Salary){
       i.first->YourFired();
     }
+
   }
   return ret;
-    
 
 }
 
