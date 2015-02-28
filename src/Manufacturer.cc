@@ -12,6 +12,8 @@
 #include "GoodManager.hh"
 #include "Person.hh"
 #include "Good.hh"
+#include "EconomicActorManager.hh"
+
 void Manufacturer::Initialize(){
 
 
@@ -80,12 +82,15 @@ ActorActions Manufacturer::BeginningOfStep(){
 
 
 ActorActions Manufacturer::EndOfStep(){
-  //Pay the employees
+
   ActorActions ret=ActorActions::None;
-  for (auto & i : Employees2Salary ){
+
+  //Pay the employees if able
+  for (auto & i : Employees2Salary){
     double moneyToPay=i.second;
     if (moneyToPay > fMoney){
       //Can't pay that going bankrupt
+      fTheEconomicActorManager->MarkForDeath(this);
       ret=ActorActions::Died;
       break;
     }else {
@@ -94,14 +99,7 @@ ActorActions Manufacturer::EndOfStep(){
     }
   }
   
-  if(ret==ActorActions::Died){
-    for (auto & i : Employees2Salary){
-      i.first->YourFired();
-    }
-
-  }
   return ret;
-
 }
 
 
