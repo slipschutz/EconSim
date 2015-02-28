@@ -11,13 +11,11 @@ using namespace std;
 
 
 //Include local headers
-#include "EconomicActor.hh"
+#include "Person.hh"
 
-class Person;
 /**ABC for the company chain of classe.  Will be base class
    for the different types of companies.  Manufacturer, retailer ect...
-
- */
+*/
 
 class Company : public EconomicActor{
 

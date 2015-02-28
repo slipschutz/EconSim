@@ -14,8 +14,12 @@ Company::Company(EconomicActorManager* man ) : EconomicActor(man){
 
 
 Company::~Company(){
-  //  cout<<"~company()"<<endl;
-
+  //This compnay is being deleted.  Clean up its employees
+  for (auto i : Employees2Salary){
+    i.first->YourFired();
+  }
+  Employees2Salary.clear();//Clear list of pointers
+  
 
 }
 
