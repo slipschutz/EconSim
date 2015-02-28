@@ -170,7 +170,7 @@ void EconomicActor::RemoveSupply(int GoodNumber,int Quantity){
   auto theSupply = fSupplies.find(GoodNumber);
   if (theSupply->second.GetNumberOfCopies() < Quantity){
     cout<<"Trying to remove "<<Quantity <<" copies of "<<GoodNumber <<" from "<<this->GetBaseId()<<" but there are only "<<
-      theSupply->second.GetNumberOfCopies()<<endl;
+      theSupply->second.GetNumberOfCopies()<<" it is a "<<this->GetActorType()<<endl;
     throw 3;
   }
 
@@ -207,7 +207,8 @@ void EconomicActor::RemoveDemand(int GoodNumber,int Quantity){
   }else {
     int temp = theDemand->second.GetNumberOfCopies();
     if ( temp < Quantity){
-      cout<<"Trying to remove "<<Quantity <<" copies of "<<GoodNumber <<" form "<<this->GetBaseId()<<" but there are only "<<temp<<endl;
+      cout<<"Trying to remove "<<Quantity <<" copies of "<<GoodNumber <<" form "<<this->GetBaseId()<<" but there are only "<<temp<<
+	" it is a "<<this->GetActorType()<<endl;
       throw 3;
     }
     theDemand->second.RemoveCopies(Quantity);
