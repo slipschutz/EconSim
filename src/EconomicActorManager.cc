@@ -90,7 +90,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     rTheIds.push_back(a->GetBaseId());
   }
   rNumPeople=rTheListOfActors.size();
-  
+  cout<<"TOTAL NUMBER OF ACTORS "<<rNumPeople<<endl;
   if (rTheIds.size() !=rNumPeople){
     MessageException e("<EconomicActorManager::BuildCompleteNetwor> Length of id list does not match number of actors");
     throw e;
@@ -118,10 +118,13 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 
 void EconomicActorManager::DoAStep(){
-
+  rTheIds.clear();
 
   for (auto i : rTheListOfActors){
     ActorActions a =i.second->BeginningOfStep();
+
+    //Recreate the ids list
+    rTheIds.push_back(i.first);
 
 
     // if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
@@ -134,20 +137,6 @@ void EconomicActorManager::DoAStep(){
   
 
 
-  // rTheListOfActors[0]->DumpSupplies();
-  // rTheListOfActors[0]->DumpDemands();
-  
-  // GoodManager::Get()->Dump();
-  //Each call to make transactions will pick some number
-  //of random people and those people will have transactions
-  
-  //  MarketManager::Get()->Dump();
-
-  // cout<<endl;
-  // for (map<int,bool>::iterator ii = tempPersonMap.begin();ii!=tempPersonMap.end();
-  //      ii++){
-  //   rTheListOfActors[ii->first]->DoStep();
-  // }
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
   std::random_shuffle ( rTheIds.begin(), rTheIds.end(),RandomManager::GetRand );
@@ -161,42 +150,33 @@ void EconomicActorManager::DoAStep(){
   }
   
 
-  vector <int> ToBeKilled;
+  rToBeKilled.clear();//Make sure that this is empty
+
   //Call end of step for every actor in the list 
   for (auto & i : rTheListOfActors){
-
-    if (i.second->EndOfStep()==ActorActions::Died ){
-
-      //This actor died
-      //Remove reference to it from everyone else 
-      //Replace the pointer to a DeadActor object
-      //This way we don't need to move the vector
-      //IE don't need to call erase
-      ToBeKilled.push_back(i.first);
-
-      KillActor(i.second);
-      delete i.second;
-
-      //Make pointer point to an empty class
-      
-      // EconomicActor * a = new DeadActor();
-      // rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
-
-
-    }
+    i.second->EndOfStep();
   }
   
-
-  for (auto i : ToBeKilled){
+  //Need to clean up the list of actors 
+  //and the list of IDs
+  for (auto i : rToBeKilled){
+    delete rTheListOfActors[i];
     rTheListOfActors.erase(i);
+    rNumberOfDeaths++;
+    Death::Get()->AddDead(i,Calendar::DayNumber);
   }
-
+  
+  //Clear the id list.  It seems difficult 
+  //to go through and find the ids of dead actors as they
+  //are in a random order
+  rTheIds.clear();
 }
 
-void EconomicActorManager::KillActor(EconomicActor* act){
+void EconomicActorManager::MarkForDeath(EconomicActor* act){
+
   //This method will remove all connections the actor has 
   int DeadMansBaseId=act->GetBaseId();
-
+  
   //Loop over the connections and remove this actor from
   //the list of everyone else
   for ( auto & ii : (*act->GetConnections())){
@@ -205,8 +185,8 @@ void EconomicActorManager::KillActor(EconomicActor* act){
     ii.second->GetConnections()->erase(DeadMansBaseId);
   }
 
-  rNumberOfDeaths++;
-  Death::Get()->AddDead(DeadMansBaseId,Calendar::DayNumber);
+  rToBeKilled.push_back(DeadMansBaseId);
+  
 }
 
 void EconomicActorManager::MakeActor(EconomicActor* act){

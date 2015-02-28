@@ -39,7 +39,7 @@ public:
 
   void DoAStep();
 
-  void KillActor(EconomicActor*);
+  void MarkForDeath(EconomicActor*);
   void MakeActor(EconomicActor*);
 
   //  void SetPersonToLog(int v);
@@ -60,6 +60,7 @@ private:
   std::unordered_map <int,EconomicActor*> rTheListOfActors;
 
   vector <int> rTheIds;///<Vector that is used to determine the order that the Actors act in
+  vector <int> rToBeKilled;
 
   int rPersonToLog;
 
