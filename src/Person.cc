@@ -7,6 +7,7 @@
 #include "Calendar.hh"
 
 #include "Company.hh"
+#include "Manufacturer.hh"
 #include "EconomicActorManager.hh"
 
 int largestGoodNum=1;
@@ -18,7 +19,10 @@ Person::Person(EconomicActorManager* man) : EconomicActor(man){
 Person::~Person(){
   //Need to clean up this economic actor 
   //
-
+  if (rEmployer!=NULL){
+    rEmployer->RemoveEmployee(this);
+  }
+  
 }
 
 
@@ -81,21 +85,27 @@ ActorActions Person::BeginningOfStep(){
   //Check to see if this person has food (GOOD ID=0)
   if (fSupplies.count(0) == 0) {
     //Food is not in the supplies map
-    //Must get food
     AddSupply(0,0);//Make empty good
   }
 
   stringstream s;
   s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
 
+
+  //
+  //Add food Demand if in need of food
+  //
   if (fSupplies[0].GetNumberOfCopies() < rGluttoness){
-    //There are no copies of food in the supply
+    //There are not enough copies of food in the supply
     int n=RandomManager::GetRand(10)+rGluttoness;
     AddDemand(0,n);//Add the demand for food
-
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
+
   
+  //
+  //Add demands for random goods depending on restlessness of person
+  //
   if (RandomManager::GetRand(100) < rRestlessness){
     int d=RandomManager::GetRand(Settings::MaxGoodNumber);
     AddDemand(d,1);
@@ -105,14 +115,24 @@ ActorActions Person::BeginningOfStep(){
 
   if (RandomManager::GetRand(100)< 2){
     s<<"Diary it is time i started a compnay"<<endl;
-    ret=ActorActions::StartedCompany;
+    double startup=this->GetCompanyInvestment();
+    this->SubtractMoney(startup);
+    fTheEconomicActorManager->MakeActor(new Manufacturer(startup,fTheEconomicActorManager));
   }
   
+
+  //
+  //Message to keep track of whether this person got fired in previous step
+  //
   if (rWasFiredInPreviousStep==true){
     rWasFiredInPreviousStep=false;
     s<<"Diary i was fired in yesterday"<<endl;
   }
   
+
+  //
+  //If this is the magic person log info
+  //
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
     ActorLogger::Get()->LogBeforeStepState(this);
     ActorLogger::Get()->BeforeMessage(s.str());
@@ -122,6 +142,7 @@ ActorActions Person::BeginningOfStep(){
 }
 
 void Person::DoStep(){
+
   //check priorties list for things to buy
   stringstream dayNotes;
   if (fDemandPriorities2GoodNum.size()==0){
@@ -137,14 +158,17 @@ void Person::DoStep(){
     int totalWant= fDemands[Good2Buy].GetNumberOfCopies();
     int AmountOfGoodIWant =totalWant;
 
-    //  cout<<"This is person "<<this->GetBaseId()<<" I want "<<AmountOfGoodIWant<<endl;
+    
     while (AmountOfGoodIWant >0){
+
       OrderInfo info;
       int Seller=MarketManager::Get()->GetCheapestSeller(Good2Buy,info);
+
       if (Seller == -1 ){// there is no seller 
 	// cout<<"NO SELLER FOR "<<this->GetBaseId()<<endl;
 	dayNotes<<"I wanted to buy "<<totalWant<<" of good "<<Good2Buy<<" but can't find seller "<<endl
 		<<" at the end of the day I still want "<<AmountOfGoodIWant<<endl;
+	AmountOfGoodIWant=-10;
 	break;
       } else if (info.Price*AmountOfGoodIWant > fMoney){
 	//This price is always the current cheapest price
@@ -152,57 +176,64 @@ void Person::DoStep(){
 	//Not sale
 	dayNotes<<"I wanted to buy "<<info.Price*AmountOfGoodIWant<<" worth of good "<<Good2Buy<<endl
 		<<"but I only have "<<fMoney<<endl;
-	if (AmountOfGoodIWant > 5)
+	if (AmountOfGoodIWant > 5){
 	  AmountOfGoodIWant-=5;
-	else
+	}else{
 	  break;
-
-      } else{
+	}
+      } else {//Can afford the good and someone is selling it
 	if (AmountOfGoodIWant <= info.Quantity ){
 	  //All of the remaining good can be bought from this seller
-	  double totalCost=(AmountOfGoodIWant)*info.Price;
-	  //Move the money
-	  fConnections[Seller]->AddMoney(totalCost);
-	  this->SubtractMoney(totalCost);
-      
-	  //Remove the Supply from seller
 
-	  GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,AmountOfGoodIWant);
-	  MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,AmountOfGoodIWant);
+	  rDoTransaction(Good2Buy,AmountOfGoodIWant,info.Price,Seller);
+
+	  double totalCost=(AmountOfGoodIWant)*info.Price;
+	  // //Move the money
+	  // Company* theSeller =fTheEconomicActorManager->FindCompany(Seller);
+
+	  // theSeller->AddMoney(totalCost);
+	  // this->SubtractMoney(totalCost);
+      
+	  // //Remove the Supply from seller
+
+	  // GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
+	  // MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,AmountOfGoodIWant);
 	  dayNotes<<"Haza I bought "<<AmountOfGoodIWant<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
 		  <<info.Price<<" totaling "<<totalCost<<endl;
 	  AmountOfGoodIWant=0;
 	} else {
-      
 	  int PartOfWhatIWant=info.Quantity; // Buying everything this seller can offer
-
+	  rDoTransaction(Good2Buy,PartOfWhatIWant,info.Price,Seller);
 	  //This seller can only provide part of the order
 	  double totalCost=(PartOfWhatIWant)*info.Price;
-	  //Move the money
-	  fConnections[Seller]->AddMoney(totalCost);
-	  this->SubtractMoney(totalCost);
-      
-	  //Remove the Supply from seller
-	  GoodManager::Get()->ReconcileTransaction(fConnections[Seller],this,Good2Buy,PartOfWhatIWant);
-	  MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,PartOfWhatIWant);
+	  // //Move the money
+	  // //	  fConnections[Seller]->AddMoney(totalCost);
+	  // Company* theSeller =fTheEconomicActorManager->FindCompany(Seller);
+	  // theSeller->AddMoney(totalCost);
+	  // this->SubtractMoney(totalCost);
+
+	  // //Remove the Supply from seller
+	  // GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,PartOfWhatIWant);
+	  // MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,PartOfWhatIWant);
 	  AmountOfGoodIWant-=PartOfWhatIWant;
 	  dayNotes<<"Less Haza I bought "<<info.Quantity<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
 		  <<info.Price<<" totaling "<<totalCost<<endl;
-	}
-      }
-    }
-  }
+	}//End buy part of demand
+      }//End can afford and someone is selling
+    }//end while loop 
+  }//end if perosn wants something 
 
   //Check to see if this person is employed
   if (!rHaveAJob){
     //Get a job
     JobInfo jInfo= MarketManager::Get()->GetBestJob();
     if (jInfo.EmployerID==-1){
-      cout<<"No jobs "<<endl;
+      //No jobs silently do nothing
     }else{
-      rHaveAJob=true;
-      MarketManager::Get()->BrokerJob(this,(Company*)fConnections[jInfo.EmployerID],jInfo.salary);
-      rEmployer=(Company*)fConnections[jInfo.EmployerID];
+      rHaveAJob=true;//Now has job
+      Company * theCompany = fTheEconomicActorManager->FindCompany(jInfo.EmployerID);
+      MarketManager::Get()->BrokerJob(this,theCompany,jInfo.salary);
+      rEmployer=theCompany;
       rEmployerId=jInfo.EmployerID;
       dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<endl;
     }
@@ -224,10 +255,9 @@ ActorActions Person::EndOfStep(){
   if (fSupplies[0].GetNumberOfCopies()< rGluttoness){
     //cout<<"\n\n\nI DIED"<<endl;
     s<<"I have died :( "<<endl;
-    if (rEmployer!=NULL){
-       rEmployer->RemoveEmployee(this);
-    }
-    
+    //KillActor does not delete it right away.
+    //it removes it from the 
+    fTheEconomicActorManager->MarkForDeath(this);
     ret=ActorActions::Died;
   }else {
     fSupplies[0].RemoveCopies(rGluttoness);
@@ -240,6 +270,21 @@ ActorActions Person::EndOfStep(){
     ActorLogger::Get()->EndMessage(s.str());
   }
   return ret;
+}
+
+void Person::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller){
+  double totalCost=(AmountOfGoodIWant)*price;
+  //Move the money
+  Company* theSeller =fTheEconomicActorManager->FindCompany(Seller);
+  
+  theSeller->AddMoney(totalCost);
+  this->SubtractMoney(totalCost);
+  
+  //Remove the Supply from seller
+  
+  GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
+  MarketManager::Get()->CleanUpOrder(Good2Buy,price,Seller,AmountOfGoodIWant);
+
 }
 
 

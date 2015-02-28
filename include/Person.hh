@@ -40,6 +40,7 @@ public:
   void PrintInfo();
 private:
 
+  void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
   //Some person specific traits
   //all things 0-100
   int rRestlessness;//How likely person will develop a want other than food
@@ -52,6 +53,7 @@ private:
   
   int rEmployerId;
   Company * rEmployer;
+
 
   bool rWasFiredInPreviousStep;
 };
