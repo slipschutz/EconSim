@@ -114,14 +114,16 @@ int main(int argv, char ** argc){
 
     delete theManager;
   
-    ActorLogger::Get()->DumpLog();
+    //ActorLogger::Get()->DumpLog();
 
     if (DataLogger::Get() != NULL){
       delete DataLogger::Get();
     }
   } catch (exception &e){
+    cout<<"*******************************************************"<<endl;
     cout<<"Fatal Exception Must exit"<<endl;
     cout<<e.what()<<endl;
+    cout<<"*******************************************************"<<endl;
   }
   
 
