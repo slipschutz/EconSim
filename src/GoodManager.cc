@@ -66,8 +66,7 @@ Good GoodManager::MakeSupply(int id, int copies,EconomicActor* act){
 void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buyer,int good,int quantity){
   //The Seller needs to have the goods removed from it's supplies and the buyer needs
   //to have the good removed from its demand
-  // cout<<"\n\n DO the trade \n\n"<<endl;
-  //  cout<<"Buyer "<<Buyer->GetBaseId()<< " is buying "<<quantity<<" of good "<<good<<" from "<<Seller->GetBaseId()<<endl;
+
   Seller->RemoveSupply(good,quantity);
   Buyer->AddSupply(good,quantity);
   Buyer->RemoveDemand(good,quantity);
