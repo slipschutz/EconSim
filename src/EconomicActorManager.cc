@@ -4,9 +4,12 @@
 #include <cstdlib>
 
 #include "Person.hh"
+
 #include "Manufacturer.hh"
 #include "Retailer.hh"
 #include "DeadActor.hh"
+#include "Company.hh"
+
 #include "ActorLogger.hh"
 
 #include "RandomManager.hh"
@@ -14,8 +17,10 @@
 #include "MarketManager.hh"
 #include "GoodManager.hh"
 
+
 #include "Exceptions.hh"
 #include "Calendar.hh"
+#include "Death.hh"
 
 EconomicActorManager::EconomicActorManager() {
   //  srand(0);
@@ -71,16 +76,16 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   rNumPeople=NumberOfActors;
   //  rTheListOfActors.resize(NumberOfActors);
   
-
-  
   for (int i=0;i<NumberOfActors;i++){
     EconomicActor * a = new Person(this);
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
     rTheIds.push_back(a->GetBaseId());
   }
+
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
+
   for (int i=0;i<0.1*NumberOfActors;i++){
-    EconomicActor * a = new Manufacturer(1000,this);//Have these initial companies start with 1000 dollars
+    EconomicActor * a = new Manufacturer(100,this);//Have these initial companies start with 1000 dollars
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
     rTheIds.push_back(a->GetBaseId());
   }
@@ -114,35 +119,19 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 void EconomicActorManager::DoAStep(){
 
-  //First in each step call begin of step for all economic actors
-
-  // for (int i=0;i<rTheListOfActors.size();i++){
-  //   rTheListOfActors[i]->BeginningOfStep();
-  // }
-
-
-  // for (auto i : rTheListOfActors){
-  //   i.second->PrintInfo();
-  // }
-  if (Calendar::DayNumber % 10 == 0){
-    GoodManager::Get()->Dump();
-
-  }
-
-  vector <EconomicActor*> listOfNewActors;
 
   for (auto i : rTheListOfActors){
     ActorActions a =i.second->BeginningOfStep();
-    if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
-      double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
-      i.second->SubtractMoney(startup);
-      listOfNewActors.push_back(new Manufacturer(startup,this));
-    }
+
+
+    // if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
+    //   double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
+    //   i.second->SubtractMoney(startup);
+    //   listOfNewActors.push_back(new Manufacturer(startup,this));
+    // }
+
   }
   
-  for (auto & i : listOfNewActors){
-    MakeActor(i);
-  }
 
 
   // rTheListOfActors[0]->DumpSupplies();
@@ -197,12 +186,7 @@ void EconomicActorManager::DoAStep(){
     }
   }
   
-  // for (int i=0;i<ToBeKilled.size();i++){
-  //   cout<<ToBeKilled[i]<<" ";
-  // }cout<<endl;
 
-
- 
   for (auto i : ToBeKilled){
     rTheListOfActors.erase(i);
   }
@@ -221,7 +205,8 @@ void EconomicActorManager::KillActor(EconomicActor* act){
     ii.second->GetConnections()->erase(DeadMansBaseId);
   }
 
-      rNumberOfDeaths++;
+  rNumberOfDeaths++;
+  Death::Get()->AddDead(DeadMansBaseId,Calendar::DayNumber);
 }
 
 void EconomicActorManager::MakeActor(EconomicActor* act){
@@ -232,6 +217,7 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   rTheIds.push_back(act->GetBaseId());
   
   for (auto it : rTheListOfActors){
+
     if (it.second->GetBaseId() !=act->GetBaseId()){
       act->MakeConnection(it.second);
     }
@@ -272,3 +258,44 @@ void EconomicActorManager::PrintMoney(){
 // PersonLogger* PersonManager::GetLogger(){
 //   return rTheLogger;
 // }
+
+Person * EconomicActorManager::FindPerson(int id){
+  auto it = rTheListOfActors.find(id);
+  stringstream s;
+  if (it == rTheListOfActors.end()){//There is no actor with this id
+    s<<"<EconomicActorManager::FindPerson> connot find id "<<id<<endl;
+    MessageException e(s.str());
+    throw e;
+  } else {
+    if (it->second->GetActorType() == ActorTypes::Person){
+      //Confirmed that this is a person. Preform reinterpret cast
+      return reinterpret_cast<Person*>(it->second);
+    }else {
+      s<<"<EconomicActorManager::FindPerson> id is not a person"<<endl;
+      MessageException e(s.str());
+      throw e;
+    }
+  }
+}
+
+Company * EconomicActorManager::FindCompany(int id){
+  auto it = rTheListOfActors.find(id);
+  stringstream s;
+  if (it == rTheListOfActors.end()){//There is no actor with this id
+    Death::Get()->FindDead(id);
+    s<<"<EconomicActorManager::FindCompnay> connot find id "<<id<<endl;
+    MessageException e(s.str());
+    throw e;
+  } else {
+    int t =it->second->GetActorType();
+    if ( t == ActorTypes::Company || t==ActorTypes::Manufacturer){
+      //Confirmed that this is a person. Preform reinterpret cast
+      return reinterpret_cast<Company*>(it->second);
+    }else {
+      s<<"<EconomicActorManager::FindCompany> id is not a company"<<endl;
+      MessageException e(s.str());
+      throw e;
+    }
+  }
+}
+

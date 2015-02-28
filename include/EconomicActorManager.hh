@@ -16,8 +16,9 @@ using namespace std;
 
 //Foward Declarations
 class EconomicActor;
-class PersonLogger;
-
+class Manufacturer;
+class Person;
+class Company;
 
 
 class EconomicActorManager : public Base {
@@ -47,6 +48,10 @@ public:
   void Test(){
     cout<<"Size of list "<<rTheListOfActors.size()<<endl;
   }
+  
+  Person * FindPerson(int Id);
+  Company * FindCompany(int Id);
+  
 
 private:
   int rInitialTopConectivity;
