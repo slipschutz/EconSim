@@ -3,6 +3,7 @@
 
 #include "Base.hh"
 #include <vector>
+#include <fstream>
 
 class EconomicActor;
 #include "ActorSnapshot.hh"
@@ -52,7 +53,8 @@ private:
   std::vector <string> rBeforeMessage;
   std::vector <string> rDuringMessage;
   std::vector <string> rAfterMessage;
-
+  
+  ofstream outFile;
 };
 
 #endif

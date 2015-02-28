@@ -27,7 +27,8 @@ EconomicActorManager::EconomicActorManager() {
   rInitialTopConectivity=20;
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
 
-  rNumberOfDeaths=0;
+  rNumberOfPeopleDeaths=0;
+  rNumberOfCompanyDeaths=0;
   rNumberOfBirths=0;
   
 
@@ -43,8 +44,14 @@ EconomicActorManager::~EconomicActorManager(){
   }
 
   rTheListOfActors.clear();
-  cout<<"There were "<<rNumberOfDeaths<<" deaths"<<endl;
+  cout<<"There were "<<rNumberOfPeopleDeaths<<" People deaths"<<endl;
+  cout<<"There were "<<rNumberOfCompanyDeaths<<" Company deaths"<<endl;
   cout<<"There were "<<rNumberOfBirths<<" births"<<endl;
+}
+
+void EconomicActorManager::PrintAllInfo(){
+  for (auto i : rTheListOfActors){i.second->PrintInfo();
+  }
 }
 void EconomicActorManager::Initialize(){
 
@@ -84,11 +91,12 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
 
-  for (int i=0;i<0.1*NumberOfActors;i++){
-    EconomicActor * a = new Manufacturer(100,this);//Have these initial companies start with 1000 dollars
-    rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
-    rTheIds.push_back(a->GetBaseId());
-  }
+  // for (int i=0;i<0.5*NumberOfActors;i++){
+  //   EconomicActor * a = new Manufacturer(1000,this);//Have these initial companies start with 1000 dollars
+  //   rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+  //   rTheIds.push_back(a->GetBaseId());
+  // }
+
   rNumPeople=rTheListOfActors.size();
   cout<<"TOTAL NUMBER OF ACTORS "<<rNumPeople<<endl;
   if (rTheIds.size() !=rNumPeople){
@@ -105,15 +113,39 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   //   }
   // }
 
-  for (auto  i : rTheListOfActors){
+  for (auto i : rTheListOfActors){
     i.second->Initialize();
-    for (auto j : rTheListOfActors){
-      if (i.first != j.first){
-	i.second->MakeConnection(j.second);
-      }
-    }
   }
+  
+  // for (auto  i : rTheListOfActors){
+  //   i.second->Initialize();
+  //   for (auto j : rTheListOfActors){
+  //     if (i.first != j.first){
+  // 	i.second->MakeConnection(j.second);
+  //     }
+  //   }
+  // }
 
+}
+
+void EconomicActorManager::BuildTestNetwork(){
+  rNumPeople=2;
+  
+
+  Person * a = new Person(this);
+  a->Initialize();
+  rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
+  rTheIds.push_back(a->GetBaseId());
+
+  ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
+
+
+  EconomicActor * a1 = new Manufacturer(100000,this,a);//Have these initial companies start with 1000 dollars
+  a1->Initialize();
+  rTheListOfActors.insert(make_pair(a1->GetBaseId(),a1));
+  rTheIds.push_back(a1->GetBaseId());
+
+  
 }
 
 
@@ -160,9 +192,15 @@ void EconomicActorManager::DoAStep(){
   //Need to clean up the list of actors 
   //and the list of IDs
   for (auto i : rToBeKilled){
+    if (rTheListOfActors[i]->GetActorType()==ActorTypes::Person){
+      rNumberOfPeopleDeaths++;
+    }else{
+      rNumberOfCompanyDeaths++;
+    }
     delete rTheListOfActors[i];
+
     rTheListOfActors.erase(i);
-    rNumberOfDeaths++;
+
     Death::Get()->AddDead(i,Calendar::DayNumber);
   }
   
@@ -179,11 +217,11 @@ void EconomicActorManager::MarkForDeath(EconomicActor* act){
   
   //Loop over the connections and remove this actor from
   //the list of everyone else
-  for ( auto & ii : (*act->GetConnections())){
-    //    ii.first is the id of the connection
-    //    ii.second should be pointer to connection
-    ii.second->GetConnections()->erase(DeadMansBaseId);
-  }
+  // for ( auto & ii : (*act->GetConnections())){
+  //   //    ii.first is the id of the connection
+  //   //    ii.second should be pointer to connection
+  //   ii.second->GetConnections()->erase(DeadMansBaseId);
+  // }
 
   rToBeKilled.push_back(DeadMansBaseId);
   

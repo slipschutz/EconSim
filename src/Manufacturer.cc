@@ -24,7 +24,7 @@ void Manufacturer::Initialize(){
   Conservativeness=RandomManager::GetRand(1000)/1000.0;
   Steadfastness=RandomManager::GetRand(1000)/1000.0;
 
-  MaxVolume = RandomManager::GetRand(5)+10;///CAN"T BE 0
+  MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
 
   rTotalVolumeCreated=0;
 
@@ -40,6 +40,9 @@ void Manufacturer::Initialize(){
 
 
 ActorActions Manufacturer::BeginningOfStep(){
+
+
+
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //

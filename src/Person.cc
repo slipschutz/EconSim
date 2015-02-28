@@ -13,7 +13,7 @@
 int largestGoodNum=1;
 
 Person::Person(EconomicActorManager* man) : EconomicActor(man){
-  
+  rEmployer=NULL;
 }
 
 Person::~Person(){
@@ -95,9 +95,9 @@ ActorActions Person::BeginningOfStep(){
   //
   //Add food Demand if in need of food
   //
-  if (fSupplies[0].GetNumberOfCopies() < rGluttoness){
+  if (fSupplies[0].GetNumberOfCopies() < 5*rGluttoness){
     //There are not enough copies of food in the supply
-    int n=RandomManager::GetRand(10)+rGluttoness;
+    int n=RandomManager::GetRand(100)+rGluttoness;
     AddDemand(0,n);//Add the demand for food
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
@@ -117,7 +117,7 @@ ActorActions Person::BeginningOfStep(){
     s<<"Diary it is time i started a compnay"<<endl;
     double startup=this->GetCompanyInvestment();
     this->SubtractMoney(startup);
-    fTheEconomicActorManager->MakeActor(new Manufacturer(startup,fTheEconomicActorManager));
+    fTheEconomicActorManager->MakeActor(new Manufacturer(startup,fTheEconomicActorManager,this));
   }
   
 

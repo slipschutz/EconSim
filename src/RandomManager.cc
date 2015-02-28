@@ -16,7 +16,8 @@ RandomManager::RandomManager(){
 int RandomManager::GetRand(int n){
   if (!pSeeded){
     // construct a trivial random generator engine from a time-based seed:
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();//4250247065;
+    std::cout<<"SEED IS "<<seed<<std::endl;
     pTheGenerator = new std::default_random_engine(seed);
 
     pSeeded=true;

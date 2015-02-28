@@ -52,6 +52,9 @@ public:
   Person * FindPerson(int Id);
   Company * FindCompany(int Id);
   
+  void BuildTestNetwork();
+
+  void PrintAllInfo();
 
 private:
   int rInitialTopConectivity;
@@ -64,7 +67,8 @@ private:
 
   int rPersonToLog;
 
-  int rNumberOfDeaths;
+  int rNumberOfPeopleDeaths;
+  int rNumberOfCompanyDeaths;
   int rNumberOfBirths;
 };
 

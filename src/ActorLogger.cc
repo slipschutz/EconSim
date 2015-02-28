@@ -43,7 +43,7 @@ void ActorLogger::LogBeforeStepState(EconomicActor* a){
   rBeforeState.push_back(s.str());
 }
 void ActorLogger::LogAfterStepState(EconomicActor* a){
-    stringstream s;
+  stringstream s;
   s<<"Supplies: "<<endl;
 
   for ( auto & i : *a->GetSupplies() ){
@@ -62,7 +62,8 @@ void ActorLogger::LogAfterStepState(EconomicActor* a){
 }
 
 void ActorLogger::DumpLog(){
-  cout<<"This is the story of actor "<<thePerson<<endl;
+  outFile.open("Log.dat");
+  outFile<<"This is the story of actor "<<thePerson<<endl;
 
 
   int size = rBeforeState.size();
@@ -73,24 +74,30 @@ void ActorLogger::DumpLog(){
     cout<<"NO MATCH"<<endl;
     cout<<"Before "<<size<<endl;
     cout<<"after "<<size2<<endl;
-    //    throw;
+  
   }
 
   for (int i=0;i<size;i++){
-    PrintLine('v',50);
+    for (int i=0;i<50;i++){
+      outFile<<'v';
+    }outFile<<endl;
 
-    cout<<rBeforeMessage[i]<<endl;
+    outFile<<rBeforeMessage[i]<<endl;
 
-    cout<<"At the start of the day I had"<<endl;
-    cout<<rBeforeState[i]<<endl;
+    outFile<<"At the start of the day I had"<<endl;
+    outFile<<rBeforeState[i]<<endl;
 
-    cout<<rDuringMessage[i]<<endl;
-    cout<<"At the end of the day I had"<<endl;
-    cout<<rAfterState[i]<<endl;
+    outFile<<rDuringMessage[i]<<endl;
+    outFile<<"At the end of the day I had"<<endl;
+    outFile<<rAfterState[i]<<endl;
 
 
-    cout<<rAfterMessage[i]<<endl;
+    outFile<<rAfterMessage[i]<<endl;
+    for (int i=0;i<50;i++){
+      outFile<<'^';
+    }outFile<<endl;
 
-    PrintLine('^',50);
+
   }
+  outFile.close();
 }

@@ -28,60 +28,30 @@
 using namespace  std;
 
 void TestGoodStuff(){
-  // Person aPerson;
+  EconomicActorManager man;
+  man.BuildTestNetwork();
   
-  // Manufacturer aManu(1000);
-  // Manufacturer anotherManu(1000);
-  
-  // anotherManu.Initialize();
-  // aPerson.Initialize();
-  // aManu.Initialize();
+  for (int i=0;i<2;i++){
+    man.DoAStep();
+    MarketManager::Get()->ClearMarket();
+    Calendar::DayNumber++;
+    man.PrintAllInfo();
+    GoodManager::Get()->Dump();
+    cout<<"______________________"<<endl;
+  }
 
-  // aPerson.MakeConnection(&aManu);
-  // aPerson.MakeConnection(&anotherManu);
-
-  // aPerson.BeginningOfStep();
-  // aManu.BeginningOfStep();
-  // anotherManu.BeginningOfStep();
-
-  // aPerson.DumpSupplies();
-  // aPerson.DumpDemands();
-  
-  // aManu.DumpSupplies();
-  // aManu.DumpDemands();
-
-  // anotherManu.DumpSupplies();
-  // anotherManu.DumpDemands();
-
-  // GoodManager::Get()->Dump();
-
-  // MarketManager::Get()->Dump();
-  // aPerson.DoStep();
-  // MarketManager::Get()->Dump();
-  // //  aPerson.DoStep();
-  // cout<<"+++++++++++++++++++++++++++"<<endl;
-
-  // GoodManager::Get()->Dump();
-  // MarketManager::Get()->Dump();
-  // aPerson.DumpSupplies();
-  // aPerson.DumpDemands();
-
-  // aManu.DumpSupplies();
-  // aManu.DumpDemands();
-
-
-  // anotherManu.DumpSupplies();
-  // anotherManu.DumpDemands();
-
-
+  ActorLogger::Get()->DumpLog();
+  GoodManager::Get()->Dump();
 }
 
 
 
 int main(int argv, char ** argc){
-  // TestGoodStuff();
+   // TestGoodStuff();
+   // cout<<"\n\n\n";
+   // GoodManager::Get()->Dump();
 
-
+   // return 0;
   //  return 3;
 
   try{
@@ -97,24 +67,34 @@ int main(int argv, char ** argc){
     for (int i=0;i<Settings::NumberOfSteps;i++){
     
       theManager->DoAStep();
-      if (i%100==0){
+      if (i%1==0){
 	cout<<"ON "<<i<<endl;
       }
+       if (i==Settings::NumberOfSteps-1){
+	 cout<<"\n\n\n";
+	 GoodManager::Get()->Dump();
+	 MarketManager::Get()->Dump();
+	// 	int t;cin>>t;
+       }
+
+
       MarketManager::Get()->ClearMarket();
       Calendar::DayNumber++;
+
     }
 
 
  
-    GoodManager::Get()->Dump();
+    
 
     //theManager.PrintMoney();
     // theManager.PrintHavesWants();
     DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
 
     delete theManager;
-  
-    //ActorLogger::Get()->DumpLog();
+    GoodManager::Get()->Dump();
+    ActorLogger::Get()->DumpLog();
+
 
     if (DataLogger::Get() != NULL){
       delete DataLogger::Get();

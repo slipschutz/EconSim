@@ -125,18 +125,19 @@ void EconomicActor::AddDemand(int GoodNumber,int copies){
   //  Good temp =GoodManager::Get()->MakeDemand(GoodNumber,copies,this);
 
 
-  Good temp(GoodNumber,copies,fGoodPriorities[GoodNumber],"demand");
+
 
   //if the actor already demands this good just add the copies 
   auto theDemand = fDemands.find(GoodNumber);
   if (theDemand == fDemands.end()){//The demand wasn't there
     //    fDemands[GoodNumber]=temp;
+    Good temp(GoodNumber,copies,fGoodPriorities[GoodNumber],"demand");
     fDemands.insert(make_pair(GoodNumber,temp));
   }else {// the good was there
     theDemand->second.AddCopies(copies);
   }
   //Now put the demand in the priority map
-  int tempNum = temp.GetPriority();
+  int tempNum = fGoodPriorities[GoodNumber];//temp.GetPriority();
 
   //need to make sure that this is not a second copy of the same thing
   //if one is adding demand for a good that is already demanded then

@@ -20,7 +20,7 @@ using namespace std;
 
 class Manufacturer : public Company {
 public:
-  Manufacturer(double money,EconomicActorManager*man) : Company(man){
+  Manufacturer(double money,EconomicActorManager*man,Person * own) : Company(man,own) {
     fMoney=money;
   };
   virtual ~Manufacturer(){
@@ -56,6 +56,8 @@ private:
   int rStartingSalary;
   
   int rTotalVolumeCreated;
+
+  double rStartOfStepMoney;
 };
 
 
