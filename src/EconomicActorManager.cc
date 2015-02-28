@@ -74,13 +74,13 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
   
   for (int i=0;i<NumberOfActors;i++){
-    EconomicActor * a = new Person();
+    EconomicActor * a = new Person(this);
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
     rTheIds.push_back(a->GetBaseId());
   }
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
   for (int i=0;i<0.1*NumberOfActors;i++){
-    EconomicActor * a = new Manufacturer(1000);//Have these initial companies start with 1000 dollars
+    EconomicActor * a = new Manufacturer(1000,this);//Have these initial companies start with 1000 dollars
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
     rTheIds.push_back(a->GetBaseId());
   }
@@ -136,7 +136,7 @@ void EconomicActorManager::DoAStep(){
     if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
       double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
       i.second->SubtractMoney(startup);
-      listOfNewActors.push_back(new Manufacturer(startup));
+      listOfNewActors.push_back(new Manufacturer(startup,this));
     }
   }
   

@@ -28,50 +28,50 @@
 using namespace  std;
 
 void TestGoodStuff(){
-  Person aPerson;
+  // Person aPerson;
   
-  Manufacturer aManu(1000);
-  Manufacturer anotherManu(1000);
+  // Manufacturer aManu(1000);
+  // Manufacturer anotherManu(1000);
   
-  anotherManu.Initialize();
-  aPerson.Initialize();
-  aManu.Initialize();
+  // anotherManu.Initialize();
+  // aPerson.Initialize();
+  // aManu.Initialize();
 
-  aPerson.MakeConnection(&aManu);
-  aPerson.MakeConnection(&anotherManu);
+  // aPerson.MakeConnection(&aManu);
+  // aPerson.MakeConnection(&anotherManu);
 
-  aPerson.BeginningOfStep();
-  aManu.BeginningOfStep();
-  anotherManu.BeginningOfStep();
+  // aPerson.BeginningOfStep();
+  // aManu.BeginningOfStep();
+  // anotherManu.BeginningOfStep();
 
-  aPerson.DumpSupplies();
-  aPerson.DumpDemands();
+  // aPerson.DumpSupplies();
+  // aPerson.DumpDemands();
   
-  aManu.DumpSupplies();
-  aManu.DumpDemands();
+  // aManu.DumpSupplies();
+  // aManu.DumpDemands();
 
-  anotherManu.DumpSupplies();
-  anotherManu.DumpDemands();
+  // anotherManu.DumpSupplies();
+  // anotherManu.DumpDemands();
 
-  GoodManager::Get()->Dump();
+  // GoodManager::Get()->Dump();
 
-  MarketManager::Get()->Dump();
-  aPerson.DoStep();
-  MarketManager::Get()->Dump();
-  //  aPerson.DoStep();
-  cout<<"+++++++++++++++++++++++++++"<<endl;
+  // MarketManager::Get()->Dump();
+  // aPerson.DoStep();
+  // MarketManager::Get()->Dump();
+  // //  aPerson.DoStep();
+  // cout<<"+++++++++++++++++++++++++++"<<endl;
 
-  GoodManager::Get()->Dump();
-  MarketManager::Get()->Dump();
-  aPerson.DumpSupplies();
-  aPerson.DumpDemands();
+  // GoodManager::Get()->Dump();
+  // MarketManager::Get()->Dump();
+  // aPerson.DumpSupplies();
+  // aPerson.DumpDemands();
 
-  aManu.DumpSupplies();
-  aManu.DumpDemands();
+  // aManu.DumpSupplies();
+  // aManu.DumpDemands();
 
 
-  anotherManu.DumpSupplies();
-  anotherManu.DumpDemands();
+  // anotherManu.DumpSupplies();
+  // anotherManu.DumpDemands();
 
 
 }

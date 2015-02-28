@@ -45,7 +45,7 @@ public:
   unordered_map <int,EconomicActor*> * GetList(){return &rTheListOfActors;}
 
   void Test(){
-    //    KillActor(rTheListOfActors[4]);
+    cout<<"Size of list "<<rTheListOfActors.size()<<endl;
   }
 
 private:

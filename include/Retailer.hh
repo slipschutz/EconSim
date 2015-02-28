@@ -16,7 +16,7 @@ using namespace std;
 class Retailer : public Company 
 {
 public:
-  Retailer(){}
+  Retailer(EconomicActorManager *man):Company(man){}
   virtual ~Retailer(){}
   
   void Initialize(){

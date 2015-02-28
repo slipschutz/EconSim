@@ -14,7 +14,7 @@ class Company;
 
 class Person : public EconomicActor {
 public:
-  Person();
+  Person(EconomicActorManager* );
   ~Person();
  
   void Initialize();

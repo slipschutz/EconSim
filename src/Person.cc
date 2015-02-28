@@ -7,10 +7,11 @@
 #include "Calendar.hh"
 
 #include "Company.hh"
+#include "EconomicActorManager.hh"
 
 int largestGoodNum=1;
 
-Person::Person() {
+Person::Person(EconomicActorManager* man) : EconomicActor(man){
   
 }
 
@@ -76,8 +77,8 @@ void Person::DumpConnections(){
 ActorActions Person::BeginningOfStep(){
 
   ActorActions ret=ActorActions::None;
-  //Check to see if this person has food (GOOD ID=0)
 
+  //Check to see if this person has food (GOOD ID=0)
   if (fSupplies.count(0) == 0) {
     //Food is not in the supplies map
     //Must get food

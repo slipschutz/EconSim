@@ -17,7 +17,7 @@ using namespace std;
 
 class DeadActor : public EconomicActor{
 public:
-  DeadActor(){
+  DeadActor(EconomicActorManager * man) : EconomicActor(man){
   }
   virtual ~DeadActor(){
     //    cout<<"in ~Dead Actor "<<this<<endl;

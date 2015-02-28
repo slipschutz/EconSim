@@ -22,7 +22,7 @@ class Person;
 class Company : public EconomicActor{
 
 public:
-  Company();
+  Company(EconomicActorManager * man);
   virtual ~Company();
 
   

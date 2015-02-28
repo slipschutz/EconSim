@@ -5,7 +5,7 @@
 
 #include "RandomManager.hh"
 
-Company::Company(){
+Company::Company(EconomicActorManager* man ) : EconomicActor(man){
 
   Employees2Salary.clear();
 

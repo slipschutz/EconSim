@@ -8,7 +8,7 @@
 #include "GoodManager.hh"
 #include "Settings.hh"
 
-EconomicActor::EconomicActor() : fNumConnections(0){
+EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fTheEconomicActorManager(man){
   fConnections.clear();
   fDemands.clear();
   fSupplies.clear();

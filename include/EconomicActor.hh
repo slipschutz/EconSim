@@ -15,6 +15,10 @@
 using namespace std;
 
 
+//Foward Declerations
+class EconomicActorManager;
+
+
 enum class ActorActions{
   Died,
   None,
@@ -24,7 +28,7 @@ enum class ActorActions{
 
 class EconomicActor : public Base {
 public:
-  EconomicActor();
+  EconomicActor(EconomicActorManager*);
 
  
   /**Virtual Functions
@@ -96,6 +100,9 @@ protected:
   multimap<int,int> fDemandPriorities2GoodNum;
     
   vector <int>   fGoodPriorities;
+
+  EconomicActorManager * fTheEconomicActorManager;
+
 public:
   void RemoveSupply(int GoodNumber,int Quantity);
   void AddSupply(int GoodNumber,int Quantity);
