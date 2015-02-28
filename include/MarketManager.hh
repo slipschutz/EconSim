@@ -21,6 +21,13 @@ public:
   double Price;
   OrderInfo(int id,int q,double p) : SellerId(id), Quantity(q),Price(p){}
   OrderInfo() : SellerId(-1),Quantity(-1),Price(-1){}
+
+  ~OrderInfo(){
+    SellerId=-1000;
+    Quantity=-1000;
+    Price=-1000;
+  }
+
 };
 
 class JobInfo{
@@ -59,12 +66,8 @@ public:
 
   JobInfo GetBestJob();
 
-  void ClearMarket(){
-    for (auto & i : rSellPrices){
-      i.clear();
-    }
-    rJobListings.clear();
-  }
+  void ClearMarket();
+   
   void Dump();
   
 

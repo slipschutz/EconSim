@@ -6,7 +6,7 @@
 #include "EconomicActor.hh"
 #include "Company.hh"
 #include "Person.hh"
-
+#include "Exceptions.hh"
 //Initialize the singleton pointer
 
 MarketManager * MarketManager::theManager=NULL;
@@ -20,6 +20,14 @@ MarketManager::MarketManager(){
 MarketManager::~MarketManager(){
   //Deconstructor
 
+}
+void MarketManager::ClearMarket(){
+  for (auto & i : rSellPrices){
+    i.clear();
+  }
+  rJobListings.clear();
+  rSellPrices.clear();
+  rSellPrices.resize(Settings::MaxGoodNumber);
 }
 
 MarketManager * MarketManager::Get(){
@@ -35,12 +43,26 @@ MarketManager * MarketManager::Get(){
 
 void MarketManager::PlaceSellOrder(int GoodNumber,int SellerId, int Quantity,double Price){
 
+  multimap <double,OrderInfo> * theMap=&rSellPrices[GoodNumber];
+  auto range = theMap->equal_range(Price);
+
+  for (auto it =range.first;it!=range.second;it++){
+    if (it->second.SellerId==SellerId){
+      //This seller is already in the map?
+
+      stringstream s;s<<"This seller "<<SellerId<<" already has sellorder for "<<GoodNumber<<endl;
+      MessageException e(s.str());
+      //throw e;
+      return;
+    }
+  }
+
   (rSellPrices[GoodNumber]).insert(make_pair(Price,OrderInfo(SellerId,Quantity,Price)));
 
 }
 
 int MarketManager::GetCheapestSeller(int GoodNumber,OrderInfo & Info){
-  multimap<double,OrderInfo> m =rSellPrices[GoodNumber];
+  multimap<double,OrderInfo> m =rSellPrices.at(GoodNumber);
 
   if (m.size() ==0 ){//there is no seller :(
     return -1;
@@ -109,7 +131,8 @@ JobInfo MarketManager::GetBestJob(){
 }
 
 void MarketManager::Dump(){
-  
+  cout<<"Begin MarketManager::Dump()"<<endl;
+
   for ( int i=0;i < rSellPrices.size();i++){
     cout<<"Good "<<i<<" ";
     
@@ -121,8 +144,8 @@ void MarketManager::Dump(){
   }
   
   for (auto & i : rJobListings){
-    cout<<"Salary "<<i.first<<" from "<<i.second.EmployerID<<endl;
+    //    cout<<"Salary "<<i.first<<" from "<<i.second.EmployerID<<endl;
 
   }
-
+  cout<<"End MarketManager::Dump()"<<endl;
 }
