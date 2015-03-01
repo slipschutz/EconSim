@@ -1,4 +1,4 @@
-
+#include "DataLogger.hh"
 
 
 #include "MarketManager.hh"
@@ -74,7 +74,9 @@ int MarketManager::GetCheapestSeller(int GoodNumber,OrderInfo & Info){
 }
 
 void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int quantity){
-  
+  if (GoodNumber==0){
+    DataLogger::Get()->PushGoodPrice(GoodNumber,price,quantity);
+  }
   multimap<double,OrderInfo> * theMap = &rSellPrices[GoodNumber];
 
   //Find the range of entries that have the price 

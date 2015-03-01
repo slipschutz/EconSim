@@ -21,6 +21,7 @@ public:
 
   void FindDead(int id);
 
+  bool CheckDeath(int id);
 private:
   Death();
 };

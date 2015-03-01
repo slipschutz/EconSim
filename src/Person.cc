@@ -22,7 +22,7 @@ Person::~Person(){
   if (rEmployer!=NULL){
     rEmployer->RemoveEmployee(this);
   }
-  
+
 }
 
 
@@ -50,6 +50,7 @@ void Person::Initialize(){
   rHaveAJob=false;
   rEmployerId=-1;
   rWasFiredInPreviousStep=false;
+  rWasPaidInPreviousStep=false;
 }
 
 void Person::DumpHavesWants(){
@@ -77,6 +78,14 @@ void Person::DumpConnections(){
 
 }
 
+
+void Person::GetPaid(double amount,string notes){
+
+  this->AddMoney(amount);
+  rWasPaidInPreviousStep=true;
+  rPaidNotes<<notes<<endl;
+
+}
 
 ActorActions Person::BeginningOfStep(){
 
@@ -114,10 +123,13 @@ ActorActions Person::BeginningOfStep(){
   
 
   if (RandomManager::GetRand(100)< 2){
-    s<<"Diary it is time i started a compnay"<<endl;
+
     double startup=this->GetCompanyInvestment();
     this->SubtractMoney(startup);
-    fTheEconomicActorManager->MakeActor(new Manufacturer(startup,fTheEconomicActorManager,this));
+    Company * c =new Manufacturer(startup,fTheEconomicActorManager,this);
+    s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
+    rOwnedCompanies.push_back(c);
+    fTheEconomicActorManager->MakeActor(c);
   }
   
 
@@ -129,6 +141,11 @@ ActorActions Person::BeginningOfStep(){
     s<<"Diary i was fired in yesterday"<<endl;
   }
   
+  if (rWasPaidInPreviousStep==true){
+    rWasPaidInPreviousStep==false;
+    s<<rPaidNotes.str();
+    rPaidNotes.str("");
+  }
 
   //
   //If this is the magic person log info
@@ -257,7 +274,13 @@ ActorActions Person::EndOfStep(){
     s<<"I have died :( "<<endl;
     //KillActor does not delete it right away.
     //it removes it from the 
+
     fTheEconomicActorManager->MarkForDeath(this);
+    for (auto i : rOwnedCompanies){
+      //      i->SetNoOwner();
+      fTheEconomicActorManager->MarkForDeath(i);
+    }//end for
+    
     ret=ActorActions::Died;
   }else {
     fSupplies[0].RemoveCopies(rGluttoness);
@@ -265,10 +288,13 @@ ActorActions Person::EndOfStep(){
     s<<"I ate "<<rGluttoness<<" foods "<<endl;
     ret=ActorActions::None;
   }
+  
+  
   if (this->GetBaseId() == ActorLogger::Get()->thePerson){
     ActorLogger::Get()->LogAfterStepState(this);
     ActorLogger::Get()->EndMessage(s.str());
   }
+  
   return ret;
 }
 
@@ -293,6 +319,10 @@ void Person::PrintInfo(){
   cout<<"Info for <Person> Base id "<<this->GetBaseId()<<" actor type "<<this->GetActorType()<<endl;
   cout<<"Has Job? "<<rHaveAJob<<" employer "<<rEmployerId<<endl;
   cout<<"I have "<<fMoney<<" monies"<<endl;
+  cout<<"I own "<<rOwnedCompanies.size()<<" companies"<<endl;
+  for (auto i : rOwnedCompanies){
+    cout<<"I own "<<i->GetBaseId()<<" it is a "<<i->GetActorType()<<endl;
+  }
   //  DumpSupplies();
   PrintLine('^',30);
 }
@@ -380,6 +410,17 @@ double Person::GetWorth(Good theGood){
 
 }
 
+void Person::RemoveCompany(Company* c){
+
+  for (int i=0;i< rOwnedCompanies.size();i++){
+    if (rOwnedCompanies[i]->GetBaseId()==c->GetBaseId()){
+
+      rOwnedCompanies.erase(rOwnedCompanies.begin()+i);
+      break;
+    }
+  }
+
+}
 
 
 

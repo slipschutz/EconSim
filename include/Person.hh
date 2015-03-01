@@ -37,6 +37,10 @@ public:
   
   double GetCompanyInvestment(){return (rInvestmentLevel/100.)*fMoney;}
 
+  void GetPaid(double amount,string notes);
+
+  void RemoveCompany(Company*);
+
   void PrintInfo();
 private:
 
@@ -54,7 +58,11 @@ private:
   int rEmployerId;
   Company * rEmployer;
 
+  vector <Company*> rOwnedCompanies;
 
   bool rWasFiredInPreviousStep;
+
+  bool rWasPaidInPreviousStep;
+  stringstream rPaidNotes;
 };
 #endif

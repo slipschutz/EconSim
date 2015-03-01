@@ -24,7 +24,7 @@ public:
     fMoney=money;
   };
   virtual ~Manufacturer(){
-    //    cout<<"IN ~Manufacture()"<<endl;
+    
   }
 
   

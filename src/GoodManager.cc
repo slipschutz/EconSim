@@ -6,7 +6,7 @@
 #include "RandomManager.hh"
 #include "Settings.hh"
 #include "ActorTypes.hh"
-
+#include "DataLogger.hh"
 GoodManager * GoodManager::theManager=NULL;
 
 GoodManager::GoodManager(){

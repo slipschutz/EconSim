@@ -4,22 +4,29 @@
 #include "Settings.hh"
 
 #include "RandomManager.hh"
+#include "Death.hh"
 
 Company::Company(EconomicActorManager* man,Person* own ) : EconomicActor(man), fTheOwner(own){
 
   Employees2Salary.clear();
-
+  fTheOwnerId=fTheOwner->GetBaseId();
 
 }
 
 
 Company::~Company(){
   //This compnay is being deleted.  Clean up its employees
+
   for (auto i : Employees2Salary){
     i.first->YourFired();
   }
   Employees2Salary.clear();//Clear list of pointers
-  
+
+  //Also inform the owner that this company is nolonger in busines
+
+  if (! Death::Get()->CheckDeath(fTheOwnerId)){
+    fTheOwner->RemoveCompany(this);
+  }
 
 }
 

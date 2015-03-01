@@ -13,6 +13,7 @@
 #include "Person.hh"
 #include "Good.hh"
 #include "EconomicActorManager.hh"
+#include "Death.hh"
 
 void Manufacturer::Initialize(){
 
@@ -42,7 +43,7 @@ void Manufacturer::Initialize(){
 ActorActions Manufacturer::BeginningOfStep(){
 
 
-
+  rStartOfStepMoney=fMoney;
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
@@ -86,6 +87,19 @@ ActorActions Manufacturer::BeginningOfStep(){
 
 ActorActions Manufacturer::EndOfStep(){
 
+  //Compare how much was earned to how much needs to be payed to employees
+  double thisStepProfit = fMoney-rStartOfStepMoney;
+  if (thisStepProfit >0 ){//Made money
+    //give 10% to the owner of the company
+    if (fTheOwner !=NULL){
+      fTheOwner->GetPaid(0.1*thisStepProfit,"Receiving returns from owning company");
+    }
+    this->SubtractMoney(0.1*thisStepProfit);
+  }else {//We are not making moeny
+
+
+  }
+
   ActorActions ret=ActorActions::None;
 
   //Pay the employees if able
@@ -97,7 +111,8 @@ ActorActions Manufacturer::EndOfStep(){
       ret=ActorActions::Died;
       break;
     }else {
-      i.first->AddMoney(moneyToPay);
+      stringstream stemp;stemp<<"Company "<<GetBaseId()<<" is paying salary "<<moneyToPay<<endl;
+      i.first->GetPaid(moneyToPay,stemp.str());
       this->SubtractMoney(moneyToPay);
     }
   }

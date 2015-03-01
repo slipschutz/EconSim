@@ -32,6 +32,15 @@ void Death::AddDead(int id ,int day){
   }
 }
 
+bool Death::CheckDeath(int id){
+  auto it = TheDead.find(id);
+  
+  if ( it != TheDead.end() ){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 void Death::FindDead(int id){
   auto it = TheDead.find(id);

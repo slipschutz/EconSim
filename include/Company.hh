@@ -24,7 +24,7 @@ public:
   Company(EconomicActorManager * man) : EconomicActor(man){cout<<"Company constrcut no owner never call"<<endl; throw 1;}
   virtual ~Company();
   
-
+  void SetNoOwner(){fTheOwner=NULL;}
   
   /**  */
   // virutal void Initialize();
@@ -43,6 +43,7 @@ protected:
 
 
   Person* fTheOwner;
+  int fTheOwnerId;
   
 };
 

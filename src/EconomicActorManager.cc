@@ -38,7 +38,7 @@ EconomicActorManager::~EconomicActorManager(){
   
 
   for (auto i : rTheListOfActors){
-
+    Death::Get()->AddDead(i.first,Calendar::DayNumber);
     delete i.second;
 
   }
@@ -150,6 +150,7 @@ void EconomicActorManager::BuildTestNetwork(){
 
 
 void EconomicActorManager::DoAStep(){
+
   rTheIds.clear();
 
   for (auto i : rTheListOfActors){
@@ -157,13 +158,6 @@ void EconomicActorManager::DoAStep(){
 
     //Recreate the ids list
     rTheIds.push_back(i.first);
-
-
-    // if (a == ActorActions::StartedCompany && i.second->GetActorType()==ActorTypes::Person){
-    //   double startup=reinterpret_cast<Person*>( i.second)->GetCompanyInvestment();
-    //   i.second->SubtractMoney(startup);
-    //   listOfNewActors.push_back(new Manufacturer(startup,this));
-    // }
 
   }
   
@@ -192,16 +186,18 @@ void EconomicActorManager::DoAStep(){
   //Need to clean up the list of actors 
   //and the list of IDs
   for (auto i : rToBeKilled){
-    if (rTheListOfActors[i]->GetActorType()==ActorTypes::Person){
-      rNumberOfPeopleDeaths++;
-    }else{
-      rNumberOfCompanyDeaths++;
+    if (rTheListOfActors.count(i) !=0){
+      if (rTheListOfActors[i]->GetActorType()==ActorTypes::Person){
+	rNumberOfPeopleDeaths++;
+      }else{
+	rNumberOfCompanyDeaths++;
+      }
+      delete rTheListOfActors[i];
+      
+      rTheListOfActors.erase(i);
+      
+      Death::Get()->AddDead(i,Calendar::DayNumber);
     }
-    delete rTheListOfActors[i];
-
-    rTheListOfActors.erase(i);
-
-    Death::Get()->AddDead(i,Calendar::DayNumber);
   }
   
   //Clear the id list.  It seems difficult 
@@ -234,12 +230,13 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   rTheListOfActors.insert(make_pair(act->GetBaseId(),act));
   rTheIds.push_back(act->GetBaseId());
   
-  for (auto it : rTheListOfActors){
 
-    if (it.second->GetBaseId() !=act->GetBaseId()){
-      act->MakeConnection(it.second);
-    }
-  }
+  // for (auto it : rTheListOfActors){
+
+  //   if (it.second->GetBaseId() !=act->GetBaseId()){
+  //     act->MakeConnection(it.second);
+  //   }
+  // }
   rNumberOfBirths++;
 }
 

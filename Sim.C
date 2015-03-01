@@ -72,8 +72,8 @@ int main(int argv, char ** argc){
       }
        if (i==Settings::NumberOfSteps-1){
 	 cout<<"\n\n\n";
-	 GoodManager::Get()->Dump();
-	 MarketManager::Get()->Dump();
+	 // GoodManager::Get()->Dump();
+	 // MarketManager::Get()->Dump();
 	// 	int t;cin>>t;
        }
 
@@ -92,7 +92,7 @@ int main(int argv, char ** argc){
     DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
 
     delete theManager;
-    GoodManager::Get()->Dump();
+    //    GoodManager::Get()->Dump();
     ActorLogger::Get()->DumpLog();
 
 
