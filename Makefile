@@ -1,4 +1,4 @@
-CFLAGS=-c -g -Wall -I./src -I./include -std=c++11
+CFLAGS=-c -g -Wall -I./src -I./include -std=c++0x
 CXX=g++
 EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
