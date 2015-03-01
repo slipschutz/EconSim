@@ -30,7 +30,7 @@ Person::~Person(){
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
-  fMoney =1000;
+  fMoney =100000;
 
   fSupplies.clear();
   fDemands.clear();
@@ -122,7 +122,7 @@ ActorActions Person::BeginningOfStep(){
   }
   
 
-  if (RandomManager::GetRand(100)< 2){
+  if (RandomManager::GetRand(100)< 3){
 
     double startup=this->GetCompanyInvestment();
     this->SubtractMoney(startup);

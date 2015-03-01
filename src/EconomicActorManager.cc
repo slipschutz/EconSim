@@ -150,7 +150,7 @@ void EconomicActorManager::BuildTestNetwork(){
 
 
 void EconomicActorManager::DoAStep(){
-
+  cout<<"Size is "<<rTheListOfActors.size()<<endl;
   rTheIds.clear();
 
   for (auto i : rTheListOfActors){

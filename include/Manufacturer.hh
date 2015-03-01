@@ -48,8 +48,9 @@ private:
 
   int GoodToManufacture;
 
-  double Conservativeness;//How likely company is too sell all of its supply
-  double Steadfastness;//How likely company will lower it's price
+  double rConservativeness;//How likely company is too sell all of its supply
+  double rSteadfastness;//How likely company will lower it's price
+  double rPriceChangeLevel;//percent that change of price that is done when price is changed 
   
   int MaxVolume;//Max amount of good that company can make
   
@@ -58,6 +59,7 @@ private:
   int rTotalVolumeCreated;
 
   double rStartOfStepMoney;
+  int rStartOfStepSupply;
 };
 
 

@@ -22,12 +22,13 @@ void Manufacturer::Initialize(){
   GoodToManufacture=RandomManager::GetRand(Settings::MaxGoodNumber);
   
   //Randomly assign some attributes
-  Conservativeness=RandomManager::GetRand(1000)/1000.0;
-  Steadfastness=RandomManager::GetRand(1000)/1000.0;
+  rConservativeness=RandomManager::GetRand(1000)/1000.0;
+  rSteadfastness=0.9;//RandomManager::GetRand(1000)/1000.0;
 
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
+  rPriceChangeLevel= RandomManager::GetRand(100)/100.;
+  
 
-  rTotalVolumeCreated=0;
 
   for (int i=0;i<fGoodPriorities.size();i++){
     fGoodPriorities[i]=RandomManager::GetRand(Settings::MaxGoodPriority);
@@ -37,6 +38,12 @@ void Manufacturer::Initialize(){
   fDemands.clear();
 
   rStartingSalary=RandomManager::GetRand(100);
+
+
+  rTotalVolumeCreated=0;
+  rStartOfStepMoney=0;
+  rStartOfStepSupply=0;
+  
 }
 
 
@@ -44,6 +51,7 @@ ActorActions Manufacturer::BeginningOfStep(){
 
 
   rStartOfStepMoney=fMoney;
+  
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
@@ -73,12 +81,21 @@ ActorActions Manufacturer::BeginningOfStep(){
 
       MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
 					   fSupplies[GoodToManufacture].GetNumberOfCopies(),
-					   fSupplies[GoodToManufacture].GetNormPriority()*100);
+					   fGoodPriorities[GoodToManufacture]);
     }
+
+
   } else { //Try to hire people
     for (int i=0;i<10-Employees2Salary.size();i++){
       MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
     }
+  }
+
+  auto it_temp=fSupplies.find(GoodToManufacture);
+  if (it_temp != fSupplies.end()){
+    rStartOfStepSupply=it_temp->second.GetNumberOfCopies();
+  }else{
+    rStartOfStepSupply=0;
   }
 
   return ActorActions::None;
@@ -89,6 +106,15 @@ ActorActions Manufacturer::EndOfStep(){
 
   //Compare how much was earned to how much needs to be payed to employees
   double thisStepProfit = fMoney-rStartOfStepMoney;
+  double thisStepSoldVolume=0;
+  
+  auto it_temp=fSupplies.find(GoodToManufacture);
+  if (it_temp != fSupplies.end()){
+    thisStepSoldVolume=rStartOfStepSupply-it_temp->second.GetNumberOfCopies();
+  }
+
+
+
   if (thisStepProfit >0 ){//Made money
     //give 10% to the owner of the company
     if (fTheOwner !=NULL){
@@ -97,9 +123,22 @@ ActorActions Manufacturer::EndOfStep(){
     this->SubtractMoney(0.1*thisStepProfit);
   }else {//We are not making moeny
 
-
   }
 
+  if (RandomManager::GetRand(100)/100. > rSteadfastness){
+    if (thisStepSoldVolume < 10){
+      int temp =fGoodPriorities[GoodToManufacture];
+      temp = temp - temp*rPriceChangeLevel;
+
+      fGoodPriorities[GoodToManufacture]=temp;
+    }else if (thisStepSoldVolume > 0.85*rStartOfStepSupply){
+      int temp =fGoodPriorities[GoodToManufacture];
+      temp = temp + temp*rPriceChangeLevel;
+    
+      fGoodPriorities[GoodToManufacture]=temp;
+   
+    }
+  }
   ActorActions ret=ActorActions::None;
 
   //Pay the employees if able
