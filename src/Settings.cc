@@ -4,10 +4,10 @@
 
 namespace Settings{
 
-  int NumberOfPeople=50000;
+  int NumberOfPeople=10000;
   int NumberOfInteractionsPerStep=1;
-  int NumberOfSteps=50;
-  int MaxGoodNumber=50;
+  int NumberOfSteps=1000;
+  int MaxGoodNumber=10;
   double MaxGoodPriority=100.;
 }
  

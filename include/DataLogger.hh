@@ -12,6 +12,9 @@
 
 class TransactionRecord;
 class EconomicActor;
+class MarketManager;
+class GoodManager;
+
 using namespace std;
 
 class DataLogger 
@@ -28,6 +31,11 @@ public:
   void PushGoodPrice(int GoodNumber,double price,int supply);
   
   void LogEndingMoneyDistribution( unordered_map <int,EconomicActor*>* list);
+  
+  void LogMarketState(MarketManager *,GoodManager*);
+
+  void LogPopulation(int );
+  
 private:
   DataLogger();
 
@@ -35,6 +43,14 @@ private:
   ofstream pFileForEndingMoneyDistribution;
   
   vector <TransactionRecord> theGoodPrices;
+
+  vector < vector <int> > rDemands;
+  vector < vector <int> > rSupplies;
+
+  vector <ofstream*> rFilesForSupply;
+  vector <ofstream*> rFilesForDemand;
+
+  ofstream rFileForPopulation;
 
   int pBufferSize;
   void pWriteToDisk();

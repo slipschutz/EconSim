@@ -69,15 +69,22 @@ void ActorLogger::DumpLog(){
   int size = rBeforeState.size();
   int size2 =rAfterState.size();
 
+  cout<<"Size of beforeState "<<rBeforeState.size()<<endl;
+  cout<<"Size of AfterState "<<rBeforeState.size()<<endl;
+  cout<<"Before state message "<<rBeforeMessage.size()<<endl;
+  cout<<"during state message "<<rDuringMessage.size()<<endl;
+  cout<<"after message size "<< rAfterMessage.size()<<endl;
+
 
   if (size !=size2){
     cout<<"NO MATCH"<<endl;
+
     cout<<"Before "<<size<<endl;
     cout<<"after "<<size2<<endl;
   
   }
 
-  for (int i=0;i<size-1;i++){
+  for (int i=0;i<size;i++){
     for (int i=0;i<50;i++){
       outFile<<'v';
     }outFile<<endl;

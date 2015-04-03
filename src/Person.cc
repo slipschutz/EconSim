@@ -30,7 +30,7 @@ Person::~Person(){
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
-  fMoney =1000;
+  fMoney =100000;
 
   fSupplies.clear();
   fDemands.clear();
@@ -44,8 +44,8 @@ void Person::Initialize(){
   //Initialize Person specific Traits 
   
   rRestlessness=RandomManager::GetRand(100);
-  rGluttoness=RandomManager::GetRand(10)+1;
-  rInvestmentLevel=RandomManager::GetRand(100);
+  rGluttoness=1;//RandomManager::GetRand(10)+1;
+  rInvestmentLevel=RandomManager::GetRand(60)+40;
 
   rHaveAJob=false;
   rEmployerId=-1;
@@ -74,8 +74,6 @@ void Person::DumpConnections(){
   for (auto & ii : fConnections){
     cout<<"    Person "<<this->GetBaseId()<<" connects to "<<ii.first<<endl;
   }
-
-
 }
 
 
@@ -122,16 +120,24 @@ ActorActions Person::BeginningOfStep(){
   }
   
 
-  if (RandomManager::GetRand(100)< 2){
+  if (fMoney > 20000 && RandomManager::GetRand(1000)< 10){
 
-    double startup=this->GetCompanyInvestment();
-    this->SubtractMoney(startup);
-    Company * c =new Manufacturer(startup,fTheEconomicActorManager,this);
-    s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
-    rOwnedCompanies.push_back(c);
-    fTheEconomicActorManager->MakeActor(c);
+
+    int num = GoodManager::Get()->FindHighestDemandGood();
+    int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(num);
+    int theDemand = GoodManager::Get()->demand[num];
+
+    if (theDemand > 1.2*theSupply){
+
+      double startup=this->GetCompanyInvestment();
+      this->SubtractMoney(startup);
+
+      Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,num);
+      s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
+      rOwnedCompanies.push_back(c);
+      fTheEconomicActorManager->MakeActor(c);
+    }
   }
-  
 
   //
   //Message to keep track of whether this person got fired in previous step

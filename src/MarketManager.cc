@@ -14,6 +14,7 @@ MarketManager * MarketManager::theManager=NULL;
 MarketManager::MarketManager(){
   //Constructor
   rSellPrices.resize(Settings::MaxGoodNumber);
+  rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
 
 }
 
@@ -28,6 +29,10 @@ void MarketManager::ClearMarket(){
   rJobListings.clear();
   rSellPrices.clear();
   rSellPrices.resize(Settings::MaxGoodNumber);
+
+  rCurrentGoodsForSale.clear();
+  rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
+
 }
 
 MarketManager * MarketManager::Get(){
@@ -58,6 +63,11 @@ void MarketManager::PlaceSellOrder(int GoodNumber,int SellerId, int Quantity,dou
   }
 
   (rSellPrices[GoodNumber]).insert(make_pair(Price,OrderInfo(SellerId,Quantity,Price)));
+  
+  //Put the inforamtion from the sale in the list of current goods for sale
+  //this will keep track of the FOR SALE supply of things 
+  rCurrentGoodsForSale[GoodNumber]=Quantity;
+
 
 }
 
@@ -150,4 +160,15 @@ void MarketManager::Dump(){
 
   }
   cout<<"End MarketManager::Dump()"<<endl;
+}
+
+
+void MarketManager::DumpCurrentGoodsForSale(){
+
+
+  for (int i=0;i<rCurrentGoodsForSale.size();i++){
+    cout<<"Good "<<i<<" has supply for sale "<<rCurrentGoodsForSale.at(i)<<endl;
+    
+  }
+
 }

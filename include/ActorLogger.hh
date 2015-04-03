@@ -11,8 +11,6 @@ class ActorLogger : public Base{
 
 public:
 
-
-
   static ActorLogger* theLogger;
   static ActorLogger* Get();
 
@@ -38,14 +36,13 @@ private:
   
   ActorLogger(){}
   
-  std::vector <ActorSnapshot> rWantsSnapshots;
-  std::vector <ActorSnapshot> rHasSnapshots;
-  std::vector <int> rGoodBeingTraded;
-  std::vector <double> rValue2Buyer;
-  std::vector <double> rValue2Seller;
+  // std::vector <ActorSnapshot> rWantsSnapshots;
+  // std::vector <ActorSnapshot> rHasSnapshots;
+  // std::vector <int> rGoodBeingTraded;
+  // std::vector <double> rValue2Buyer;
+  // std::vector <double> rValue2Seller;
 
   std::vector <double> rMoneyLog;
-
 
   std::vector <string> rBeforeState;
   std::vector <string> rAfterState;

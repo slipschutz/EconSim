@@ -69,15 +69,19 @@ public:
   void ClearMarket();
    
   void Dump();
-  
+  void DumpCurrentGoodsForSale();
 
+
+  vector <int> * GetCurrentGoodsForSale(){return &rCurrentGoodsForSale;}
+  
 private:
   MarketManager();
 
   //For each good make a map of prices
   vector < multimap <double,OrderInfo> > rSellPrices;
   multimap <double,JobInfo> rJobListings;
-  
+
+  vector <int> rCurrentGoodsForSale;
 };
 
 
