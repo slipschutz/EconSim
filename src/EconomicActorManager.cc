@@ -32,7 +32,7 @@ EconomicActorManager::EconomicActorManager() {
   rNumberOfCompanyDeaths=0;
   rNumberOfBirths=0;
   
-
+  rNumCurrentCompanies=0;
 }
 
 EconomicActorManager::~EconomicActorManager(){
@@ -141,7 +141,7 @@ void EconomicActorManager::BuildTestNetwork(){
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
 
 
-  EconomicActor * a1 = new Manufacturer(100000,this,a);//Have these initial companies start with 1000 dollars
+  EconomicActor * a1 = new Manufacturer(100000,this,a,0);//Have these initial companies start with 1000 dollars
   a1->Initialize();
   rTheListOfActors.insert(make_pair(a1->GetBaseId(),a1));
   rTheIds.push_back(a1->GetBaseId());
@@ -153,16 +153,20 @@ void EconomicActorManager::BuildTestNetwork(){
 void EconomicActorManager::DoAStep(){
   cout<<"Size is "<<rTheListOfActors.size()<<endl;
   rTheIds.clear();
-
+  rNumCurrentCompanies=0;
   for (auto i : rTheListOfActors){
     ActorActions a =i.second->BeginningOfStep();
+
+    if ( i.second->GetActorType()== ActorTypes::Manufacturer){
+      rNumCurrentCompanies++;
+    }
 
     //Recreate the ids list
     rTheIds.push_back(i.first);
 
   }
   
-
+  cout<<"FOR ToNY "<<rNumCurrentCompanies<<" "<<GetNumberOfPeople()<<endl;
 
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
@@ -216,6 +220,7 @@ void EconomicActorManager::MarkForDeath(EconomicActor* act){
   //This method will remove all connections the actor has 
   int DeadMansBaseId=act->GetBaseId();
   
+
   //Loop over the connections and remove this actor from
   //the list of everyone else
   // for ( auto & ii : (*act->GetConnections())){
@@ -235,6 +240,7 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   rTheListOfActors.insert(make_pair(act->GetBaseId(),act));
   rTheIds.push_back(act->GetBaseId());
   
+
 
   // for (auto it : rTheListOfActors){
 

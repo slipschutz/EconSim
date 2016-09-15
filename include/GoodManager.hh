@@ -30,6 +30,8 @@ public:
   map<int,int> supply;
   map<int,int> demand;
 
+
+  
   void Dump();
 
 
@@ -53,10 +55,11 @@ public:
   void AddSupply(int id, int copies);
   void AddDemand(int id, int copies);
 
-
+  
+  int FindHighestDemandGood();
  
 private:
-  
+
 
   GoodManager();//This is a static singleton
 };

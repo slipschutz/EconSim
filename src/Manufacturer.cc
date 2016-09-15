@@ -19,7 +19,7 @@ void Manufacturer::Initialize(){
 
 
   //Pick a good to manufacturer
-  GoodToManufacture=RandomManager::GetRand(Settings::MaxGoodNumber);
+  //  GoodToManufacture=RandomManager::GetRand(Settings::MaxGoodNumber);
   
   //Randomly assign some attributes
   rConservativeness=RandomManager::GetRand(1000)/1000.0;
@@ -35,7 +35,7 @@ void Manufacturer::Initialize(){
   }
 
   fSupplies.clear();
-    fDemands.clear();
+  fDemands.clear();
 
   rStartingSalary=RandomManager::GetRand(100);
 
@@ -50,6 +50,9 @@ void Manufacturer::Initialize(){
   numberOfSteps=0;
   numberOFProductions=0;
   
+
+  rStartingSalary=RandomManager::GetRand(10000);
+
 }
 
 

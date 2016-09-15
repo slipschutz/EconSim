@@ -175,6 +175,22 @@ void GoodManager::Dump(){
 
 
 
+int GoodManager::FindHighestDemandGood(){
+  //Make this function better futrure sam
+  //you are making a linear search cuz you are feeling 
+  //lazy.
+  int maxDemand =-1;
+  int maxDemandGoodNumber=-1;
+  for (auto i : demand ){
+    if( i.second  > maxDemand){
+      maxDemand=i.second;
+      maxDemandGoodNumber=i.first;
+    }
+  }
+
+  return maxDemandGoodNumber;
+}
+
 
 
 double Demand2Money=(1.1/Settings::NumberOfPeople);

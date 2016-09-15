@@ -47,11 +47,11 @@ void TestGoodStuff(){
 
 
 int main(int argv, char ** argc){
-   // TestGoodStuff();
-   // cout<<"\n\n\n";
-   // GoodManager::Get()->Dump();
+  // TestGoodStuff();
+  // cout<<"\n\n\n";
+  // GoodManager::Get()->Dump();
 
-   // return 0;
+  // return 0;
   //  return 3;
 
   try{
@@ -67,16 +67,17 @@ int main(int argv, char ** argc){
     for (int i=0;i<Settings::NumberOfSteps;i++){
     
       theManager->DoAStep();
+
       if (i%1==0){
 	cout<<"ON "<<i<<endl;
       }
-       if (i==Settings::NumberOfSteps-1){
-	 cout<<"\n\n\n";
-	 // GoodManager::Get()->Dump();
-	 // MarketManager::Get()->Dump();
-	// 	int t;cin>>t;
-       }
-
+      if (i % 1 == 0){
+	// GoodManager::Get()->Dump();
+	// MarketManager::Get()->DumpCurrentGoodsForSale();
+	// cout<<"______________"<<endl;
+	DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
+	DataLogger::Get()->LogPopulation(theManager->GetNumberOfPeople());
+      }
 
       MarketManager::Get()->ClearMarket();
       Calendar::DayNumber++;
@@ -93,7 +94,7 @@ int main(int argv, char ** argc){
 
     delete theManager;
     //    GoodManager::Get()->Dump();
-    ActorLogger::Get()->DumpLog();
+    //    ActorLogger::Get()->DumpLog();
 
 
     if (DataLogger::Get() != NULL){

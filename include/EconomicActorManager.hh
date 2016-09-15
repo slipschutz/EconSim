@@ -11,6 +11,8 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
+
+#include "Settings.hh"
 using namespace std;
 
 
@@ -55,11 +57,15 @@ public:
   void BuildTestNetwork();
 
   void PrintAllInfo();
+  
+  int GetNumberOfPeople(){return Settings::NumberOfPeople-rNumberOfPeopleDeaths;}
 
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
   int rNumPeople;
+  
+  int rNumCurrentCompanies;
   std::unordered_map <int,EconomicActor*> rTheListOfActors;
 
   vector <int> rTheIds;///<Vector that is used to determine the order that the Actors act in
