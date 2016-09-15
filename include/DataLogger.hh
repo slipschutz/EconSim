@@ -26,8 +26,22 @@ public:
 
 
   void PushGoodPrice(int GoodNumber,double price,int supply);
-  
+
+  void PushJobInfo(double salary);
+
   void LogEndingMoneyDistribution( unordered_map <int,EconomicActor*>* list);
+
+  void FinalizePrices();
+
+  vector <TransactionRecord >* GetThePrices(){return &theGoodPrices;}
+  
+  vector <double> * GetTheSalaries(){return &theSalaries;}
+  
+
+  vector <double> theSupplies;
+  vector <double> theDemands;
+  
+
 private:
   DataLogger();
 
@@ -35,6 +49,18 @@ private:
   ofstream pFileForEndingMoneyDistribution;
   
   vector <TransactionRecord> theGoodPrices;
+
+  vector <double> theSalaries;
+
+  
+  double rTempPrice;
+  long rTempNumTransactions;
+  double rTempVolume;
+
+  double rTempJobSalary;
+  long rTempNumJobPostings;
+
+
 
   int pBufferSize;
   void pWriteToDisk();

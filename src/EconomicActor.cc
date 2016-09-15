@@ -152,7 +152,7 @@ void EconomicActor::AddDemand(int GoodNumber,int copies){
   //it made it through the search.  Therefore it the demand
   //is not already there.  Add it
   fDemandPriorities2GoodNum.insert(make_pair(tempNum,GoodNumber));
-
+  
   
 }
 

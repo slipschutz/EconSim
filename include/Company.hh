@@ -25,7 +25,8 @@ public:
   virtual ~Company();
   
   void SetNoOwner(){fTheOwner=NULL;}
-  
+
+  Person* GetTheOwner(){return fTheOwner;}
   /**  */
   // virutal void Initialize();
   // void EndOfStep(){}
@@ -35,6 +36,8 @@ public:
   // virtual int GetActorType(){return ActorTypes::Company;}
   void AddEmployee(Person * ,double salary);
   void RemoveEmployee(Person *);
+
+  int GetNumberOfEmployees(){return Employees2Salary.size();}
 protected:
  
   map<Person*,double> Employees2Salary;

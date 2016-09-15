@@ -30,7 +30,7 @@ Person::~Person(){
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
-  fMoney =100000;
+  fMoney =1000;
 
   fSupplies.clear();
   fDemands.clear();
@@ -115,23 +115,25 @@ ActorActions Person::BeginningOfStep(){
   //
   //Add demands for random goods depending on restlessness of person
   //
-  if (RandomManager::GetRand(100) < rRestlessness){
-    int d=RandomManager::GetRand(Settings::MaxGoodNumber);
-    AddDemand(d,1);
-    s<<"Diary I just have to have a new "<<d<<" or else no one will like me"<<endl;
-  }
+
+  //Just FOOD FOR NOW
+  // if (RandomManager::GetRand(100) < rRestlessness){
+  //   int d=RandomManager::GetRand(Settings::MaxGoodNumber);
+  //   AddDemand(d,1);
+  //   s<<"Diary I just have to have a new "<<d<<" or else no one will like me"<<endl;
+  // }
   
 
-  if (RandomManager::GetRand(100)< 3){
-
-    double startup=this->GetCompanyInvestment();
-    this->SubtractMoney(startup);
-    Company * c =new Manufacturer(startup,fTheEconomicActorManager,this);
-    s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
-    rOwnedCompanies.push_back(c);
-    fTheEconomicActorManager->MakeActor(c);
+  if (rOwnedCompanies.size () < 3){ //Max of three companies per person
+    if (RandomManager::GetRand(100)< 3){
+      double startup=this->GetCompanyInvestment();
+      this->SubtractMoney(startup);
+      Company * c =new Manufacturer(startup,fTheEconomicActorManager,this);
+      s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
+      rOwnedCompanies.push_back(c);
+      fTheEconomicActorManager->MakeActor(c);
+    }
   }
-  
 
   //
   //Message to keep track of whether this person got fired in previous step

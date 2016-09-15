@@ -103,6 +103,9 @@ void MarketManager::PlaceJobPosting(double salary, int EmployerId){
 }
 
 void MarketManager::BrokerJob(Person * employee, Company * employer,double salary){
+  DataLogger::Get()->PushJobInfo(salary);
+
+
   employer->AddEmployee(employee,salary);
   //Now do clean up of job posting
   

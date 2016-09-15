@@ -42,6 +42,12 @@ public:
   void RemoveCompany(Company*);
 
   void PrintInfo();
+
+
+  void SetRestlessnes(int v){rRestlessness=v;}
+  void SetGluttoness(int v){rGluttoness=v;}
+  void SetInvestmentLevel(int v){rInvestmentLevel=v;}
+
 private:
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);

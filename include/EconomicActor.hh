@@ -82,6 +82,7 @@ public:
   void AddMoney(double v){fMoney=fMoney+v;}
 
   inline int GetGoodPriority(int GoodId){return fGoodPriorities[GoodId];}
+  void SetGoodPriority(int GoodId,double priority){fGoodPriorities[GoodId]=priority;}
 
 protected:
 

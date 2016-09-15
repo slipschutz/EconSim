@@ -16,6 +16,7 @@
 #include "Settings.hh"
 #include "MarketManager.hh"
 #include "GoodManager.hh"
+#include "DataLogger.hh"
 
 
 #include "Exceptions.hh"
@@ -204,6 +205,10 @@ void EconomicActorManager::DoAStep(){
   //to go through and find the ids of dead actors as they
   //are in a random order
   rTheIds.clear();
+
+
+  DataLogger::Get()->FinalizePrices();
+
 }
 
 void EconomicActorManager::MarkForDeath(EconomicActor* act){

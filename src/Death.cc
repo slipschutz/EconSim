@@ -50,7 +50,7 @@ void Death::FindDead(int id){
     cout<<"Died on "<<it->second<<endl;
     cout<<"Today is "<<Calendar::DayNumber<<endl;
   } else {
-    cout<<"IT still draws breath"<<endl;
+    cout<<"It still draws breath"<<endl;
   }
     
 

@@ -60,6 +60,11 @@ private:
 
   double rStartOfStepMoney;
   int rStartOfStepSupply;
+
+  int numberOfSteps;
+  int numberOFProductions;
+
+  bool rFirstStep;
 };
 
 
