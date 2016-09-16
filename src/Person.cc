@@ -112,11 +112,13 @@ ActorActions Person::BeginningOfStep(){
 
   
 
-  if (fMoney > 20000 && RandomManager::GetRand(1000)< 10){
+  if (fMoney > 20000 && RandomManager::GetRand(1000)< 10 &&1==2){
 
 
     int num = GoodManager::Get()->FindHighestDemandGood();
+
     int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(num);
+
     int theDemand = GoodManager::Get()->demand[num];
 
     if (theDemand > 1.2*theSupply){
