@@ -92,41 +92,19 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
   ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
 
-  // for (int i=0;i<0.5*NumberOfActors;i++){
-  //   EconomicActor * a = new Manufacturer(1000,this);//Have these initial companies start with 1000 dollars
-  //   rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
-  //   rTheIds.push_back(a->GetBaseId());
-  // }
 
   rNumPeople=rTheListOfActors.size();
-  cout<<"TOTAL NUMBER OF ACTORS "<<rNumPeople<<endl;
+
   if (rTheIds.size() !=rNumPeople){
     MessageException e("<EconomicActorManager::BuildCompleteNetwor> Length of id list does not match number of actors");
     throw e;
   }
 
-  // for (int i=0;i<rTheListOfActors.size();i++){
-  //   rTheListOfActors[i]->Initialize();
-  //   for (int j=0;j<rTheListOfActors.size();j++){
-  //     if (i != j){
-  // 	rTheListOfActors[i]->MakeConnection(rTheListOfActors[j]);
-  //     }
-  //   }
-  // }
 
   for (auto i : rTheListOfActors){
     i.second->Initialize();
   }
-  
-  // for (auto  i : rTheListOfActors){
-  //   i.second->Initialize();
-  //   for (auto j : rTheListOfActors){
-  //     if (i.first != j.first){
-  // 	i.second->MakeConnection(j.second);
-  //     }
-  //   }
-  // }
-
+ 
 }
 
 void EconomicActorManager::BuildTestNetwork(){
@@ -151,7 +129,7 @@ void EconomicActorManager::BuildTestNetwork(){
 
 
 void EconomicActorManager::DoAStep(){
-  cout<<"Size is "<<rTheListOfActors.size()<<endl;
+ 
   rTheIds.clear();
   rNumCurrentCompanies=0;
   for (auto i : rTheListOfActors){
@@ -165,8 +143,6 @@ void EconomicActorManager::DoAStep(){
     rTheIds.push_back(i.first);
 
   }
-  
-  cout<<"FOR ToNY "<<rNumCurrentCompanies<<" "<<GetNumberOfPeople()<<endl;
 
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP

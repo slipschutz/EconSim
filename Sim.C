@@ -94,7 +94,7 @@ int main(int argv, char ** argc){
 
     delete theManager;
     //    GoodManager::Get()->Dump();
-    //    ActorLogger::Get()->DumpLog();
+    ActorLogger::Get()->DumpLog();
 
 
     if (DataLogger::Get() != NULL){

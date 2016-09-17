@@ -70,8 +70,8 @@ ActorActions Manufacturer::BeginningOfStep(){
     fSupplies[GoodToManufacture]=temp;
   }
     
-  if ( Employees2Salary.size() > 5){
-    int t=Employees2Salary.size()*10;
+  if ( Employees2Salary.size() > 2){
+    int t=Employees2Salary.size()*1000;
     fSupplies[GoodToManufacture].AddCopies(t);
     rTotalVolumeCreated+=t;
 

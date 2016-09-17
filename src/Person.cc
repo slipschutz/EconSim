@@ -109,24 +109,24 @@ ActorActions Person::BeginningOfStep(){
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
 
-
-  
-
-  if (fMoney > 20000 && RandomManager::GetRand(1000)< 10 &&1==2){
+  int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood();
 
 
-    int num = GoodManager::Get()->FindHighestDemandGood();
+  if (fMoney > 2000 && RandomManager::GetRand(100)< 10 &&
+      HighestDemandGoodNum!=-1){
 
-    int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(num);
 
-    int theDemand = GoodManager::Get()->demand[num];
+
+    int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
+
+    int theDemand = GoodManager::Get()->demand[HighestDemandGoodNum];
 
     if (theDemand > 1.2*theSupply){
 
       double startup=this->GetCompanyInvestment();
       this->SubtractMoney(startup);
 
-      Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,num);
+      Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,HighestDemandGoodNum);
 
       s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
       rOwnedCompanies.push_back(c);
