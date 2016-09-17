@@ -31,6 +31,7 @@ public:
   void PushGoodPrice(int GoodNumber,double price,int supply);
 
   void PushJobInfo(double salary);
+  void FinalizePrices();
 
   void LogEndingMoneyDistribution( unordered_map <int,EconomicActor*>* list);
   
@@ -38,7 +39,7 @@ public:
 
   void LogPopulation(int num);
 
-  void FinalizePrices();
+
 
   vector <TransactionRecord >* GetThePrices(){return &theGoodPrices;}
   
