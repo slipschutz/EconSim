@@ -67,10 +67,10 @@ void DataLogger::PushGoodPrice(int GoodNumber,double price, int supply){
 
   theGoodPrices.push_back(TransactionRecord(GoodNumber,price,supply));
 
-  if (theGoodPrices.size() >= pBufferSize){
-    pWriteToDisk();
-    theGoodPrices.clear();
-  }
+  // if (theGoodPrices.size() >= pBufferSize){
+  //   pWriteToDisk();
+  //   theGoodPrices.clear();
+  // }
 
 }
 
