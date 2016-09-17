@@ -188,15 +188,17 @@ void Person::DoStep(){
 		<<" at the end of the day I still want "<<AmountOfGoodIWant<<endl;
 	AmountOfGoodIWant=-10;
 	break;
-      } else if (info.Price*AmountOfGoodIWant > fMoney){
+      } else if (Seller !=-1 && info.Price*AmountOfGoodIWant > fMoney){
 	//This price is always the current cheapest price
 	//if I don't have enought money to buy what I want then 
 	//Not sale
 	dayNotes<<"I wanted to buy "<<info.Price*AmountOfGoodIWant<<" worth of good "<<Good2Buy<<endl
 		<<"but I only have "<<fMoney<<endl;
 	if (AmountOfGoodIWant > 5){
+	  //if they demand alot of the good try lowering it until they can afford the good
 	  AmountOfGoodIWant-=5;
 	}else{
+	  //They can't afford anything
 	  break;
 	}
       } else {//Can afford the good and someone is selling it
@@ -206,16 +208,6 @@ void Person::DoStep(){
 	  rDoTransaction(Good2Buy,AmountOfGoodIWant,info.Price,Seller);
 
 	  double totalCost=(AmountOfGoodIWant)*info.Price;
-	  // //Move the money
-	  // Company* theSeller =fTheEconomicActorManager->FindCompany(Seller);
-
-	  // theSeller->AddMoney(totalCost);
-	  // this->SubtractMoney(totalCost);
-      
-	  // //Remove the Supply from seller
-
-	  // GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
-	  // MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,AmountOfGoodIWant);
 	  dayNotes<<"Haza I bought "<<AmountOfGoodIWant<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
 		  <<info.Price<<" totaling "<<totalCost<<endl;
 	  AmountOfGoodIWant=0;
@@ -224,15 +216,6 @@ void Person::DoStep(){
 	  rDoTransaction(Good2Buy,PartOfWhatIWant,info.Price,Seller);
 	  //This seller can only provide part of the order
 	  double totalCost=(PartOfWhatIWant)*info.Price;
-	  // //Move the money
-	  // //	  fConnections[Seller]->AddMoney(totalCost);
-	  // Company* theSeller =fTheEconomicActorManager->FindCompany(Seller);
-	  // theSeller->AddMoney(totalCost);
-	  // this->SubtractMoney(totalCost);
-
-	  // //Remove the Supply from seller
-	  // GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,PartOfWhatIWant);
-	  // MarketManager::Get()->CleanUpOrder(Good2Buy,info.Price,Seller,PartOfWhatIWant);
 	  AmountOfGoodIWant-=PartOfWhatIWant;
 	  dayNotes<<"Less Haza I bought "<<info.Quantity<<" of good "<<Good2Buy<<" from "<<Seller<<" at a price of "<<endl
 		  <<info.Price<<" totaling "<<totalCost<<endl;

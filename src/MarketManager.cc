@@ -161,8 +161,7 @@ void MarketManager::Dump(){
   }
   
   for (auto & i : rJobListings){
-    //    cout<<"Salary "<<i.first<<" from "<<i.second.EmployerID<<endl;
-
+    cout<<"Salary "<<i.first<<" from "<<i.second.EmployerID<<endl;
   }
   cout<<"End MarketManager::Dump()"<<endl;
 }

@@ -67,6 +67,9 @@ void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buye
   //The Seller needs to have the goods removed from it's supplies and the buyer needs
   //to have the good removed from its demand
 
+  DataLogger::Get()->theSupplies.push_back(supply[good]);
+  DataLogger::Get()->theDemands.push_back(demand[good]);
+
   Seller->RemoveSupply(good,quantity);
   Buyer->AddSupply(good,quantity);
   Buyer->RemoveDemand(good,quantity);

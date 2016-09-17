@@ -71,7 +71,7 @@ ActorActions Manufacturer::BeginningOfStep(){
   }
     
   if ( Employees2Salary.size() > 2){
-    int t=Employees2Salary.size()*1000;
+    int t=Employees2Salary.size()*2;
     fSupplies[GoodToManufacture].AddCopies(t);
     rTotalVolumeCreated+=t;
 
