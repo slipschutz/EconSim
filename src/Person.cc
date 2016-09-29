@@ -53,6 +53,17 @@ void Person::Initialize(){
   rWasPaidInPreviousStep=false;
 }
 
+void Person::Initialize(Person *p){
+  Initialize();
+  
+  //Initialize Person specific Traits 
+  
+  rRestlessness=p->rRestlessness;
+  rGluttoness=p->rGluttoness;
+  rInvestmentLevel=p->rGluttoness;
+
+}
+
 void Person::DumpHavesWants(){
   cout<<"Wants for Person "<<this->GetBaseId()<<":   ";
   for (map<int,Good>::iterator ii=fDemands.begin();ii!=fDemands.end();ii++){
@@ -93,8 +104,9 @@ ActorActions Person::BeginningOfStep(){
   if (fSupplies.count(0) == 0) {
     //Food is not in the supplies map
     AddSupply(0,0);//Make empty good
-  }
 
+  }
+  AddDemand(0,0);
   stringstream s;
   s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
 
@@ -102,20 +114,19 @@ ActorActions Person::BeginningOfStep(){
   //
   //Add food Demand if in need of food
   //
-  if (fSupplies[0].GetNumberOfCopies() < 5*rGluttoness){
+  if (fSupplies[0].GetNumberOfCopies() < 5*rGluttoness && fDemands[0].GetNumberOfCopies()<2){
     //There are not enough copies of food in the supply
     int n=RandomManager::GetRand(100)+rGluttoness;
     AddDemand(0,n);//Add the demand for food
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
 
-  int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood();
+  int amtOfDemand=0;
+  int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood(amtOfDemand);
 
 
-  if (fMoney > 2000 && RandomManager::GetRand(100)< 10 &&
-      HighestDemandGoodNum!=-1){
-
-
+  if (RandomManager::GetRand(1000)< 10 &&
+      HighestDemandGoodNum!=-1 && amtOfDemand > 10){//10 here is to prevent too many companies from spawning 
 
     int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
 
@@ -132,6 +143,18 @@ ActorActions Person::BeginningOfStep(){
       rOwnedCompanies.push_back(c);
       fTheEconomicActorManager->MakeActor(c);
     }
+  }
+
+  
+  //Make more people
+  if (RandomManager::GetRand(1000) < 2){
+    Person * aPerson = new Person(fTheEconomicActorManager);
+    fTheEconomicActorManager->MakeActor(aPerson);
+    aPerson->Initialize(this);
+    double temp=fMoney/2.0;
+    this->SubtractMoney(temp);
+    aPerson->AddMoney(temp);
+
   }
 
   //

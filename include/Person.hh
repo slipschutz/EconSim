@@ -18,6 +18,7 @@ public:
   ~Person();
  
   void Initialize();
+  void Initialize(Person *);
 
 
   void DumpConnections();
