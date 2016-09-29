@@ -29,6 +29,8 @@ EconomicActorManager::EconomicActorManager() {
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
 
   rNumberOfPeopleDeaths=0;
+  rNumberOfPeopleBirths=0;
+  rNumberOfCompanyBirths=0;
   rNumberOfCompanyDeaths=0;
   rNumberOfBirths=0;
   
@@ -47,6 +49,10 @@ EconomicActorManager::~EconomicActorManager(){
   rTheListOfActors.clear();
   cout<<"There were "<<rNumberOfPeopleDeaths<<" People deaths"<<endl;
   cout<<"There were "<<rNumberOfCompanyDeaths<<" Company deaths"<<endl;
+
+  cout<<"There were "<<rNumberOfPeopleBirths<<" People   births"<<endl;
+  cout<<"There were "<<rNumberOfCompanyBirths<<" Company births"<<endl;
+
   cout<<"There were "<<rNumberOfBirths<<" births"<<endl;
 }
 
@@ -216,6 +222,13 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   rTheListOfActors.insert(make_pair(act->GetBaseId(),act));
   rTheIds.push_back(act->GetBaseId());
   
+
+  int t =act->GetActorType();
+  if ( t == ActorTypes::Company || t==ActorTypes::Manufacturer){
+    rNumberOfCompanyBirths++;
+  }else{
+    rNumberOfPeopleBirths++;
+  }
 
 
   // for (auto it : rTheListOfActors){

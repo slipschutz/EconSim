@@ -74,6 +74,8 @@ private:
   int rPersonToLog;
 
   int rNumberOfPeopleDeaths;
+  int rNumberOfPeopleBirths;
+  int rNumberOfCompanyBirths;
   int rNumberOfCompanyDeaths;
   int rNumberOfBirths;
 };
