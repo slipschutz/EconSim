@@ -96,10 +96,13 @@ void ActorLogger::DumpLog(){
 
     outFile<<rDuringMessage[i]<<endl;
     outFile<<"At the end of the day I had"<<endl;
-    outFile<<rAfterState[i]<<endl;
 
-
-    outFile<<rAfterMessage[i]<<endl;
+    if (i <rAfterState.size()){
+      outFile<<rAfterState[i]<<endl;
+    }
+    if (i < rAfterMessage.size()){
+      outFile<<rAfterMessage[i]<<endl;
+    }
     for (int i=0;i<50;i++){
       outFile<<'^';
     }outFile<<endl;
