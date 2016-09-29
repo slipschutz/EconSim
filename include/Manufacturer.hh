@@ -65,6 +65,7 @@ private:
   int numberOFProductions;
 
   bool rFirstStep;
+  bool rHireMorePeople;
 };
 
 

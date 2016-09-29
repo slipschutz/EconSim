@@ -14,6 +14,7 @@
 #include "Good.hh"
 #include "EconomicActorManager.hh"
 #include "Death.hh"
+#include "Calendar.hh"
 
 void Manufacturer::Initialize(){
 
@@ -23,7 +24,7 @@ void Manufacturer::Initialize(){
   
   //Randomly assign some attributes
   rConservativeness=RandomManager::GetRand(1000)/1000.0;
-  rSteadfastness=0.1;//RandomManager::GetRand(1000)/1000.0;
+  rSteadfastness=RandomManager::GetRand(1000)/2000.0 + 0.5;
 
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
   rPriceChangeLevel= RandomManager::GetRand(100)/100.;
@@ -37,7 +38,7 @@ void Manufacturer::Initialize(){
   fSupplies.clear();
   fDemands.clear();
 
-  rStartingSalary=RandomManager::GetRand(100);
+
 
 
   rTotalVolumeCreated=0;
@@ -51,8 +52,9 @@ void Manufacturer::Initialize(){
   numberOFProductions=0;
   
 
-  rStartingSalary=RandomManager::GetRand(10000);
+  rStartingSalary=RandomManager::GetRand(100000);
 
+  rHireMorePeople=true;
 }
 
 
@@ -70,8 +72,9 @@ ActorActions Manufacturer::BeginningOfStep(){
     fSupplies[GoodToManufacture]=temp;
   }
     
-  if ( Employees2Salary.size() > 2){
-    int t=Employees2Salary.size()*2;
+  if ( Employees2Salary.size() > 2 && Calendar::DayNumber < 1200){
+
+    int t=Employees2Salary.size();
     fSupplies[GoodToManufacture].AddCopies(t);
     rTotalVolumeCreated+=t;
 
@@ -92,11 +95,12 @@ ActorActions Manufacturer::BeginningOfStep(){
   }
   
 
-
-  for (int i=0;i<10-Employees2Salary.size();i++){
-    MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
+  if (rHireMorePeople || Employees2Salary.size()==0){
+    for (int i=0;i<5;i++){
+      MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
+    }
+    rHireMorePeople=false;
   }
-
 
   auto it_temp=fSupplies.find(GoodToManufacture);
   if (it_temp != fSupplies.end()){
@@ -128,7 +132,7 @@ ActorActions Manufacturer::EndOfStep(){
     //   fTheOwner->GetPaid(0.1*thisStepProfit,"Receiving returns from owning company");
     //   this->SubtractMoney(0.1*thisStepProfit);
     // }
-
+    rHireMorePeople=true;
   }else {//We are not making moeny
 
   }
@@ -136,9 +140,14 @@ ActorActions Manufacturer::EndOfStep(){
   if (RandomManager::GetRand(100)/100. > rSteadfastness){
     if (thisStepSoldVolume < 10){
       int temp =fGoodPriorities[GoodToManufacture];
-      // cout<<"before price "<<temp<<endl;
+      //      cout<<"before price "<<temp<<endl;
       temp = temp - temp*rPriceChangeLevel;
-      // cout<<"after price "<<temp<<endl;
+      //      cout<<"after price "<<temp<<endl;
+      
+      if (temp < 10){
+	temp=10;
+      }
+      
       fGoodPriorities[GoodToManufacture]=temp;
 
       // cout<<"This is manufacturer "<<this->GetBaseId()<<" in lower price"<<endl;
@@ -187,6 +196,14 @@ ActorActions Manufacturer::EndOfStep(){
     }
   }
 
+  if (RandomManager::GetRand(100) <=1 &&Employees2Salary.size()!=0){
+    //
+
+    auto it= Employees2Salary.begin();
+    it->first->YourFired();
+    Employees2Salary.erase(it);
+
+  }
   numberOfSteps++;
   return ret;
 }
