@@ -67,8 +67,10 @@ void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buye
   //The Seller needs to have the goods removed from it's supplies and the buyer needs
   //to have the good removed from its demand
 
-  DataLogger::Get()->theSupplies.push_back(supply[good]);
-  DataLogger::Get()->theDemands.push_back(demand[good]);
+  if (good ==0){
+    DataLogger::Get()->theSupplies.push_back(supply[good]);
+    DataLogger::Get()->theDemands.push_back(demand[good]);
+  }
 
   Seller->RemoveSupply(good,quantity);
   Buyer->AddSupply(good,quantity);
@@ -178,15 +180,15 @@ void GoodManager::Dump(){
 
 
 
-int GoodManager::FindHighestDemandGood(){
+int GoodManager::FindHighestDemandGood(int &amtOfDemand){
   //Make this function better futrure sam
   //you are making a linear search cuz you are feeling 
   //lazy.
-  int maxDemand =-1;
+  amtOfDemand =-1;
   int maxDemandGoodNumber=-1;
   for (auto i : demand ){
-    if( i.second  > maxDemand){
-      maxDemand=i.second;
+    if( i.second  >amtOfDemand){
+      amtOfDemand=i.second;
       maxDemandGoodNumber=i.first;
     }
   }

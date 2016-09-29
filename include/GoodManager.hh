@@ -56,7 +56,7 @@ public:
   void AddDemand(int id, int copies);
 
   
-  int FindHighestDemandGood();
+  int FindHighestDemandGood(int &);
  
 private:
 
