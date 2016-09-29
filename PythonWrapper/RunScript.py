@@ -16,7 +16,9 @@ def go():
     price = plt.plot(x,"r--",label="Price")
     demand = plt.plot(libWrapper.GetDemands(),label="demand")
     supply=plt.plot(libWrapper.GetSupplies(),label="supply")
-    
+
+    plt.yscale('log')
+
     plt.legend()
     plt.show()
 
