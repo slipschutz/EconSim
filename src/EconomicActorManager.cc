@@ -91,12 +91,16 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   //  rTheListOfActors.resize(NumberOfActors);
   
   for (int i=0;i<NumberOfActors;i++){
-    EconomicActor * a = new Person(this);
+    Person * a = new Person(this);
+    if (i<20){
+      a->SetActorLogger(new ActorLogger(a->GetBaseId()));
+    }
+    
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
     rTheIds.push_back(a->GetBaseId());
   }
 
-  ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
+
 
 
   rNumPeople=rTheListOfActors.size();
@@ -122,7 +126,7 @@ void EconomicActorManager::BuildTestNetwork(){
   rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
   rTheIds.push_back(a->GetBaseId());
 
-  ActorLogger::Get()->thePerson=rTheListOfActors.begin()->second->GetBaseId();
+
 
 
   EconomicActor * a1 = new Manufacturer(100000,this,a,0);//Have these initial companies start with 1000 dollars

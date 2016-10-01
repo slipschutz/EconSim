@@ -40,7 +40,7 @@ void TestGoodStuff(){
     cout<<"______________________"<<endl;
   }
 
-  ActorLogger::Get()->DumpLog();
+
   GoodManager::Get()->Dump();
 }
 
@@ -94,7 +94,7 @@ int main(int argv, char ** argc){
 
     delete theManager;
     //    GoodManager::Get()->Dump();
-    ActorLogger::Get()->DumpLog();
+
 
 
     if (DataLogger::Get() != NULL){

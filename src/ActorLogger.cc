@@ -7,16 +7,8 @@
 
 #include <sstream>
 
-ActorLogger * ActorLogger::theLogger=NULL;
 
-ActorLogger * ActorLogger::Get(){
-  if (theLogger == NULL){
-    theLogger=new ActorLogger();
-  }
 
-  return theLogger;
-
-}
 
 
 void ActorLogger::LogBeforeStepState(EconomicActor* a){
@@ -62,7 +54,10 @@ void ActorLogger::LogAfterStepState(EconomicActor* a){
 }
 
 void ActorLogger::DumpLog(){
-  outFile.open("Log.dat");
+  stringstream ss;
+  ss<<"./Log"<<actorNumber<<".dat";
+  outFile.open(ss.str().c_str());
+  
   outFile<<"This is the story of actor "<<thePerson<<endl;
 
 

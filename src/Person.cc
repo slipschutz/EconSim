@@ -12,7 +12,7 @@
 
 int largestGoodNum=1;
 
-Person::Person(EconomicActorManager* man) : EconomicActor(man){
+Person::Person(EconomicActorManager* man) : EconomicActor(man),myActorLogger(NULL){
   rEmployer=NULL;
 }
 
@@ -21,6 +21,9 @@ Person::~Person(){
   //
   if (rEmployer!=NULL){
     rEmployer->RemoveEmployee(this);
+  }
+  if (myActorLogger !=NULL){
+    delete myActorLogger;
   }
 
 }
@@ -174,9 +177,9 @@ ActorActions Person::BeginningOfStep(){
   //
   //If this is the magic person log info
   //
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->LogBeforeStepState(this);
-    ActorLogger::Get()->BeforeMessage(s.str());
+  if (myActorLogger!=NULL){
+    myActorLogger->LogBeforeStepState(this);
+    myActorLogger->BeforeMessage(s.str());
   }
 
   return ret;
@@ -264,8 +267,8 @@ void Person::DoStep(){
   }
 
 
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->DuringMessage(dayNotes.str());
+  if (myActorLogger!=NULL){
+    myActorLogger->DuringMessage(dayNotes.str());
   }
 
     
@@ -297,9 +300,9 @@ ActorActions Person::EndOfStep(){
   }
   
   
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->LogAfterStepState(this);
-    ActorLogger::Get()->EndMessage(s.str());
+  if (myActorLogger!=NULL){
+    myActorLogger->LogAfterStepState(this);
+    myActorLogger->EndMessage(s.str());
   }
   
   return ret;

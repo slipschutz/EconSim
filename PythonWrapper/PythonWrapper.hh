@@ -131,7 +131,7 @@ void Run(){
 
     delete theManager;
     //    GoodManager::Get()->Dump();
-    ActorLogger::Get()->DumpLog();
+    
 
 
     // if (DataLogger::Get() != NULL){
