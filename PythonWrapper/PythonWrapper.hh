@@ -156,6 +156,7 @@ void DoTest(bool test,string message){
 
   if(!test){
     cout<<"*******Test Fail********* "<<message<<endl;
+    //    throw -99;
   }else{
     cout<<"Passed "<<message<<endl;
   }
@@ -186,7 +187,7 @@ void UnitTests(){
   Manufacturer *aManufac= new Manufacturer(1000,man,&aPerson1,0);
 
   man->MakeActor(aManufac);
-
+  DoTest(aManufac->GetMoney()==1000,"Manufacter should start with 1000 dollars");
 
   string aString="Company owner not the right person";
 
@@ -227,17 +228,22 @@ void UnitTests(){
   MarketManager::Get()->PlaceSellOrder(0,aManufac->GetBaseId(),
 				       totalAmtForManu,aManufac->GetGoodPriority(0)); 
 
+
   auto goods4SaleBefore =*(MarketManager::Get()->GetCurrentGoodsForSale());
-  cout<<"Size is "<<goods4SaleBefore.size()<<endl;
-  DoTest(goods4SaleBefore.size()==1,"There should be 1 type of good for sale before any sales have happened");
+
+
+  DoTest(goods4SaleBefore.size()==Settings::MaxGoodNumber,"The goods for sale vector in market manager should be of length Settings::MaxGoodNumber");
+
   DoTest(goods4SaleBefore.at(0)==25,"There should be 25 of good 0 still left for sale before any sales have happened");
 				   
   double preStepMoney=aPerson3.GetMoney();
   aPerson3.DoStep();
 
   auto goods4Sale =*(MarketManager::Get()->GetCurrentGoodsForSale());
-  DoTest(goods4Sale.size()==1,"There should be 1 type of good for sale");
   DoTest(goods4Sale.at(0)==15,"There should be 25-10 of good 0 still left for sale");
+  
+
+
 
   DoTest(aPerson3.GetMoney()==preStepMoney-10*50,"Person3 should have lost money equal to the transaction");
 

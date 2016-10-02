@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 #include "Person.hh"
-#include "MatrixMaker.hh"
+
 #include "Temp.hh"
 #include "EconomicActorManager.hh"
 #include "RandomManager.hh"
@@ -25,6 +25,7 @@
 
 #include "ActorLogger.hh"
 #include "Exceptions.hh"
+//#include "PythonWrapper/PythonWrapper.hh"
 using namespace  std;
 
 void TestGoodStuff(){
@@ -54,58 +55,60 @@ int main(int argv, char ** argc){
   // return 0;
   //  return 3;
 
-  try{
-    EconomicActorManager *  theManager = new EconomicActorManager();
+
+
+  // try{
+  //   EconomicActorManager *  theManager = new EconomicActorManager();
     
-    DataLogger::Get();
+  //   DataLogger::Get();
     
-    theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
+  //   theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
   
-    cout<<"BUILT NETWORK"<<endl;
+  //   cout<<"BUILT NETWORK"<<endl;
 
   
-    for (int i=0;i<Settings::NumberOfSteps;i++){
+  //   for (int i=0;i<Settings::NumberOfSteps;i++){
     
-      theManager->DoAStep();
+  //     theManager->DoAStep();
 
-      if (i%1==0){
-	cout<<"ON "<<i<<endl;
-      }
-      if (i % 1 == 0){
-	// GoodManager::Get()->Dump();
-	// MarketManager::Get()->DumpCurrentGoodsForSale();
-	// cout<<"______________"<<endl;
-	DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
-	DataLogger::Get()->LogPopulation(theManager->GetNumberOfPeople());
-      }
+  //     if (i%1==0){
+  // 	cout<<"ON "<<i<<endl;
+  //     }
+  //     if (i % 1 == 0){
+  // 	// GoodManager::Get()->Dump();
+  // 	// MarketManager::Get()->DumpCurrentGoodsForSale();
+  // 	// cout<<"______________"<<endl;
+  // 	DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
+  // 	DataLogger::Get()->LogPopulation(theManager->GetNumberOfPeople());
+  //     }
 
-      MarketManager::Get()->ClearMarket();
-      Calendar::DayNumber++;
+  //     MarketManager::Get()->ClearMarket();
+  //     Calendar::DayNumber++;
 
-    }
+  //   }
 
 
  
     
 
-    //theManager.PrintMoney();
-    // theManager.PrintHavesWants();
-    DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
+  //   //theManager.PrintMoney();
+  //   // theManager.PrintHavesWants();
+  //   DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
 
-    delete theManager;
-    //    GoodManager::Get()->Dump();
+  //   delete theManager;
+  //   //    GoodManager::Get()->Dump();
 
 
 
-    if (DataLogger::Get() != NULL){
-      delete DataLogger::Get();
-    }
-  } catch (exception &e){
-    cout<<"*******************************************************"<<endl;
-    cout<<"Fatal Exception Must exit"<<endl;
-    cout<<e.what()<<endl;
-    cout<<"*******************************************************"<<endl;
-  }
+  //   if (DataLogger::Get() != NULL){
+  //     delete DataLogger::Get();
+  //   }
+  // } catch (exception &e){
+  //   cout<<"*******************************************************"<<endl;
+  //   cout<<"Fatal Exception Must exit"<<endl;
+  //   cout<<e.what()<<endl;
+  //   cout<<"*******************************************************"<<endl;
+  // }
   
 
    return 0;

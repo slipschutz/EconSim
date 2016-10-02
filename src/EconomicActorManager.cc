@@ -87,8 +87,7 @@ void EconomicActorManager::BuildList(int NumberOfPeople){
 }
 
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
-  rNumPeople=NumberOfActors;
-  //  rTheListOfActors.resize(NumberOfActors);
+
   
   for (int i=0;i<NumberOfActors;i++){
     Person * a = new Person(this);
@@ -100,6 +99,12 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     rTheIds.push_back(a->GetBaseId());
   }
 
+  Person * luckyPerson = reinterpret_cast<Person*>( rTheListOfActors[0]);
+  int numSeedCompanies=0.1*NumberOfActors;
+  for (int i=0;i<numSeedCompanies;i++){
+    Manufacturer * m = new Manufacturer(10000,this,luckyPerson,0);
+    this->MakeActor(m);
+  }
 
 
 

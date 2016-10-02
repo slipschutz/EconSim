@@ -106,6 +106,8 @@ void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int q
     }
   }
 
+  rCurrentGoodsForSale[GoodNumber]-=quantity;
+
 }
 
 void MarketManager::PlaceJobPosting(double salary, int EmployerId){

@@ -21,7 +21,7 @@ using namespace std;
 class Manufacturer : public Company {
 public:
   Manufacturer(double money,EconomicActorManager*man,Person * own, int GoodNumber) : Company(man,own),GoodToManufacture(GoodNumber) {
-    fMoney=1000000000;//money;
+    fMoney=money;
   };
   virtual ~Manufacturer(){
     

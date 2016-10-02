@@ -14,6 +14,9 @@ class Company;
 class Person;
 
 
+/**Small container class to hold in formation on market orders
+
+ */
 class OrderInfo{
 public:
   int SellerId;
@@ -27,8 +30,9 @@ public:
     Quantity=-1000;
     Price=-1000;
   }
-
 };
+
+
 
 class JobInfo{
 public:
@@ -38,9 +42,8 @@ public:
 
   int EmployerID;
   double salary;
-
-
 };
+
 
 /**This class will be responsible for holding by and sell orders from companies and 
    maybe people too?

@@ -1,4 +1,5 @@
-CFLAGS=-c -g -Wall -I./src -I./include -std=c++11
+CFLAGS=-c -g -Wall -I./src -I./include -std=c++11 -I/usr/include/python2.7/
+LIBFLAGS= -L/usr/lib/x86_64-linux-gnu/ -lboost_python-py27
 CXX=g++
 EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
@@ -17,7 +18,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE) : $(MAINO) $(LIBS)
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) -g -std=c++11 -o $@ $^ 
+	$(CXX) -g -std=c++11 -lEverything -L./lib/ -I./include/ -fPIC $(MAINO) -o $@ 
 	@echo "Build succeed"
 
 
@@ -27,10 +28,12 @@ $(EXECUTABLE) : $(MAINO) $(LIBS)
 
 %.o : %.cc
 	@echo "Compiling" $< "..."
-	@$(CXX) $(CFLAGS) -fPIC $< -o $@ 
+	$(CXX) $(CFLAGS) $(LIBFLAGS) -fPIC $< -o $@ 
 $(MAINO) : $(MAIN)
 	@echo "Compiling" $< "..."
-	@$(CXX) $(CFLAGS) -fPIC $< -o $@ 
+	$(CXX) $(CFLAGS) $(LIBFLAGS) -fPIC $< -o $@ 
+
+
 
 test:
 	@echo $(LIBRARY) : $(DICTOBJ) $(OBJECTS)
