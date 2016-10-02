@@ -212,6 +212,7 @@ ActorActions Manufacturer::EndOfStep(){
     }else {
       stringstream stemp;stemp<<"Company "<<GetBaseId()<<" is paying salary "<<moneyToPay<<endl;
       i.first->GetPaid(moneyToPay,stemp.str());
+
       this->SubtractMoney(moneyToPay);
       ss<<" I Paid an employee "<<i.first->GetBaseId()<<" "<<moneyToPay<<" I have "<<fMoney<<" money left"<<endl;
     }

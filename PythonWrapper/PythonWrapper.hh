@@ -101,6 +101,7 @@ void DoTest(bool test,string message){
 
 
 
+
 void UnitTests(){
 
   EconomicActorManager * man =new EconomicActorManager();
@@ -208,6 +209,25 @@ void UnitTests(){
   aManufac->EndOfStep(); 
 
   DoTest(preStepPerson2-15*50 + 100==aPerson2.GetMoney(),"Person2 should have now gotten paid 100");
+
+
+
+  Person aPerson4(man);
+  aPerson4.Initialize();
+  DoTest(aPerson4.GetHasJob()==false,"Person should not have a job yet");
+  MarketManager::Get()->PlaceJobPosting(10,aManufac->GetBaseId());
+  JobInfo jInfo= MarketManager::Get()->GetBestJob();
+  DoTest(jInfo.EmployerID!=-1,"There should be a job available on the market");
+  aPerson4.DoStep();
+  DoTest(aPerson4.GetHasJob()==true,"Person should Now have a job");
+  DoTest(aPerson4.GetEmployer()->GetBaseId()==aManufac->GetBaseId(),"The company* inside of person should be correct");
+
+  double moneyPerson4Orig=aPerson4.GetMoney();
+  double moneyManuOrig =aManufac->GetMoney();
+  aManufac->EndOfStep();
+  DoTest(moneyPerson4Orig+10 ==aPerson4.GetMoney(),"Person4 should have been paid 10");
+
+  DoTest(moneyManuOrig-10-100 == aManufac->GetMoney(),"manufac should have give 10 money away to person4 and a 100 to person2");
   
 }
 

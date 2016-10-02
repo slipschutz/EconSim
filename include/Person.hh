@@ -51,6 +51,9 @@ public:
   void SetInvestmentLevel(int v){rInvestmentLevel=v;}
 
 
+  bool GetHasJob(){return rHaveAJob;}
+  Company * GetEmployer(){return rEmployer;}
+  
 private:
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
