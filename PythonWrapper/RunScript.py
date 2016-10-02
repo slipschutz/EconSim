@@ -7,7 +7,10 @@ import libWrapper
 
 
 def go():
+    libWrapper.UnitTests()
+    return 
     libWrapper.Run()
+    
 
     x=libWrapper.GetData()
     for i in range(len(x)):

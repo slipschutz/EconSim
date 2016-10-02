@@ -163,8 +163,9 @@ void DoTest(bool test,string message){
 }
 
 
+
 void UnitTests(){
-  /*
+
   EconomicActorManager * man =new EconomicActorManager();
 
   //Basic People Tests
@@ -182,13 +183,12 @@ void UnitTests(){
   totalSupply += (*aPerson2.GetSupplies())[0].GetNumberOfCopies();
   DoTest(GoodManager::Get()->supply[0]==totalSupply,"Total Supply should be the supply of person 1 and 2");
 
-  Manufacturer *aManufac= new Manufacturer(1000,man,&aPerson1);
+  Manufacturer *aManufac= new Manufacturer(1000,man,&aPerson1,0);
 
   man->MakeActor(aManufac);
 
 
   string aString="Company owner not the right person";
-
 
   DoTest(aManufac->GetTheOwner()==&aPerson1,aString);
 
@@ -226,10 +226,19 @@ void UnitTests(){
 
   MarketManager::Get()->PlaceSellOrder(0,aManufac->GetBaseId(),
 				       totalAmtForManu,aManufac->GetGoodPriority(0)); 
+
+  auto goods4SaleBefore =*(MarketManager::Get()->GetCurrentGoodsForSale());
+  cout<<"Size is "<<goods4SaleBefore.size()<<endl;
+  DoTest(goods4SaleBefore.size()==1,"There should be 1 type of good for sale before any sales have happened");
+  DoTest(goods4SaleBefore.at(0)==25,"There should be 25 of good 0 still left for sale before any sales have happened");
 				   
   double preStepMoney=aPerson3.GetMoney();
   aPerson3.DoStep();
-  
+
+  auto goods4Sale =*(MarketManager::Get()->GetCurrentGoodsForSale());
+  DoTest(goods4Sale.size()==1,"There should be 1 type of good for sale");
+  DoTest(goods4Sale.at(0)==15,"There should be 25-10 of good 0 still left for sale");
+
   DoTest(aPerson3.GetMoney()==preStepMoney-10*50,"Person3 should have lost money equal to the transaction");
 
   DoTest(totalSupply==GoodManager::Get()->supply[0],"Total supply should be the same");
@@ -257,7 +266,7 @@ void UnitTests(){
   aManufac->EndOfStep(); 
 
   DoTest(preStepPerson2-15*50 + 100==aPerson2.GetMoney(),"Person2 should have now gotten paid 100");
-  */  
+  
 }
 
 
