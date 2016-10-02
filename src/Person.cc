@@ -174,9 +174,9 @@ ActorActions Person::BeginningOfStep(){
   //
   //If this is the magic person log info
   //
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->LogBeforeStepState(this);
-    ActorLogger::Get()->BeforeMessage(s.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->LogBeforeStepState(this);
+    fMyActorLogger->BeforeMessage(s.str());
   }
 
   return ret;
@@ -264,8 +264,8 @@ void Person::DoStep(){
   }
 
 
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->DuringMessage(dayNotes.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->DuringMessage(dayNotes.str());
   }
 
     
@@ -297,9 +297,9 @@ ActorActions Person::EndOfStep(){
   }
   
   
-  if (this->GetBaseId() == ActorLogger::Get()->thePerson){
-    ActorLogger::Get()->LogAfterStepState(this);
-    ActorLogger::Get()->EndMessage(s.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->LogAfterStepState(this);
+    fMyActorLogger->EndMessage(s.str());
   }
   
   return ret;

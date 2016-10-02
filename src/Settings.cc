@@ -7,7 +7,7 @@ namespace Settings{
 
   int NumberOfPeople=1000;
   int NumberOfInteractionsPerStep=1;
-  int NumberOfSteps=2000;
+  int NumberOfSteps=200;
   int MaxGoodNumber=4;
 
 

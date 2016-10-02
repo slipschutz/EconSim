@@ -11,10 +11,9 @@ class ActorLogger : public Base{
 
 public:
 
-  static ActorLogger* theLogger;
-  static ActorLogger* Get();
+  ActorLogger(int num):actorNumber(num){}
 
-  ~ActorLogger(){}
+  ~ActorLogger(){DumpLog();}
   
   void Initialize(){}
   
@@ -34,7 +33,7 @@ public:
 
 private:
   
-  ActorLogger(){}
+
   
   // std::vector <ActorSnapshot> rWantsSnapshots;
   // std::vector <ActorSnapshot> rHasSnapshots;
@@ -50,6 +49,8 @@ private:
   std::vector <string> rBeforeMessage;
   std::vector <string> rDuringMessage;
   std::vector <string> rAfterMessage;
+
+  int actorNumber;
   
   ofstream outFile;
 };

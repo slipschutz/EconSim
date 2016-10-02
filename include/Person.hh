@@ -11,6 +11,7 @@ using namespace std;
 
 #include "EconomicActor.hh"
 class Company;
+class ActorLogger;
 
 class Person : public EconomicActor {
 public:
@@ -49,6 +50,7 @@ public:
   void SetGluttoness(int v){rGluttoness=v;}
   void SetInvestmentLevel(int v){rInvestmentLevel=v;}
 
+
 private:
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
@@ -67,6 +69,8 @@ private:
 
   vector <Company*> rOwnedCompanies;
 
+
+  
   bool rWasFiredInPreviousStep;
 
   bool rWasPaidInPreviousStep;

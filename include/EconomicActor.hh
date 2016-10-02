@@ -17,7 +17,7 @@ using namespace std;
 
 //Foward Declerations
 class EconomicActorManager;
-
+class ActorLogger;
 
 enum class ActorActions{
   Died,
@@ -84,9 +84,12 @@ public:
   inline int GetGoodPriority(int GoodId){return fGoodPriorities[GoodId];}
   void SetGoodPriority(int GoodId,double priority){fGoodPriorities[GoodId]=priority;}
 
+  void SetActorLogger(ActorLogger* a){fMyActorLogger=a;}
+  
 protected:
+  ActorLogger * fMyActorLogger;
 
-
+  
   int fNumConnections;
   map <int,EconomicActor*> fConnections;
   double fMoney;
