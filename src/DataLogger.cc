@@ -100,7 +100,7 @@ void DataLogger::LogMarketState(MarketManager *MarketMan,GoodManager * GoodMan){
 
   vector<int>* vec = MarketMan->GetCurrentGoodsForSale();
 
-  for (int i=0;i< vec->size();i++){
+  for (unsigned int i=0;i< vec->size();i++){
     rSupplies[i].push_back((*vec)[i]);
   }
 
@@ -112,7 +112,7 @@ void DataLogger::LogMarketState(MarketManager *MarketMan,GoodManager * GoodMan){
   if (rDemands[0].size() > 3 ){
     //Write everything to the files
     //loop over all goods 
-    for (int i=0;i<rDemands.size();i++){
+    for (unsigned int i=0;i<rDemands.size();i++){
       
       for (auto j : rDemands[i]){
 	(*rFilesForDemand[i])<<j<<endl;

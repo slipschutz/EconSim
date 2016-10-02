@@ -166,7 +166,7 @@ ActorActions Person::BeginningOfStep(){
   }
   
   if (rWasPaidInPreviousStep==true){
-    rWasPaidInPreviousStep==false;
+    rWasPaidInPreviousStep=false;
     s<<rPaidNotes.str();
     rPaidNotes.str("");
   }
@@ -408,7 +408,7 @@ double Person::GetWorth(Good theGood){
   int Priority =theGood.GetPriority();
 
   int NumberOfPeopleThatWantTheGood=GoodManager::Get()->demand[GoodNumber];
-  int NumberOfPeopleThatHaveTheGood=0;
+  //  int NumberOfPeopleThatHaveTheGood=0;
   
 
 
@@ -419,7 +419,7 @@ double Person::GetWorth(Good theGood){
 
 void Person::RemoveCompany(Company* c){
 
-  for (int i=0;i< rOwnedCompanies.size();i++){
+  for (unsigned int i=0;i< rOwnedCompanies.size();i++){
     if (rOwnedCompanies[i]->GetBaseId()==c->GetBaseId()){
 
       rOwnedCompanies.erase(rOwnedCompanies.begin()+i);

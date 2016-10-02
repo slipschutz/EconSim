@@ -152,7 +152,7 @@ JobInfo MarketManager::GetBestJob(){
 void MarketManager::Dump(){
   cout<<"Begin MarketManager::Dump()"<<endl;
 
-  for ( int i=0;i < rSellPrices.size();i++){
+  for (unsigned int i=0;i < rSellPrices.size();i++){
     cout<<"Good "<<i<<" ";
     
     multimap<double, OrderInfo> temp = rSellPrices[i];
@@ -172,7 +172,7 @@ void MarketManager::Dump(){
 void MarketManager::DumpCurrentGoodsForSale(){
 
 
-  for (int i=0;i<rCurrentGoodsForSale.size();i++){
+  for (unsigned int i=0;i<rCurrentGoodsForSale.size();i++){
     cout<<"Good "<<i<<" has supply for sale "<<rCurrentGoodsForSale.at(i)<<endl;
     
   }

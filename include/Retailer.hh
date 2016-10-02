@@ -22,7 +22,7 @@ public:
   void Initialize(){
     cout<<"The good priorities has size "<<fGoodPriorities.size()<<endl;
     cout<<"Max Good number "<<Settings::MaxGoodNumber<<endl;
-    for (int i=0;i<fGoodPriorities.size();i++){
+    for (unsigned int i=0;i<fGoodPriorities.size();i++){
       fGoodPriorities[i]=RandomManager::GetRand(Settings::MaxGoodPriority);
     }
   }

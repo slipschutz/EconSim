@@ -13,9 +13,9 @@ void MatrixMaker::MakeMatrix (vector <Person*> p){
 
 
 
-  for (int i=0;i<p.size();i++){
+  for (unsigned int i=0;i<p.size();i++){
     
-    for (int j=0;j<p.size();j++){
+    for (unsigned int j=0;j<p.size();j++){
       if ((p[i]->GetConnections())->count(j)==1){
 	cout<<i<<" "<<j<<endl;
       }

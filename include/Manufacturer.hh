@@ -32,7 +32,7 @@ public:
   void Initialize();
   ActorActions EndOfStep();
   ActorActions BeginningOfStep();
-  void DoStep(){}
+  void DoStep();
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
 
 

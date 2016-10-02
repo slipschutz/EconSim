@@ -15,7 +15,7 @@
 #include "EconomicActorManager.hh"
 #include "Death.hh"
 #include "Calendar.hh"
-
+#include "ActorLogger.hh"
 void Manufacturer::Initialize(){
 
 
@@ -31,7 +31,7 @@ void Manufacturer::Initialize(){
   
 
 
-  for (int i=0;i<fGoodPriorities.size();i++){
+  for (unsigned int i=0;i<fGoodPriorities.size();i++){
     fGoodPriorities[i]=41;//RandomManager::GetRand(Settings::MaxGoodPriority);
   }
 
@@ -62,7 +62,11 @@ ActorActions Manufacturer::BeginningOfStep(){
 
 
   rStartOfStepMoney=fMoney;
-  
+
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->BeforeMessage("Hello from manufacturer");
+    fMyActorLogger->LogBeforeStepState(this);
+  }
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
@@ -112,9 +116,16 @@ ActorActions Manufacturer::BeginningOfStep(){
   return ActorActions::None;
 }
 
-
+void Manufacturer::DoStep(){
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->DuringMessage("Durring Message");
+  }
+ }
 ActorActions Manufacturer::EndOfStep(){
+  stringstream ss;
+   
 
+  
   //Compare how much was earned to how much needs to be payed to employees
   double thisStepProfit = fMoney-rStartOfStepMoney;
   double thisStepSoldVolume=0;
@@ -133,6 +144,7 @@ ActorActions Manufacturer::EndOfStep(){
     //   this->SubtractMoney(0.1*thisStepProfit);
     // }
     rHireMorePeople=true;
+    ss<<"I made money so I am gonna try to hire more people"<<endl;
   }else {//We are not making moeny
 
   }
@@ -156,6 +168,8 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
 
+      ss<<"I am lowering my price "<<endl;
+      
     }else if (thisStepSoldVolume > 0.85*rStartOfStepSupply){
       int temp =fGoodPriorities[GoodToManufacture];
       // cout<<"before price "<<temp<<endl;
@@ -167,6 +181,7 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"Volume sold "<<thisStepSoldVolume<<endl;
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
+      ss<<"I am raising my price "<<endl;
    
     }
   }
@@ -184,7 +199,12 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"Num productions "<<numberOFProductions<<endl;
       // cout<<"steps "<<numberOfSteps<<endl;
       // cin.get();
- 
+
+
+
+      ss<<"Going Bankrupt. Trying to pay employee "<<i.first->GetBaseId()<<" "<<moneyToPay<<" but only have "<<fMoney<<"\n";
+
+
       //Can't pay that going bankrupt
       fTheEconomicActorManager->MarkForDeath(this);
       ret=ActorActions::Died;
@@ -193,6 +213,7 @@ ActorActions Manufacturer::EndOfStep(){
       stringstream stemp;stemp<<"Company "<<GetBaseId()<<" is paying salary "<<moneyToPay<<endl;
       i.first->GetPaid(moneyToPay,stemp.str());
       this->SubtractMoney(moneyToPay);
+      ss<<" I Paid an employee "<<i.first->GetBaseId()<<" "<<moneyToPay<<" I have "<<fMoney<<" money left"<<endl;
     }
   }
 
@@ -204,6 +225,13 @@ ActorActions Manufacturer::EndOfStep(){
     Employees2Salary.erase(it);
 
   }
+
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->EndMessage(ss.str());
+    fMyActorLogger->LogAfterStepState(this);
+  }
+
+  
   numberOfSteps++;
   return ret;
 }

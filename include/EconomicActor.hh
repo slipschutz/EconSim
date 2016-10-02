@@ -87,10 +87,11 @@ public:
   void SetActorLogger(ActorLogger* a){fMyActorLogger=a;}
   
 protected:
+  int fNumConnections;
   ActorLogger * fMyActorLogger;
 
   
-  int fNumConnections;
+
   map <int,EconomicActor*> fConnections;
   double fMoney;
 

@@ -18,7 +18,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE) : $(LIBS)
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) $(CFLAGS) -fPIC -lEverything -L./lib/ ./$(MAIN) -Wl,-rpath=./lib/ -o $@ 
+	@$(CXX) $(CFLAGS) -fPIC -lEverything -L./lib/ ./$(MAIN) -Wl,-rpath=./lib/ -o $@ 
 	@echo "Build succeed"
 
 
@@ -28,7 +28,7 @@ $(EXECUTABLE) : $(LIBS)
 
 %.o : %.cc
 	@echo "Compiling" $< "..."
-	$(CXX) -c $(CFLAGS) $(LIBFLAGS) -fPIC $< -o $@ 
+	@$(CXX) -c $(CFLAGS) $(LIBFLAGS) -fPIC $< -o $@ 
 
 
 test:

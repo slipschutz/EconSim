@@ -104,6 +104,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   int numSeedCompanies=0.1*NumberOfActors;
   for (int i=0;i<numSeedCompanies;i++){
     Manufacturer * m = new Manufacturer(100000,this,luckyPerson,0);
+    m->SetActorLogger(new ActorLogger(m->GetBaseId()));
     this->MakeActor(m);
   }
 
@@ -111,7 +112,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
   rNumPeople=rTheListOfActors.size();
 
-  if (rTheIds.size() !=rNumPeople){
+  if (rTheIds.size() !=(unsigned int) rNumPeople){
     MessageException e("<EconomicActorManager::BuildCompleteNetwor> Length of id list does not match number of actors");
     throw e;
   }
@@ -149,7 +150,8 @@ void EconomicActorManager::DoAStep(){
   rTheIds.clear();
   rNumCurrentCompanies=0;
   for (auto i : rTheListOfActors){
-    ActorActions a =i.second->BeginningOfStep();
+    //ActorActions a =i.second->BeginningOfStep();
+    i.second->BeginningOfStep();
 
     if ( i.second->GetActorType()== ActorTypes::Manufacturer){
       rNumCurrentCompanies++;
@@ -259,7 +261,7 @@ void EconomicActorManager::PrintConnections(){
 }
 
 void EconomicActorManager::PrintHavesWants(){
-  for (int i=0;i<rTheListOfActors.size();i++){
+  for (unsigned int i=0;i<rTheListOfActors.size();i++){
     cout<<"-------------------------------------"<<endl;
     //    rTheListOfActors[i]->DumpHavesWants();
     cout<<"-------------------------------------"<<endl;
@@ -271,9 +273,9 @@ void EconomicActorManager::PrintHavesWants(int index){
 }
 
 void EconomicActorManager::PrintMoney(){
-  for ( auto &i : rTheListOfActors){
-    //   cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
-  }
+  // for ( auto &i : rTheListOfActors){
+  //   cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
+  // }
 
 }
 // void PersonManager::SetPersonToLog(int v){
