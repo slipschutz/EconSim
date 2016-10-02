@@ -12,7 +12,7 @@
 
 int largestGoodNum=1;
 
-Person::Person(EconomicActorManager* man) : EconomicActor(man),myActorLogger(NULL){
+Person::Person(EconomicActorManager* man) : EconomicActor(man){
   rEmployer=NULL;
 }
 
@@ -21,9 +21,6 @@ Person::~Person(){
   //
   if (rEmployer!=NULL){
     rEmployer->RemoveEmployee(this);
-  }
-  if (myActorLogger !=NULL){
-    delete myActorLogger;
   }
 
 }
@@ -177,9 +174,9 @@ ActorActions Person::BeginningOfStep(){
   //
   //If this is the magic person log info
   //
-  if (myActorLogger!=NULL){
-    myActorLogger->LogBeforeStepState(this);
-    myActorLogger->BeforeMessage(s.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->LogBeforeStepState(this);
+    fMyActorLogger->BeforeMessage(s.str());
   }
 
   return ret;
@@ -267,8 +264,8 @@ void Person::DoStep(){
   }
 
 
-  if (myActorLogger!=NULL){
-    myActorLogger->DuringMessage(dayNotes.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->DuringMessage(dayNotes.str());
   }
 
     
@@ -300,9 +297,9 @@ ActorActions Person::EndOfStep(){
   }
   
   
-  if (myActorLogger!=NULL){
-    myActorLogger->LogAfterStepState(this);
-    myActorLogger->EndMessage(s.str());
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->LogAfterStepState(this);
+    fMyActorLogger->EndMessage(s.str());
   }
   
   return ret;

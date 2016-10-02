@@ -50,7 +50,7 @@ public:
   void SetGluttoness(int v){rGluttoness=v;}
   void SetInvestmentLevel(int v){rInvestmentLevel=v;}
 
-  void SetActorLogger(ActorLogger* a){myActorLogger=a;}
+
 private:
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
@@ -69,7 +69,7 @@ private:
 
   vector <Company*> rOwnedCompanies;
 
-  ActorLogger * myActorLogger;
+
   
   bool rWasFiredInPreviousStep;
 
