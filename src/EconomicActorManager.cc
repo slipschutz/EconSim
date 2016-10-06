@@ -103,7 +103,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
   int numSeedCompanies=0.1*NumberOfActors;
   for (int i=0;i<numSeedCompanies;i++){
-    Manufacturer * m = new Manufacturer(100000,this,luckyPerson,0);
+    Manufacturer * m = new Manufacturer(1000000,this,luckyPerson,0);
     m->SetActorLogger(new ActorLogger(m->GetBaseId()));
     this->MakeActor(m);
   }
@@ -161,6 +161,9 @@ void EconomicActorManager::DoAStep(){
     rTheIds.push_back(i.first);
 
   }
+  
+  DataLogger::Get()->theSupplies.push_back(GoodManager::Get()->supply[0]);
+  DataLogger::Get()->theDemands.push_back(GoodManager::Get()->demand[0]);
 
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
