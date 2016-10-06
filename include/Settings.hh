@@ -10,6 +10,8 @@ namespace Settings{
   extern int NumberOfInteractionsPerStep;
   extern int MaxGoodNumber;
   extern double MaxGoodPriority;
+  extern double FoodProductionPerWorker;
+
 }
 
 

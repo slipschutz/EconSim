@@ -10,6 +10,7 @@ namespace Settings{
   int NumberOfSteps=1400;
   int MaxGoodNumber=4;
 
+  double FoodProductionPerWorker=2;
 
   double MaxGoodPriority=100.;
 }

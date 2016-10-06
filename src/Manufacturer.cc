@@ -76,19 +76,14 @@ ActorActions Manufacturer::BeginningOfStep(){
     fSupplies[GoodToManufacture]=temp;
   }
     
-  if ( Employees2Salary.size() > 2 && Calendar::DayNumber < 1200){
-
+  if ( Calendar::DayNumber < 1200){
     int t=Employees2Salary.size();
-    fSupplies[GoodToManufacture].AddCopies(t);
-    rTotalVolumeCreated+=t;
+    fSupplies[GoodToManufacture].AddCopies(floor(t*Settings::FoodProductionPerWorker));
 
+    rTotalVolumeCreated+=t;
     numberOFProductions++;
   }
   
-  if ( fSupplies[GoodToManufacture].GetNumberOfCopies()<0){
-    cout<<"Less than zero"<<endl;
-    throw 1;
-  }
   
   
   if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
