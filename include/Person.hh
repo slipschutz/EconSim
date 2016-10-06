@@ -60,7 +60,9 @@ private:
   //Some person specific traits
   //all things 0-100
   int rRestlessness;//How likely person will develop a want other than food
-  int rGluttoness;//How much food some one eats
+  int rGluttoness;
+  int rFoodBuyingThreshold;
+  int rFood2BuyAtOnce;
 
 
   int rInvestmentLevel;

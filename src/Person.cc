@@ -47,6 +47,10 @@ void Person::Initialize(){
   rGluttoness=1;//RandomManager::GetRand(10)+1;
   rInvestmentLevel=RandomManager::GetRand(60)+40;
 
+  rFoodBuyingThreshold=RandomManager::GetRand(100)+10;
+  rFood2BuyAtOnce=RandomManager::GetRand(100)+10;
+
+
   rHaveAJob=false;
   rEmployerId=-1;
   rWasFiredInPreviousStep=false;
@@ -114,9 +118,9 @@ ActorActions Person::BeginningOfStep(){
   //
   //Add food Demand if in need of food
   //
-  if (fSupplies[0].GetNumberOfCopies() < 5*rGluttoness && fDemands[0].GetNumberOfCopies()<2){
+  if (fSupplies[0].GetNumberOfCopies() < rFoodBuyingThreshold && fDemands[0].GetNumberOfCopies()<2){
     //There are not enough copies of food in the supply
-    int n=RandomManager::GetRand(100)+rGluttoness;
+    int n=rFood2BuyAtOnce;
     AddDemand(0,n);//Add the demand for food
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
@@ -171,9 +175,6 @@ ActorActions Person::BeginningOfStep(){
     rPaidNotes.str("");
   }
 
-  //
-  //If this is the magic person log info
-  //
   if (fMyActorLogger!=NULL){
     fMyActorLogger->LogBeforeStepState(this);
     fMyActorLogger->BeforeMessage(s.str());
