@@ -8,6 +8,7 @@ class RandomManager{
 public:
   static int GetRand(int n);
   static double GetGaus(double mean,double sigma);
+  static double GetUniform(double low=0,double high=1);
 
   static unsigned GetSeed();
 private:

@@ -8,7 +8,7 @@ import libWrapper
 
 def go():
     libWrapper.UnitTests()
-    return
+
     libWrapper.Run()
     
 

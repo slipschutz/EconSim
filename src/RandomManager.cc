@@ -53,3 +53,19 @@ double RandomManager::GetGaus(double mean,double sigma){
     return distribution(*pTheGenerator);
 }
 
+double RandomManager::GetUniform(double low,double high){
+  if (!pSeeded){
+    // construct a trivial random generator engine from a time-based seed:
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    rTheSeed=seed;
+    pTheGenerator = new std::default_random_engine(seed);
+
+    pSeeded=true;
+  }
+
+  std::uniform_real_distribution<double> distribution(low,high);
+  return distribution(*pTheGenerator);
+
+
+}
+

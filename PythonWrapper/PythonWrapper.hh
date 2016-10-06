@@ -102,6 +102,9 @@ void DoTest(bool test,string message){
 
 
 
+
+
+
 void UnitTests(){
 
   EconomicActorManager * man =new EconomicActorManager();
@@ -169,7 +172,7 @@ void UnitTests(){
   auto goods4SaleBefore =*(MarketManager::Get()->GetCurrentGoodsForSale());
 
 
-  DoTest(goods4SaleBefore.size()==Settings::MaxGoodNumber,"The goods for sale vector in market manager should be of length Settings::MaxGoodNumber");
+  DoTest(int(goods4SaleBefore.size())==Settings::MaxGoodNumber,"The goods for sale vector in market manager should be of length Settings::MaxGoodNumber");
 
   DoTest(goods4SaleBefore.at(0)==25,"There should be 25 of good 0 still left for sale before any sales have happened");
 				   
