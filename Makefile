@@ -1,5 +1,6 @@
-CFLAGS=-g -Wall -I./src -I./include -std=c++11 -I/usr/include/python2.7/
-LIBFLAGS=-L/usr/lib/x86_64-linux-gnu/ -lboost_python-py27
+CFLAGS=-g -Wall -I./include -std=c++11 
+PYLIBFLAGS=-L/usr/lib/x86_64-linux-gnu/ -lboost_python-py27 -I/usr/include/python2.7/
+
 CXX=g++
 EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
@@ -13,18 +14,21 @@ LIBS=./lib/libEverything.so
 
 .PHONY: clean get put all test sclean
 
-all: $(EXECUTABLE) 
+all: $(EXECUTABLE) PyWrap
 
 
 $(EXECUTABLE) : $(LIBS)
 	@echo "Building $(EXECUTABLE)"
-	@$(CXX) $(CFLAGS) -fPIC -lEverything -L./lib/ ./$(MAIN) -Wl,-rpath=./lib/ -o $@ 
+	$(CXX) $(CFLAGS) ./$(MAIN) -lEverything -L./lib/  -Wl,-rpath=./lib/ -o $@ 
 	@echo "Build succeed"
+
+PyWrap: $(LIBS)
+	g++ -shared -fPIC ./PythonWrapper/PythonWrapper.cc $(CFLAGS) $(PYLIBFLAGS) -lEverything -L./lib/ -I./include/  -std=c++11 -Wl,-rpath=../lib/ -o ./PythonWrapper/libWrapper.so
 
 
 ./lib/lib%.so: $(OBJECTS)
 	@echo "Building Library $@..."
-	@$(CXX) -fPIC -shared  $^ -o $@ 
+	@$(CXX) $(CFLAGS) -fPIC -shared  $^ -o $@ 
 
 %.o : %.cc
 	@echo "Compiling" $< "..."
