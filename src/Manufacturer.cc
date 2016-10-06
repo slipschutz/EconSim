@@ -7,7 +7,7 @@
 #include "RandomManager.hh"
 
 #include "Settings.hh"
-
+#include "Calendar.hh"
 #include "MarketManager.hh"
 #include "GoodManager.hh"
 #include "Person.hh"
@@ -28,7 +28,7 @@ void Manufacturer::Initialize(){
 
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
   rPriceChangeLevel= RandomManager::GetRand(100)/100.;
-  
+  rStartingSalary=RandomManager::GetRand(floor(0.1*fMoney));
 
 
   for (unsigned int i=0;i<fGoodPriorities.size();i++){
@@ -52,21 +52,16 @@ void Manufacturer::Initialize(){
   numberOFProductions=0;
   
 
-  rStartingSalary=RandomManager::GetRand(100000);
+
 
   rHireMorePeople=true;
 }
 
 
 ActorActions Manufacturer::BeginningOfStep(){
-
-
+  //Save the start of step money
   rStartOfStepMoney=fMoney;
 
-  if (fMyActorLogger!=NULL){
-    fMyActorLogger->BeforeMessage("Hello from manufacturer");
-    fMyActorLogger->LogBeforeStepState(this);
-  }
 
   ////////////////////////////////////////////////////////////
   // if the company has employees it can manufacture goods  //
@@ -75,17 +70,18 @@ ActorActions Manufacturer::BeginningOfStep(){
     Good temp(GoodToManufacture,0,fGoodPriorities[GoodToManufacture],"supply");
     fSupplies[GoodToManufacture]=temp;
   }
+
     
-  if ( Calendar::DayNumber < 1200){
+  //Make the good based on the number of empoloyees that are employeed
+  //  if ( Calendar::DayNumber < 1200){
     int t=Employees2Salary.size();
     fSupplies[GoodToManufacture].AddCopies(floor(t*Settings::FoodProductionPerWorker));
-
     rTotalVolumeCreated+=t;
     numberOFProductions++;
-  }
+    //  }
   
-  
-  
+
+  //Put sell orders on to market  
   if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
     
     MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
@@ -94,6 +90,7 @@ ActorActions Manufacturer::BeginningOfStep(){
   }
   
 
+  //Hire more people if in the last steps EndOfStep set HireMorePeople to true
   if (rHireMorePeople || Employees2Salary.size()==0){
     for (int i=0;i<5;i++){
       MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
@@ -101,12 +98,22 @@ ActorActions Manufacturer::BeginningOfStep(){
     rHireMorePeople=false;
   }
 
+
   auto it_temp=fSupplies.find(GoodToManufacture);
   if (it_temp != fSupplies.end()){
     rStartOfStepSupply=it_temp->second.GetNumberOfCopies();
   }else{
     rStartOfStepSupply=0;
   }
+
+
+  if (fMyActorLogger!=NULL){
+    stringstream ss;
+    ss<<"Hello from manufacturer today is "<<Calendar::DayNumber<<endl;
+    fMyActorLogger->BeforeMessage(ss.str());
+    fMyActorLogger->LogBeforeStepState(this);
+  }
+
 
   return ActorActions::None;
 }
@@ -121,7 +128,7 @@ ActorActions Manufacturer::EndOfStep(){
    
 
   
-  //Compare how much was earned to how much needs to be payed to employees
+  //See how much money was made during the step
   double thisStepProfit = fMoney-rStartOfStepMoney;
   double thisStepSoldVolume=0;
   
@@ -129,7 +136,6 @@ ActorActions Manufacturer::EndOfStep(){
   if (it_temp != fSupplies.end()){
     thisStepSoldVolume=rStartOfStepSupply-it_temp->second.GetNumberOfCopies();
   }
-
 
 
   if (thisStepProfit >0 ){//Made money
@@ -141,21 +147,29 @@ ActorActions Manufacturer::EndOfStep(){
     rHireMorePeople=true;
     ss<<"I made money so I am gonna try to hire more people"<<endl;
   }else {//We are not making moeny
-
+    if (RandomManager::GetUniform() < 0.1 && Employees2Salary.size()!=0){
+      //
+      auto it= Employees2Salary.begin();
+      ss<<"I am not making any money I am going to fire "<<it->first->GetBaseId()<<endl;
+      it->first->YourFired();
+      Employees2Salary.erase(it);
+    }
+    
   }
 
-  if (RandomManager::GetRand(100)/100. > rSteadfastness){
+  if (RandomManager::GetUniform() > rSteadfastness){
     if (thisStepSoldVolume < 10){
-      int temp =fGoodPriorities[GoodToManufacture];
+      int oldPriorityLevel =fGoodPriorities[GoodToManufacture];
       //      cout<<"before price "<<temp<<endl;
-      temp = temp - temp*rPriceChangeLevel;
+      int newPriorityLevel = oldPriorityLevel- oldPriorityLevel*rPriceChangeLevel;
       //      cout<<"after price "<<temp<<endl;
       
-      if (temp < 10){
-	temp=10;
+      if (newPriorityLevel< 0){
+	newPriorityLevel=0;
       }
       
-      fGoodPriorities[GoodToManufacture]=temp;
+      fGoodPriorities[GoodToManufacture]=newPriorityLevel;
+      
 
       // cout<<"This is manufacturer "<<this->GetBaseId()<<" in lower price"<<endl;
       // cout<<"Steadfastneess "<<rSteadfastness<<endl;
@@ -213,14 +227,7 @@ ActorActions Manufacturer::EndOfStep(){
     }
   }
 
-  if (RandomManager::GetRand(100) <=1 &&Employees2Salary.size()!=0){
-    //
 
-    auto it= Employees2Salary.begin();
-    it->first->YourFired();
-    Employees2Salary.erase(it);
-
-  }
 
   if (fMyActorLogger!=NULL){
     fMyActorLogger->EndMessage(ss.str());
