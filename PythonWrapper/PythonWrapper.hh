@@ -228,7 +228,10 @@ void UnitTests(){
   DoTest(moneyPerson4Orig+10 ==aPerson4.GetMoney(),"Person4 should have been paid 10");
 
   DoTest(moneyManuOrig-10-100 == aManufac->GetMoney(),"manufac should have give 10 money away to person4 and a 100 to person2");
+
   
+  DoTest((*aManufac->GetSupplies())[0].GetNumberOfCopies() == 0,"The Manufacturer should have no supply left");
+
 }
 
 
