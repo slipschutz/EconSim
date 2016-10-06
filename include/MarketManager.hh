@@ -85,6 +85,9 @@ private:
   multimap <double,JobInfo> rJobListings;
 
   vector <int> rCurrentGoodsForSale;
+
+  double rAveragePrice;
+  int rNumberOfDailySales;
 };
 
 

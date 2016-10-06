@@ -17,6 +17,9 @@ MarketManager::MarketManager(){
   //Constructor
   rSellPrices.resize(Settings::MaxGoodNumber);
   rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
+  rAveragePrice=0;
+  rNumberOfDailySales=1;
+
 
 }
 
@@ -34,6 +37,11 @@ void MarketManager::ClearMarket(){
 
   rCurrentGoodsForSale.clear();
   rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
+
+
+  DataLogger::Get()->PushGoodPrice(0,rAveragePrice/rNumberOfDailySales,0);
+  rAveragePrice=0;
+  rNumberOfDailySales=0;
 
 }
 
@@ -86,8 +94,10 @@ int MarketManager::GetCheapestSeller(int GoodNumber,OrderInfo & Info){
 }
 
 void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int quantity){
+  
   if (GoodNumber==0){
-    DataLogger::Get()->PushGoodPrice(GoodNumber,price,quantity);
+    rAveragePrice+=price;
+    rNumberOfDailySales++;
   }
   multimap<double,OrderInfo> * theMap = &rSellPrices[GoodNumber];
 
