@@ -1,5 +1,5 @@
 
-
+#include "MarketManager.hh"
 #include "GoodManager.hh"
 #include "Good.hh"
 #include "EconomicActor.hh"
@@ -68,8 +68,9 @@ void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buye
   //to have the good removed from its demand
 
   if (good ==0){
-    DataLogger::Get()->theSupplies.push_back(supply[good]);
-    DataLogger::Get()->theDemands.push_back(demand[good]);
+    // //    DataLogger::Get()->theSupplies.push_back(supply[good]);
+    // DataLogger::Get()->theSupplies.push_back((*MarketManager::Get()->GetCurrentGoodsForSale())[0]);
+    // DataLogger::Get()->theDemands.push_back(demand[good]);
   }
 
   Seller->RemoveSupply(good,quantity);
