@@ -129,7 +129,7 @@ ActorActions Person::BeginningOfStep(){
   int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood(amtOfDemand);
 
 
-  if (RandomManager::GetRand(1000)< 10 &&
+  if (RandomManager::GetRand(10000)< 10 &&
       HighestDemandGoodNum!=-1 && amtOfDemand > 10){//10 here is to prevent too many companies from spawning 
 
     int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
