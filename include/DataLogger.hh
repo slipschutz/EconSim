@@ -44,7 +44,8 @@ public:
   vector <TransactionRecord >* GetThePrices(){return &theGoodPrices;}
   
   vector <double> * GetTheSalaries(){return &theSalaries;}
-  
+
+  vector <int>  &GetNumberOfPeople(){return rNumberOfPeople;}
 
   vector <double> theSupplies;
   vector <double> theDemands;
@@ -68,6 +69,8 @@ private:
 
   ofstream rFileForPopulation;
 
+  vector <int> rNumberOfPeople;
+  
   int pBufferSize;
   void pWriteToDisk();
 };

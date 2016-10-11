@@ -68,7 +68,7 @@ void EconomicActorManager::Initialize(){
 
 void EconomicActorManager::BuildList(int NumberOfPeople){
   rTheListOfActors.clear();//Clear the list 
-  rNumPeople=NumberOfPeople;
+  rNumberOfPeople=NumberOfPeople;
  
   //rTheListOfActors.resize(NumberOfPeople);
 
@@ -88,6 +88,8 @@ void EconomicActorManager::BuildList(int NumberOfPeople){
 
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
+
+  rNumberOfPeople=NumberOfActors;
   Person * luckyPerson;  
   for (int i=0;i<NumberOfActors;i++){
     Person * a = new Person(this);
@@ -110,12 +112,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 
 
-  rNumPeople=rTheListOfActors.size();
 
-  if (rTheIds.size() !=(unsigned int) rNumPeople){
-    MessageException e("<EconomicActorManager::BuildCompleteNetwor> Length of id list does not match number of actors");
-    throw e;
-  }
 
 
   for (auto i : rTheListOfActors){
@@ -125,7 +122,7 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 }
 
 void EconomicActorManager::BuildTestNetwork(){
-  rNumPeople=2;
+  rNumberOfPeople=2;
   
 
   Person * a = new Person(this);
@@ -146,7 +143,9 @@ void EconomicActorManager::BuildTestNetwork(){
 
 
 void EconomicActorManager::DoAStep(){
- 
+
+  DataLogger::Get()->LogPopulation(rNumberOfPeople);
+  
   rTheIds.clear();
   rNumCurrentCompanies=0;
   for (auto i : rTheListOfActors){
@@ -191,6 +190,7 @@ void EconomicActorManager::DoAStep(){
     if (rTheListOfActors.count(i) !=0){
       if (rTheListOfActors[i]->GetActorType()==ActorTypes::Person){
 	rNumberOfPeopleDeaths++;
+	rNumberOfPeople--;
       }else{
 	rNumberOfCompanyDeaths++;
       }
@@ -243,6 +243,7 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
     rNumberOfCompanyBirths++;
   }else{
     rNumberOfPeopleBirths++;
+    rNumberOfPeople++;
   }
 
 

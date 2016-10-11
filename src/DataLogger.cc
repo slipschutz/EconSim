@@ -135,6 +135,7 @@ void DataLogger::LogMarketState(MarketManager *MarketMan,GoodManager * GoodMan){
 
 
 void DataLogger::LogPopulation(int n){
+  rNumberOfPeople.push_back(n);
   rFileForPopulation<<n<<endl;
 }
 

@@ -63,7 +63,7 @@ public:
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
-  int rNumPeople;
+  int rNumberOfPeople;
   
   int rNumCurrentCompanies;
   std::unordered_map <int,EconomicActor*> rTheListOfActors;

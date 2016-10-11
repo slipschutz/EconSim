@@ -75,6 +75,13 @@ bp::list GetSupplies(){
 
 }
 
+bp::list GetPopulation(){
+
+  return std_vector_to_py_list(DataLogger::Get()->GetNumberOfPeople());
+
+}
+
+
 bp::list GetDemands(){
 
 
@@ -247,6 +254,7 @@ BOOST_PYTHON_MODULE(libWrapper){
   bp::def("GetDemands",GetDemands);
 
   bp::def("UnitTests",UnitTests);
+  bp::def("GetPopulation",GetPopulation);
   
 
   //  bp::class_<std::vector<double> > ("AVec").def(bp::vector_indexing_suite<std::vector<double> >());
