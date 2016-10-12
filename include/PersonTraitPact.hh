@@ -11,10 +11,19 @@
 class PersonTraitPact : public TraitPact
 {
 public:
-  PersonTraitPact();
-  virtual ~PersonTraitPact();
+  PersonTraitPact(){}
+  virtual ~PersonTraitPact(){}
+
+  virtual void InitializeTraits();
 
 
+  
+  float Restlessness;
+  float Gluttoness;
+  float FoodBuyingThreshold;
+  float Food2BuyAtOnce;
+  float InvestmentLevel;
+  
 };
 
 

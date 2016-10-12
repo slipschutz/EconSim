@@ -9,6 +9,7 @@
 using namespace std;
 
 
+#include "PersonTraitPact.hh"
 #include "EconomicActor.hh"
 class Company;
 class ActorLogger;
@@ -64,6 +65,7 @@ private:
   int rFoodBuyingThreshold;
   int rFood2BuyAtOnce;
 
+  PersonTraitPact rMyTraits;
 
   int rInvestmentLevel;
   

@@ -8,20 +8,19 @@
 
 
 /**
-   Parent class for containers to hold traits for the actors
+   Abstract parent class for containers to hold traits for the actors
    will be extened for each class of Economic Actor
-
  */
 
 
+  
 class TraitPact
 {
 public:
   
   TraitPact();
   virtual ~TraitPact();
-  virtual void InitializeTriats()=0;
-
+  virtual void InitializeTraits()=0;
 
 
 protected:

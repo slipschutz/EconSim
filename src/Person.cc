@@ -6,7 +6,7 @@
 #include "MarketManager.hh"
 #include "Calendar.hh"
 
-#include "PersonTraitPact.hh"
+
 
 #include "Company.hh"
 #include "Manufacturer.hh"
@@ -39,7 +39,6 @@ void Person::Initialize(){
 
   //Good ID 0 is food and should have the highest prioriry 
   fGoodPriorities[0]=Settings::MaxGoodPriority;
-
 
   AddSupply(0,100);
   
