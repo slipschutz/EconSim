@@ -6,6 +6,8 @@
 #include "MarketManager.hh"
 #include "Calendar.hh"
 
+#include "PersonTraitPact.hh"
+
 #include "Company.hh"
 #include "Manufacturer.hh"
 #include "EconomicActorManager.hh"
