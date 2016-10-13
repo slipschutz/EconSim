@@ -14,8 +14,24 @@
 
 int largestGoodNum=1;
 
-Person::Person(EconomicActorManager* man) : EconomicActor(man){
+Person::Person(EconomicActorManager* man, bool DoInitialize) : EconomicActor(man){
   rEmployer=NULL;
+
+  fSupplies.clear();
+  fDemands.clear();
+
+  rHaveAJob=false;
+  rEmployerId=-1;
+  rWasFiredInPreviousStep=false;
+  rWasPaidInPreviousStep=false;
+
+  //Good ID 0 is food and should have the highest prioriry 
+  fGoodPriorities[0]=Settings::MaxGoodPriority;
+
+
+  if (DoInitialize){
+    Initialize();
+  }
 }
 
 Person::~Person(){
@@ -28,34 +44,32 @@ Person::~Person(){
 }
 
 
+double Person::GetCompanyInvestment(){
 
+  return (rMyTraits.InvestmentLevel)*fMoney;
+
+}
 void Person::Initialize(){
   //Randomly Pick starting money 
   //  rMoney = RandomManager::GetRand(1000);
+
   fMoney =100000;
-
-  fSupplies.clear();
-  fDemands.clear();
-
-  //Good ID 0 is food and should have the highest prioriry 
-  fGoodPriorities[0]=Settings::MaxGoodPriority;
-
   AddSupply(0,100);
+
+
+  //Initialize the traits for this person
+  rMyTraits.InitializeTraits();
   
   //Initialize Person specific Traits 
   
-  rRestlessness=RandomManager::GetRand(100);
-  rGluttoness=1;//RandomManager::GetRand(10)+1;
-  rInvestmentLevel=RandomManager::GetRand(60)+40;
+  // rRestlessness=RandomManager::GetRand(100);
+  // rGluttoness=1;//RandomManager::GetRand(10)+1;
+  // rInvestmentLevel=RandomManager::GetRand(60)+40;
 
-  rFoodBuyingThreshold=RandomManager::GetRand(100)+10;
-  rFood2BuyAtOnce=RandomManager::GetRand(100)+10;
+  // rFoodBuyingThreshold=RandomManager::GetRand(100)+10;
+  // rFood2BuyAtOnce=RandomManager::GetRand(100)+10;
 
 
-  rHaveAJob=false;
-  rEmployerId=-1;
-  rWasFiredInPreviousStep=false;
-  rWasPaidInPreviousStep=false;
 }
 
 void Person::Initialize(Person *p){
@@ -63,11 +77,19 @@ void Person::Initialize(Person *p){
   
   //Initialize Person specific Traits 
   
-  rRestlessness=p->rRestlessness;
-  rGluttoness=p->rGluttoness;
-  rInvestmentLevel=p->rGluttoness;
+  // rRestlessness=p->rRestlessness;
+  // rGluttoness=p->rGluttoness;
+  // rInvestmentLevel=p->rGluttoness;
 
 }
+
+void Person::CopyTraits(const PersonTraitPact & Traits2Copy){
+  this->rMyTraits=Traits2Copy;
+}
+void Person::CopyAndMutateTraits(const PersonTraitPact & Traits2Copy){
+  this->rMyTraits.MutateCopy(Traits2Copy);
+}
+
 
 void Person::DumpHavesWants(){
   cout<<"Wants for Person "<<this->GetBaseId()<<":   ";
@@ -109,19 +131,18 @@ ActorActions Person::BeginningOfStep(){
   if (fSupplies.count(0) == 0) {
     //Food is not in the supplies map
     AddSupply(0,0);//Make empty good
-
   }
   AddDemand(0,0);
   stringstream s;
   s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
 
+  //Add food Demand if in need of food.  Also has check on there not being any
+  //demand already.  This prevents more demand to be added in later steps
+  if (fSupplies[0].GetNumberOfCopies() < rMyTraits.FoodBuyingThreshold && 
+      fDemands[0].GetNumberOfCopies()==0){
 
-  //
-  //Add food Demand if in need of food
-  //
-  if (fSupplies[0].GetNumberOfCopies() < rFoodBuyingThreshold && fDemands[0].GetNumberOfCopies()<2){
     //There are not enough copies of food in the supply
-    int n=rFood2BuyAtOnce;
+    int n=rMyTraits.Food2BuyAtOnce;
     AddDemand(0,n);//Add the demand for food
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
@@ -134,16 +155,15 @@ ActorActions Person::BeginningOfStep(){
       HighestDemandGoodNum!=-1 && amtOfDemand > 10){//10 here is to prevent too many companies from spawning 
 
     int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
-
+    
     int theDemand = GoodManager::Get()->demand[HighestDemandGoodNum];
-
+    
     if (theDemand > 1.2*theSupply){
-
+      
       double startup=this->GetCompanyInvestment();
       this->SubtractMoney(startup);
 
       Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,HighestDemandGoodNum);
-
       s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
       rOwnedCompanies.push_back(c);
       fTheEconomicActorManager->MakeActor(c);
@@ -152,14 +172,18 @@ ActorActions Person::BeginningOfStep(){
 
   
   //Make more people
-  if (RandomManager::GetRand(1000) < 2){
-    Person * aPerson = new Person(fTheEconomicActorManager);
+  if (RandomManager::GetRand(1000) < 2 &&     fSupplies[0].GetNumberOfCopies() >20){
+    Person * aPerson = new Person(fTheEconomicActorManager,false);
     fTheEconomicActorManager->MakeActor(aPerson);
-    aPerson->Initialize(this);
+    aPerson->CopyAndMutateTraits(this->rMyTraits);
+
     double temp=fMoney/2.0;
     this->SubtractMoney(temp);
     aPerson->AddMoney(temp);
 
+    this->RemoveSupply(0,10);
+    aPerson->AddSupply(0,10);
+    //    aPerson->SetActorLogger(new ActorLogger(aPerson->GetBaseId()));
   }
 
   //
@@ -278,23 +302,21 @@ ActorActions Person::EndOfStep(){
   stringstream s;
   //Preform End of step things
   ActorActions ret;
-  if (fSupplies[0].GetNumberOfCopies()< rGluttoness){
-    //cout<<"\n\n\nI DIED"<<endl;
+  if (fSupplies[0].GetNumberOfCopies() < rMyTraits.Gluttoness){
     s<<"I have died :( "<<endl;
+
     //KillActor does not delete it right away.
     //it removes it from the 
-
     fTheEconomicActorManager->MarkForDeath(this);
     for (auto i : rOwnedCompanies){
-      //      i->SetNoOwner();
       fTheEconomicActorManager->MarkForDeath(i);
     }//end for
     
     ret=ActorActions::Died;
   }else {
-    fSupplies[0].RemoveCopies(rGluttoness);
+    fSupplies[0].RemoveCopies(rMyTraits.Gluttoness);
     //    GoodManager::Get()->RemoveSupply(0,1);
-    s<<"I ate "<<rGluttoness<<" foods "<<endl;
+    s<<"I ate "<<rMyTraits.Gluttoness<<" foods "<<endl;
     ret=ActorActions::None;
   }
   
@@ -304,6 +326,15 @@ ActorActions Person::EndOfStep(){
     fMyActorLogger->EndMessage(s.str());
   }
   
+
+  //Randomly add new demands
+  if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
+    int n=RandomManager::GetRand(Settings::MaxGoodNumber);
+    AddDemand(n,10);
+      
+
+  }
+
   return ret;
 }
 

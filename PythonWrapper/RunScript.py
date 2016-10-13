@@ -8,7 +8,7 @@ import libWrapper
 
 def go():
     libWrapper.UnitTests()
-    return
+
     libWrapper.Run()
     
 
@@ -18,7 +18,7 @@ def go():
 
     price = plt.plot(x,"r--",label="Price")
     people = plt.plot(libWrapper.GetPopulation(),label="Population")
-    demand = plt.plot(libWrapper.GetDemands(),label="demand")
+    demand = plt.plot(libWrapper.GetDemands(),"g^",label="demand")
     supply=plt.plot(libWrapper.GetSupplies(),label="supply")
 
     plt.yscale('log')

@@ -112,9 +112,6 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 
 
-
-
-
   for (auto i : rTheListOfActors){
     i.second->Initialize();
   }
@@ -145,9 +142,14 @@ void EconomicActorManager::BuildTestNetwork(){
 void EconomicActorManager::DoAStep(){
 
   DataLogger::Get()->LogPopulation(rNumberOfPeople);
+
   
+  //First thing to to is clear the ID list as people may have been killed at end
+  //of last step
   rTheIds.clear();
   rNumCurrentCompanies=0;
+
+  //Loop over the list of all actors and call thier begin of step methods
   for (auto i : rTheListOfActors){
     //ActorActions a =i.second->BeginningOfStep();
     i.second->BeginningOfStep();
@@ -155,12 +157,11 @@ void EconomicActorManager::DoAStep(){
     if ( i.second->GetActorType()== ActorTypes::Manufacturer){
       rNumCurrentCompanies++;
     }
-
-    //Recreate the ids list
+    //Fill the list of Actor IDs
     rTheIds.push_back(i.first);
-
   }
   
+  //Log some stuf for the Data logger
   DataLogger::Get()->theSupplies.push_back(GoodManager::Get()->supply[0]);
   DataLogger::Get()->theDemands.push_back(GoodManager::Get()->demand[0]);
 
@@ -168,7 +169,8 @@ void EconomicActorManager::DoAStep(){
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
   std::random_shuffle ( rTheIds.begin(), rTheIds.end(),RandomManager::GetRand );
 
-  
+  //Loop over the randomly shuffled list of IDs and for each ID Find the person
+  //in the actor list and call it's DOSTEP method
   for (auto & i : rTheIds ){
     auto it=rTheListOfActors.find(i);
     if (it != rTheListOfActors.end()){
@@ -176,9 +178,9 @@ void EconomicActorManager::DoAStep(){
     }
   }
   
-
+  
   rToBeKilled.clear();//Make sure that this is empty
-
+  
   //Call end of step for every actor in the list 
   for (auto & i : rTheListOfActors){
     i.second->EndOfStep();
@@ -194,10 +196,9 @@ void EconomicActorManager::DoAStep(){
       }else{
 	rNumberOfCompanyDeaths++;
       }
+
       delete rTheListOfActors[i];
-      
       rTheListOfActors.erase(i);
-      
       Death::Get()->AddDead(i,Calendar::DayNumber);
     }
   }
@@ -232,12 +233,13 @@ void EconomicActorManager::MarkForDeath(EconomicActor* act){
 
 void EconomicActorManager::MakeActor(EconomicActor* act){
   //need to integrate this actor into all the lists and
-  //add it to the connections of everyone in the network
-  act->Initialize();
+
+  //act->Initialize();
+
   rTheListOfActors.insert(make_pair(act->GetBaseId(),act));
   rTheIds.push_back(act->GetBaseId());
-  
 
+  
   int t =act->GetActorType();
   if ( t == ActorTypes::Company || t==ActorTypes::Manufacturer){
     rNumberOfCompanyBirths++;
@@ -246,13 +248,6 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
     rNumberOfPeople++;
   }
 
-
-  // for (auto it : rTheListOfActors){
-
-  //   if (it.second->GetBaseId() !=act->GetBaseId()){
-  //     act->MakeConnection(it.second);
-  //   }
-  // }
   rNumberOfBirths++;
 }
 

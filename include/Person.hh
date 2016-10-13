@@ -16,12 +16,14 @@ class ActorLogger;
 
 class Person : public EconomicActor {
 public:
-  Person(EconomicActorManager* );
+  Person(EconomicActorManager* ,bool DoInitialize=true);
   ~Person();
  
   void Initialize();
   void Initialize(Person *);
 
+  void CopyTraits(const PersonTraitPact &);
+  void CopyAndMutateTraits(const PersonTraitPact &);
 
   void DumpConnections();
   void DoStep();
@@ -38,7 +40,7 @@ public:
   double GetWorth(Good);
   void YourFired(){rHaveAJob=false;rEmployerId=-1;rWasFiredInPreviousStep=true;rEmployer=NULL;}
   
-  double GetCompanyInvestment(){return (rInvestmentLevel/100.)*fMoney;}
+  double GetCompanyInvestment();
 
   void GetPaid(double amount,string notes);
 
@@ -47,9 +49,9 @@ public:
   void PrintInfo();
 
 
-  void SetRestlessnes(int v){rRestlessness=v;}
-  void SetGluttoness(int v){rGluttoness=v;}
-  void SetInvestmentLevel(int v){rInvestmentLevel=v;}
+  void SetRestlessnes(int v){rMyTraits.Restlessness=v;}
+  void SetGluttoness(int v){rMyTraits.Gluttoness=v;}
+  void SetInvestmentLevel(int v){rMyTraits.InvestmentLevel=v;}
 
 
   bool GetHasJob(){return rHaveAJob;}
@@ -58,16 +60,19 @@ public:
 private:
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
+
+
   //Some person specific traits
   //all things 0-100
-  int rRestlessness;//How likely person will develop a want other than food
-  int rGluttoness;
-  int rFoodBuyingThreshold;
-  int rFood2BuyAtOnce;
+  // int rRestlessness;//How likely person will develop a want other than food
+  // int rGluttoness;
+  // int rFoodBuyingThreshold;
+  // int rFood2BuyAtOnce;
+  // int rInvestmentLevel;
 
   PersonTraitPact rMyTraits;
 
-  int rInvestmentLevel;
+
   
   bool rHaveAJob;
   
@@ -75,7 +80,6 @@ private:
   Company * rEmployer;
 
   vector <Company*> rOwnedCompanies;
-
 
   
   bool rWasFiredInPreviousStep;
