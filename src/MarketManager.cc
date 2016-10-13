@@ -39,7 +39,11 @@ void MarketManager::ClearMarket(){
   rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
 
 
-  DataLogger::Get()->PushGoodPrice(0,rAveragePrice/rNumberOfDailySales,0);
+  double temp=0;
+  if (rNumberOfDailySales !=0){
+    temp=rAveragePrice/rNumberOfDailySales;
+  }
+  DataLogger::Get()->PushGoodPrice(0,temp,0);
   rAveragePrice=0;
   rNumberOfDailySales=0;
 
