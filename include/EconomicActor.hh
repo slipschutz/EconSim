@@ -26,6 +26,7 @@ enum class ActorActions{
 };
   
 
+
 class EconomicActor : public Base {
 public:
   EconomicActor(EconomicActorManager*);
@@ -59,7 +60,6 @@ public:
 
 
   
-
   
 
 
@@ -125,7 +125,8 @@ public:
      come from out side of the network.  For a person
      Adding a supply should come from within the network
    */
-  void fAddASupply(int GoodNumber){}
+
+  //  void fAddASupply(int GoodNumber){}
   
 
 };

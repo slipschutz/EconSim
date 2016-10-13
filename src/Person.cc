@@ -219,13 +219,24 @@ void Person::DoStep(){
   
     //Buy the thing that has the most priority 
     auto it= fDemandPriorities2GoodNum.end();
-    //move iterator 1 back from the end to get last elment
-    it--;
-    int Good2Buy = it->second;//this is the good number that has the highest priority
-    int totalWant= fDemands[Good2Buy].GetNumberOfCopies();
-    int AmountOfGoodIWant =totalWant;
+    int Good2Buy=-1;
+    int totalWant=-1;
+    int AmountOfGoodIWant=-1;
 
     
+    while (true){
+      //move iterator 1 back from the end to get last elment
+      it--;
+      Good2Buy = it->second;//this is the good number that has the highest priority
+      totalWant= fDemands[Good2Buy].GetNumberOfCopies();
+      AmountOfGoodIWant =totalWant;
+      if(fDemandPriorities2GoodNum.size()==1){
+	break;
+      }
+      if (AmountOfGoodIWant!=0){
+	break;
+      }
+    }
     while (AmountOfGoodIWant >0){
 
       OrderInfo info;
