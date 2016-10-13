@@ -20,6 +20,7 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   for (auto & i : fGoodPriorities){
     i=RandomManager::GetRand(Settings::MaxGoodPriority - 4);//-4 to keep things away from 100%
   }
+
   //Fill the maps of Demands and supplies 
   //with goods that have 0 quantity.
   //this way Later checks won't have to look
@@ -28,9 +29,8 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   //Those will be set at latter times in the
   //sub classes
   for ( int i=0;i<Settings::MaxGoodNumber;i++){
-    // fSupplies[i]=Good(i,0);
-    // fDemands[i]=Good(i,0);
-
+    fSupplies[i]=Good(i,0);
+    fDemands[i]=Good(i,0);
   }
 
 }
@@ -53,7 +53,9 @@ EconomicActor::~EconomicActor(){
   fDemands.clear();
   fSupplies.clear();
   fGoodPriorities.clear();
+  fDemandPriorities2GoodNum.clear();
 
+  
   fNumConnections=0;
   fMoney=0;
 
