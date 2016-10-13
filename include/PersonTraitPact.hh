@@ -16,12 +16,13 @@ public:
 
   virtual void InitializeTraits();
 
+  void MutateCopy(const PersonTraitPact &);
 
   
   float Restlessness;
-  float Gluttoness;
-  float FoodBuyingThreshold;
-  float Food2BuyAtOnce;
+  int Gluttoness;
+  int FoodBuyingThreshold;
+  int Food2BuyAtOnce;
   float InvestmentLevel;
   
 };
