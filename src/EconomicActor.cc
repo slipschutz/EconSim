@@ -29,8 +29,8 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   //Those will be set at latter times in the
   //sub classes
   for ( int i=0;i<Settings::MaxGoodNumber;i++){
-    fSupplies[i]=Good(i,0);
-    fDemands[i]=Good(i,0);
+    fSupplies[i]=Good(i,0,fGoodPriorities[i],"supply");
+    fDemands[i]=Good(i,0,fGoodPriorities[i],"demand");
   }
 
 }
