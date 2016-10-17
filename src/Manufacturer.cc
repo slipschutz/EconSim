@@ -164,7 +164,7 @@ ActorActions Manufacturer::EndOfStep(){
       int newPriorityLevel = oldPriorityLevel- oldPriorityLevel*rPriceChangeLevel;
       //      cout<<"after price "<<temp<<endl;
       
-      if (newPriorityLevel< 0){
+      if (newPriorityLevel< 1){
 	newPriorityLevel=0;
       }
       
@@ -177,7 +177,7 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
 
-      ss<<"I am lowering my price "<<endl;
+      ss<<"I am lowering my price for good "<<GoodToManufacture<<" it is "<<newPriorityLevel<<endl;
       
     }else if (thisStepSoldVolume > 0.85*rStartOfStepSupply){
       int temp =fGoodPriorities[GoodToManufacture];
@@ -190,8 +190,8 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"Volume sold "<<thisStepSoldVolume<<endl;
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
-      ss<<"I am raising my price "<<endl;
-   
+
+      ss<<"I am raising my price for good "<<GoodToManufacture<<" it is "<<temp<<endl;
     }
   }
   ActorActions ret=ActorActions::None;

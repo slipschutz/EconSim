@@ -20,7 +20,8 @@ using namespace std;
 
 class Manufacturer : public Company {
 public:
-  Manufacturer(double money,EconomicActorManager*man,Person * own, int GoodNumber,bool DoInitialize=true) : Company(man,own),GoodToManufacture(GoodNumber) {
+  Manufacturer(double money,EconomicActorManager*man,Person * own, int GoodNumber,bool DoInitialize=true) :
+    Company(man,own),GoodToManufacture(GoodNumber) {
     fMoney=money;
     if (DoInitialize){
       Initialize();
@@ -67,6 +68,8 @@ private:
   int numberOfSteps;
   int numberOFProductions;
 
+  double rGoodPrice;
+  
   bool rFirstStep;
   bool rHireMorePeople;
 };
