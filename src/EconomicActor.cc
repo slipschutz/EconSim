@@ -15,6 +15,8 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   fDemands.clear();
   fSupplies.clear();
   fGoodPriorities.clear();
+
+  fMoney=0;
   
   fGoodPriorities.resize(Settings::MaxGoodNumber);
   for (auto & i : fGoodPriorities){

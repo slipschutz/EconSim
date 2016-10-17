@@ -17,8 +17,8 @@ int largestGoodNum=1;
 Person::Person(EconomicActorManager* man, bool DoInitialize) : EconomicActor(man){
   rEmployer=NULL;
 
-  fSupplies.clear();
-  fDemands.clear();
+  // fSupplies.clear();
+  // fDemands.clear();
 
   rHaveAJob=false;
   rEmployerId=-1;
@@ -132,7 +132,7 @@ ActorActions Person::BeginningOfStep(){
     //Food is not in the supplies map
     AddSupply(0,0);//Make empty good
   }
-  AddDemand(0,0);
+  //  AddDemand(0,0);
   stringstream s;
   s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
 
@@ -180,7 +180,8 @@ ActorActions Person::BeginningOfStep(){
     double temp=fMoney/2.0;
     this->SubtractMoney(temp);
     aPerson->AddMoney(temp);
-
+    
+    
     this->RemoveSupply(0,10);
     aPerson->AddSupply(0,10);
     //    aPerson->SetActorLogger(new ActorLogger(aPerson->GetBaseId()));
@@ -340,8 +341,8 @@ ActorActions Person::EndOfStep(){
 
   //Randomly add new demands
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
-    int n=RandomManager::GetRand(Settings::MaxGoodNumber);
-    AddDemand(n,10);
+    int n=RandomManager::GetRand(Settings::MaxGoodNumber-1 );
+    AddDemand(n+1,10);
       
 
   }
