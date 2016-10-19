@@ -18,6 +18,10 @@ public:
 
   void MutateCopy(const PersonTraitPact &);
 
+  static float TraitMutationRate;
+  static int DiscreteTraitMutationRate;
+
+  static bool RunTests();
   
   float Restlessness;
   int Gluttoness;
