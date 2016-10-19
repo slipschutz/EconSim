@@ -13,7 +13,7 @@
  */
 
 
-  
+
 class TraitPact
 {
 public:
@@ -22,6 +22,9 @@ public:
   virtual ~TraitPact();
   virtual void InitializeTraits()=0;
 
+  void BoundAboveZero(int &val);
+  void BoundZeroToOne(float &val);
+    
 
 protected:
 
