@@ -23,6 +23,9 @@ public:
   virtual void InitializeTraits()=0;
 
   void BoundAboveZero(int &val);
+  void BoundAboveZero(float&val);
+  template<typename T> void BoundAboveZero(T & val);
+  
   void BoundZeroToOne(float &val);
     
 
@@ -30,4 +33,11 @@ protected:
 
   
 };
+
+
+template<typename T> void TraitPact::BoundAboveZero(T & val){
+
+}
+
+
 #endif /* __TRAITPACT_HH */

@@ -11,6 +11,13 @@ void TraitPact::BoundAboveZero(int &val){
   }
 }
 
+void TraitPact::BoundAboveZero(float & val){
+  if (val <0){
+    val=0;
+  }
+}
+
+
 void TraitPact::BoundZeroToOne(float &val){
   if (val <0){
     val=0;
@@ -19,7 +26,9 @@ void TraitPact::BoundZeroToOne(float &val){
   }
 }
 TraitPact::TraitPact(){
-
+  double x=5;
+  BoundAboveZero(x);
+  
 }
 TraitPact::~TraitPact(){
 
