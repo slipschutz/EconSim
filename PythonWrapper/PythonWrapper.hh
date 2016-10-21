@@ -95,17 +95,7 @@ bp::list GetDemands(){
 #include <string>
 
 
-void DoTest(bool test,string message){
-
-  if(!test){
-    cout<<"*******Test Fail********* "<<message<<endl;
-    //    throw -99;
-  }else{
-    cout<<"Passed "<<message<<endl;
-  }
-
-}
-
+#include "Utilities.hh"
 
 
 

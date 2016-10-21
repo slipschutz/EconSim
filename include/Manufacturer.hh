@@ -15,6 +15,7 @@
 
 //Local Headers 
 #include "Company.hh"
+#include "ManufacturerTraitPact.hh"
 
 using namespace std;
 
@@ -72,6 +73,10 @@ private:
   
   bool rFirstStep;
   bool rHireMorePeople;
+
+  
+  ManufacturerTraitPact myTraits;
+  
 };
 
 
