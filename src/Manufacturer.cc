@@ -1,7 +1,6 @@
 
 
 
-
 #include "Manufacturer.hh"
 
 #include "RandomManager.hh"
@@ -16,7 +15,11 @@
 #include "Death.hh"
 #include "Calendar.hh"
 #include "ActorLogger.hh"
+
+
+
 void Manufacturer::Initialize(){
+
 
 
   //Pick a good to manufacturer
@@ -28,7 +31,7 @@ void Manufacturer::Initialize(){
 
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
   rPriceChangeLevel= RandomManager::GetRand(100)/100.;
-  rStartingSalary=RandomManager::GetRand(floor(0.1*fMoney));
+  rStartingSalary=RandomManager::GetRand(floor(0.1*fMoney))+100;
 
 
   for (unsigned int i=0;i<fGoodPriorities.size();i++){
@@ -52,8 +55,8 @@ void Manufacturer::Initialize(){
   numberOFProductions=0;
   
 
-
-
+  rGoodPrice=RandomManager::GetRand(1000);
+  
   rHireMorePeople=true;
 }
 
@@ -86,7 +89,7 @@ ActorActions Manufacturer::BeginningOfStep(){
     
     MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
 					 fSupplies[GoodToManufacture].GetNumberOfCopies(),
-					 fGoodPriorities[GoodToManufacture]);
+					 rGoodPrice);/////
   }
   
 
@@ -159,17 +162,15 @@ ActorActions Manufacturer::EndOfStep(){
 
   if (RandomManager::GetUniform() > rSteadfastness){
     if (thisStepSoldVolume < 10){
-      int oldPriorityLevel =fGoodPriorities[GoodToManufacture];
-      //      cout<<"before price "<<temp<<endl;
-      int newPriorityLevel = oldPriorityLevel- oldPriorityLevel*rPriceChangeLevel;
-      //      cout<<"after price "<<temp<<endl;
-      
-      if (newPriorityLevel< 1){
-	newPriorityLevel=0;
+
+
+      double oldPrice=rGoodPrice;
+      rGoodPrice=oldPrice - oldPrice*rPriceChangeLevel;
+      if (rGoodPrice<0){
+	rGoodPrice=0;
       }
-      
-      fGoodPriorities[GoodToManufacture]=newPriorityLevel;
-      
+
+
 
       // cout<<"This is manufacturer "<<this->GetBaseId()<<" in lower price"<<endl;
       // cout<<"Steadfastneess "<<rSteadfastness<<endl;
@@ -177,21 +178,24 @@ ActorActions Manufacturer::EndOfStep(){
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
 
-      ss<<"I am lowering my price for good "<<GoodToManufacture<<" it is "<<newPriorityLevel<<endl;
+
+      ss<<"I am lowering my price for good "<<GoodToManufacture<<" it is "<<rGoodPrice<<endl;
       
     }else if (thisStepSoldVolume > 0.85*rStartOfStepSupply){
-      int temp =fGoodPriorities[GoodToManufacture];
-      // cout<<"before price "<<temp<<endl;
-      temp = temp + temp*rPriceChangeLevel;
-      // cout<<"after price "<<temp<<endl;
-      fGoodPriorities[GoodToManufacture]=temp;
+
+      double oldPrice=rGoodPrice;
+      rGoodPrice=oldPrice +oldPrice*rPriceChangeLevel;
+      if (rGoodPrice<0){
+	rGoodPrice=0;
+      }
+
       // cout<<"This is manufacturer "<<this->GetBaseId()<<" in raise price"<<endl;
       // cout<<"Steadfastneess "<<rSteadfastness<<endl;
       // cout<<"Volume sold "<<thisStepSoldVolume<<endl;
       // cout<<"rPriceChangelevel "<<rPriceChangeLevel<<endl;
       // cin.get();
 
-      ss<<"I am raising my price for good "<<GoodToManufacture<<" it is "<<temp<<endl;
+      ss<<"I am raising my price for good "<<GoodToManufacture<<" it is "<<rGoodPrice<<endl;
     }
   }
   ActorActions ret=ActorActions::None;
