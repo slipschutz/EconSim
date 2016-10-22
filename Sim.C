@@ -32,9 +32,11 @@
 using namespace  std;
 
 
-
+#include "PersonTraitPact.hh"
+#include "TestTraits.hh"
 int main(int argv, char ** argc){
-  
+
+
   Run();
   return 0;
 }
