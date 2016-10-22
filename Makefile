@@ -17,7 +17,7 @@ LIBS=./lib/libEverything.so
 all: $(EXECUTABLE) PyWrap
 
 
-$(EXECUTABLE) : $(LIBS)
+$(EXECUTABLE) : $(LIBS) Sim.C
 	@echo "Building $(EXECUTABLE)"
 	$(CXX) $(CFLAGS) ./$(MAIN) -lEverything -L./lib/  -Wl,-rpath=./lib/ -o $@ 
 	@echo "Build succeed"
