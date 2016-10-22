@@ -52,10 +52,8 @@ bp::list std_vector_to_py_list(const std::vector<T>& v)
 }
 
 
-bp::list GetData(){
-
+bp::list GetPriceData(){
   vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
-  
   vector  <double> price;
   cout<<"The size is "<<theGoodPrices->size()<<endl;
   for ( auto i : *theGoodPrices){
@@ -67,6 +65,21 @@ bp::list GetData(){
   return std_vector_to_py_list(price);
 
 }
+
+bp::list GetVolumeData(){
+  vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
+  vector  <double> price;
+  cout<<"The size is "<<theGoodPrices->size()<<endl;
+  for ( auto i : *theGoodPrices){
+    price.push_back(i.Supply);
+  }
+
+  // vector <double> * prices = DataLogger::Get()->GetTheSalaries();
+
+  return std_vector_to_py_list(price);
+
+}
+
 
 bp::list GetSupplies(){
 
@@ -239,7 +252,8 @@ void UnitTests(){
 
 BOOST_PYTHON_MODULE(libWrapper){
   bp::def("Run",Run);
-  bp::def("GetData",GetData);
+  bp::def("GetPriceData",GetPriceData);
+  bp::def("GetVolumeData",GetVolumeData);
   bp::def("GetSupplies",GetSupplies);
   bp::def("GetDemands",GetDemands);
 

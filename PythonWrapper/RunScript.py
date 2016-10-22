@@ -12,10 +12,11 @@ def go():
     libWrapper.Run()
     
 
-    x=libWrapper.GetData()
-    for i in range(len(x)):
-        x[i]=x[i]*1000
+    x=libWrapper.GetPriceData()
+#    for i in range(len(x)):
+#        x[i]=x[i]*1000
 
+    volume = plt.plot(libWrapper.GetVolumeData(),"b*",label="volume")
     price = plt.plot(x,"ro",label="Price")
     people = plt.plot(libWrapper.GetPopulation(),label="Population")
     demand = plt.plot(libWrapper.GetDemands(),"g^",label="demand")
