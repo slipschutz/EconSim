@@ -56,18 +56,8 @@ void Person::Initialize(){
   fMoney =100000;
   AddSupply(0,100);
 
-
   //Initialize the traits for this person
   rMyTraits.InitializeTraits();
-  
-  //Initialize Person specific Traits 
-  
-  // rRestlessness=RandomManager::GetRand(100);
-  // rGluttoness=1;//RandomManager::GetRand(10)+1;
-  // rInvestmentLevel=RandomManager::GetRand(60)+40;
-
-  // rFoodBuyingThreshold=RandomManager::GetRand(100)+10;
-  // rFood2BuyAtOnce=RandomManager::GetRand(100)+10;
 
 
 }
@@ -136,21 +126,26 @@ ActorActions Person::BeginningOfStep(){
   stringstream s;
   s<<"Dear Diary, \n Today is day "<<Calendar::DayNumber<<endl;
 
+
+
+
+
+
   //Add food Demand if in need of food.  Also has check on there not being any
   //demand already.  This prevents more demand to be added in later steps
   if (fSupplies[0].GetNumberOfCopies() < rMyTraits.FoodBuyingThreshold && 
       fDemands[0].GetNumberOfCopies()==0){
-
     //There are not enough copies of food in the supply
     int n=rMyTraits.Food2BuyAtOnce;
     AddDemand(0,n);//Add the demand for food
     s<<"I need Food.  I want to buy "<<n<<" foods"<<endl;
   }
 
+
+
+  //look for Highest deamnd good and maybe start a company to make it
   int amtOfDemand=0;
   int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood(amtOfDemand);
-
-
   if (RandomManager::GetRand(10000)< 10 &&
       HighestDemandGoodNum!=-1 && amtOfDemand > 10){//10 here is to prevent too many companies from spawning 
 
@@ -171,8 +166,11 @@ ActorActions Person::BeginningOfStep(){
   }
 
   
-  //Make more people
+  //Randomly spawn more people
   if (RandomManager::GetRand(1000) < 2 &&     fSupplies[0].GetNumberOfCopies() >20){
+
+
+
     Person * aPerson = new Person(fTheEconomicActorManager,false);
     fTheEconomicActorManager->MakeActor(aPerson);
     aPerson->CopyAndMutateTraits(this->rMyTraits);
@@ -181,11 +179,13 @@ ActorActions Person::BeginningOfStep(){
     this->SubtractMoney(temp);
     aPerson->AddMoney(temp);
     
-    
+    s<<"I am reproducing.  I don't care what my mom says!!"<<endl;
+    s<<"I am giving this beautiful child "<<temp<<" monies"<<endl;
     this->RemoveSupply(0,10);
     aPerson->AddSupply(0,10);
     //    aPerson->SetActorLogger(new ActorLogger(aPerson->GetBaseId()));
   }
+
 
   //
   //Message to keep track of whether this person got fired in previous step
@@ -201,6 +201,8 @@ ActorActions Person::BeginningOfStep(){
     rPaidNotes.str("");
   }
 
+
+  //Log the information
   if (fMyActorLogger!=NULL){
     fMyActorLogger->LogBeforeStepState(this);
     fMyActorLogger->BeforeMessage(s.str());
@@ -257,7 +259,7 @@ void Person::DoStep(){
 		<<"but I only have "<<fMoney<<endl;
 	if (AmountOfGoodIWant > 5){
 	  //if they demand alot of the good try lowering it until they can afford the good
-	  AmountOfGoodIWant-=5;
+	  AmountOfGoodIWant=floor(AmountOfGoodIWant/2);
 	}else{
 	  //They can't afford anything
 	  break;
@@ -342,7 +344,7 @@ ActorActions Person::EndOfStep(){
   //Randomly add new demands
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
     int n=RandomManager::GetRand(Settings::MaxGoodNumber-1 );
-    AddDemand(n+1,10);
+    AddDemand(n+1,RandomManager::GetRand(1000));
       
 
   }
