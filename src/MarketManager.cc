@@ -43,9 +43,10 @@ void MarketManager::ClearMarket(){
   if (rNumberOfDailySales !=0){
     temp=rAveragePrice/rNumberOfDailySales;
   }
-  DataLogger::Get()->PushGoodPrice(0,temp,0);
+  DataLogger::Get()->PushGoodPrice(0,temp,rNumberOfDailySales);
   rAveragePrice=0;
   rNumberOfDailySales=0;
+
 
 }
 
@@ -102,6 +103,7 @@ void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int q
   if (GoodNumber==0){
     rAveragePrice+=price;
     rNumberOfDailySales++;
+    
   }
   multimap<double,OrderInfo> * theMap = &rSellPrices[GoodNumber];
 
