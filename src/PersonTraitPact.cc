@@ -8,6 +8,9 @@
 float PersonTraitPact::TraitMutationRate=0.05;
 int PersonTraitPact::DiscreteTraitMutationRate=2;
 
+
+
+
 bool PersonTraitPact::RunTests(){
   bool status=true;
 
@@ -25,6 +28,16 @@ bool PersonTraitPact::RunTests(){
 }
 
 void PersonTraitPact::InitializeTraits(){
+
+  // for (int i=0;i<theTraitPact.GetSize();i++){
+  //   auto trait =theTraitPact.GetTrait(i);
+  //   if (trait.type()==typeid(int)){
+  //     int *x;
+  //     theTraitPact.GetTrait(i,x);
+  //   }
+  //   if (trait.type()==typeid(float)){
+  //   }
+  // }
 
   Restlessness=RandomManager::GetUniform();
   Gluttoness=RandomManager::GetRand(10)+1;

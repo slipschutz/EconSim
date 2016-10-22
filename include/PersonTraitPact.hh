@@ -11,9 +11,7 @@
 class PersonTraitPact : public TraitPact
 {
 public:
-  PersonTraitPact(){}
   virtual ~PersonTraitPact(){}
-
   virtual void InitializeTraits();
 
   void MutateCopy(const PersonTraitPact &);
@@ -22,13 +20,22 @@ public:
   static int DiscreteTraitMutationRate;
 
   static bool RunTests();
+
+  PersonTraitPact(){
+    // theTraitPact.AddTrait(& Restlessness);
+    // theTraitPact.AddTrait(& Gluttoness);
+    // theTraitPact.AddTrait(& FoodBuyingThreshold);
+    // theTraitPact.AddTrait(& Food2BuyAtOnce);
+    // theTraitPact.AddTrait(& InvestmentLevel);
+  }
   
   float Restlessness;
   int Gluttoness;
   int FoodBuyingThreshold;
   int Food2BuyAtOnce;
   float InvestmentLevel;
-  
+
+
 };
 
 
