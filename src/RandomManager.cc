@@ -4,6 +4,7 @@
  
 #include <chrono>
 #include <iostream>
+#include "Exceptions.hh"
 bool RandomManager::pSeeded=false;
 std::default_random_engine* RandomManager::pTheGenerator = NULL;
 
@@ -16,6 +17,12 @@ RandomManager::RandomManager(){
 
 
 int RandomManager::GetRand(int n){
+  if (n < 1){
+    MessageException e("RandomManager::GetRand() Must have input 1 or greater");
+    double *d=NULL;
+    *d=5;
+  }
+
   if (!pSeeded){
     // construct a trivial random generator engine from a time-based seed:
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();//2029165674;

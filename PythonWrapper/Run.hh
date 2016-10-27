@@ -38,13 +38,13 @@ void Run(){
 	break;
       }
 
-      if(i > 500){
+      if(i > 1000){
 	if (i % 100 ==0){
-	  if (Settings::FoodProductionPerWorker==2){
-	    Settings::FoodProductionPerWorker=10;
-	  }else {
-	    Settings::FoodProductionPerWorker=2;
-	  }
+	  // if (
+	  //   Settings::FoodProductionPerWorker=10;
+	  // }else {
+	  //   Settings::FoodProductionPerWorker=2;
+	  // }
 	}
 
       }

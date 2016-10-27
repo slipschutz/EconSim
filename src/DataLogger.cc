@@ -139,6 +139,9 @@ void DataLogger::LogPopulation(int n){
   rFileForPopulation<<n<<endl;
 }
 
+void DataLogger::LogManufacturerNumber(int num){
+  rNumberOfManufacturers.push_back(num);
+}
 
 
 void DataLogger::PushJobInfo(double salary){

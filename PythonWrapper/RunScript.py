@@ -21,6 +21,7 @@ def go():
     people = plt.plot(libWrapper.GetPopulation(),label="Population")
     demand = plt.plot(libWrapper.GetDemands(),"g^",label="demand")
     supply=plt.plot(libWrapper.GetSupplies(),label="supply")
+    numManu=plt.plot(libWrapper.GetNumManufacturers(),"bx",label="Num Manufacturers")
 
     plt.yscale('log')
 

@@ -77,6 +77,7 @@ private:
   int rNumberOfPeopleBirths;
   int rNumberOfCompanyBirths;
   int rNumberOfCompanyDeaths;
+  int rNumberOfManufacturers;
   int rNumberOfBirths;
 };
 

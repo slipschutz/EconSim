@@ -31,7 +31,12 @@ void Manufacturer::Initialize(){
 
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
   rPriceChangeLevel= RandomManager::GetRand(100)/100.;
-  rStartingSalary=RandomManager::GetRand(floor(0.1*fMoney))+100;
+
+  int temp=floor(0.1*fMoney);
+  if (temp ==0){
+    temp=1;
+  }
+  rStartingSalary=RandomManager::GetRand(temp)+100;
 
 
   for (unsigned int i=0;i<fGoodPriorities.size();i++){

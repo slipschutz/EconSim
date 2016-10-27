@@ -35,8 +35,10 @@ using namespace  std;
 #include "PersonTraitPact.hh"
 #include "TestTraits.hh"
 int main(int argv, char ** argc){
-
-
+  // for (int i=0;i<10;i++){
+  //   cout<<RandomManager::GetRand(-1)<<endl;
+  // }
+  // return 0;
   Run();
   return 0;
 }

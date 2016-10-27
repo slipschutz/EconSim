@@ -38,6 +38,7 @@ public:
   void LogMarketState(MarketManager *,GoodManager*);
 
   void LogPopulation(int num);
+  void LogManufacturerNumber(int num);
 
 
 
@@ -46,6 +47,7 @@ public:
   vector <double> * GetTheSalaries(){return &theSalaries;}
 
   vector <int>  &GetNumberOfPeople(){return rNumberOfPeople;}
+  vector <int>  &GetNumberOfManufacturers(){return rNumberOfManufacturers;}
 
   vector <double> theSupplies;
   vector <double> theDemands;
@@ -70,6 +72,7 @@ private:
   ofstream rFileForPopulation;
 
   vector <int> rNumberOfPeople;
+  vector <int> rNumberOfManufacturers;
   
   int pBufferSize;
   void pWriteToDisk();

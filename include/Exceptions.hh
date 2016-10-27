@@ -20,7 +20,9 @@ using namespace std;
 
 class MessageException : public exception{
 public:
-  MessageException(string s) : rMessage(s) {}
+  MessageException(string s) : rMessage(s) {
+    cout<<s<<endl;
+  }
   
   virtual const char * what()  {
     return rMessage.c_str();

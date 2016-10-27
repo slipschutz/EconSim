@@ -33,7 +33,7 @@ EconomicActorManager::EconomicActorManager() {
   rNumberOfCompanyBirths=0;
   rNumberOfCompanyDeaths=0;
   rNumberOfBirths=0;
-  
+  rNumberOfManufacturers=0;
   rNumCurrentCompanies=0;
 }
 
@@ -104,8 +104,9 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
 
   int numSeedCompanies=0.1*NumberOfActors;
+  rNumberOfManufacturers=numSeedCompanies;
   for (int i=0;i<numSeedCompanies;i++){
-    Manufacturer * m = new Manufacturer(1000000,this,luckyPerson,0);
+    Manufacturer * m = new Manufacturer(100000,this,luckyPerson,0);
     m->SetActorLogger(new ActorLogger(m->GetBaseId()));
     this->MakeActor(m);
   }
@@ -142,6 +143,7 @@ void EconomicActorManager::BuildTestNetwork(){
 void EconomicActorManager::DoAStep(){
 
   DataLogger::Get()->LogPopulation(rNumberOfPeople);
+  DataLogger::Get()->LogManufacturerNumber(rNumberOfManufacturers);
 
   
   //First thing to to is clear the ID list as people may have been killed at end
@@ -193,7 +195,8 @@ void EconomicActorManager::DoAStep(){
       if (rTheListOfActors[i]->GetActorType()==ActorTypes::Person){
 	rNumberOfPeopleDeaths++;
 	rNumberOfPeople--;
-      }else{
+      }else if (rTheListOfActors[i]->GetActorType()==ActorTypes::Manufacturer){
+	rNumberOfManufacturers--;
 	rNumberOfCompanyDeaths++;
       }
 
@@ -243,6 +246,7 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   int t =act->GetActorType();
   if ( t == ActorTypes::Company || t==ActorTypes::Manufacturer){
     rNumberOfCompanyBirths++;
+    rNumberOfManufacturers++;
   }else{
     rNumberOfPeopleBirths++;
     rNumberOfPeople++;

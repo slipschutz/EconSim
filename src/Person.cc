@@ -227,23 +227,28 @@ void Person::DoStep(){
     int AmountOfGoodIWant=-1;
 
     
-    while (true){
+    while (true && it != fDemandPriorities2GoodNum.begin()){
       //move iterator 1 back from the end to get last elment
       it--;
       Good2Buy = it->second;//this is the good number that has the highest priority
       totalWant= fDemands[Good2Buy].GetNumberOfCopies();
       AmountOfGoodIWant =totalWant;
-      if(fDemandPriorities2GoodNum.size()==1){
-	break;
-      }
       if (AmountOfGoodIWant!=0){
 	break;
       }
     }
+
     while (AmountOfGoodIWant >0){
 
       OrderInfo info;
       int Seller=MarketManager::Get()->GetCheapestSeller(Good2Buy,info);
+
+      // if (Calendar::DayNumber > 1000){
+      // 	cout<<"-------> "<< Calendar::DayNumber <<" good "<<Good2Buy<<" seller "<<Seller<< endl;
+      // 	cin.get();
+      // }
+
+
 
       if (Seller == -1 ){// there is no seller 
 	// cout<<"NO SELLER FOR "<<this->GetBaseId()<<endl;
@@ -343,9 +348,11 @@ ActorActions Person::EndOfStep(){
 
   //Randomly add new demands
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
-    int n=RandomManager::GetRand(Settings::MaxGoodNumber-1 );
-    AddDemand(n+1,RandomManager::GetRand(1000));
-      
+    int n=RandomManager::GetRand(Settings::MaxGoodNumber);
+
+    if (n!=0){
+      //AddDemand(n,RandomManager::GetRand(1000));
+    }
 
   }
 
