@@ -21,10 +21,10 @@ using namespace std;
 class MessageException : public exception{
 public:
   MessageException(string s) : rMessage(s) {
-    cout<<s<<endl;
+
   }
   
-  virtual const char * what()  {
+  virtual const char * what() const throw()  {
     return rMessage.c_str();
   }
   

@@ -19,8 +19,7 @@ RandomManager::RandomManager(){
 int RandomManager::GetRand(int n){
   if (n < 1){
     MessageException e("RandomManager::GetRand() Must have input 1 or greater");
-    double *d=NULL;
-    *d=5;
+    throw e;
   }
 
   if (!pSeeded){
