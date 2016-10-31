@@ -13,5 +13,7 @@ namespace Settings{
   double FoodProductionPerWorker=4;
   double MaxGoodPriority=1000.;
 
+  bool CanStarveToDeath=true;
+
 }
  

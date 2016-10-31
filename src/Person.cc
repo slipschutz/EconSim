@@ -319,7 +319,8 @@ ActorActions Person::EndOfStep(){
   stringstream s;
   //Preform End of step things
   ActorActions ret;
-  if (fSupplies[0].GetNumberOfCopies() < rMyTraits.Gluttoness){
+  if (fSupplies[0].GetNumberOfCopies() < rMyTraits.Gluttoness&&
+      Settings::CanStarveToDeath){
     s<<"I have died :( "<<endl;
     
     //KillActor does not delete it right away.
@@ -330,7 +331,7 @@ ActorActions Person::EndOfStep(){
     }//end for
     
     ret=ActorActions::Died;
-  }else {
+  }else if(fSupplies[0].GetNumberOfCopies() > rMyTraits.Gluttoness){
     fSupplies[0].RemoveCopies(rMyTraits.Gluttoness);
     //    GoodManager::Get()->RemoveSupply(0,1);
     s<<"I ate "<<rMyTraits.Gluttoness<<" foods "<<endl;
@@ -348,7 +349,7 @@ ActorActions Person::EndOfStep(){
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
     int n=RandomManager::GetRand(Settings::MaxGoodNumber);
     if (n!=0){
-      //AddDemand(n,RandomManager::GetRand(1000));
+      AddDemand(n,RandomManager::GetRand(1000));
     }
     
   }

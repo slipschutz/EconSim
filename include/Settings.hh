@@ -12,6 +12,7 @@ namespace Settings{
   extern double MaxGoodPriority;
   extern double FoodProductionPerWorker;
 
+  extern bool CanStarveToDeath;
 }
 
 
