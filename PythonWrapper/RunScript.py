@@ -7,8 +7,10 @@ import libWrapper
 import IPython
 
 def go():
+    libWrapper.MoreTests()
     libWrapper.UnitTests()
 
+    return
     libWrapper.Run()
     
 

@@ -209,20 +209,11 @@ ActorActions Manufacturer::EndOfStep(){
   for (auto & i : Employees2Salary){
     double moneyToPay=i.second;
     if (moneyToPay > fMoney){
-      // cout<<"Comapny "<<this->GetBaseId()<<" going bankrupt "<<endl;
-      // cout<<"I have this number of employeees "<<Employees2Salary.size()<<endl;
-      // for (auto j : Employees2Salary){
-      // 	cout<<"Employee "<<j.first<<" pay "<<j.second<<endl;
-      // }
-      // cout<<"Num productions "<<numberOFProductions<<endl;
-      // cout<<"steps "<<numberOfSteps<<endl;
-      // cin.get();
-
-
 
       ss<<"Going Bankrupt. Trying to pay employee "<<i.first->GetBaseId()<<" "<<moneyToPay<<" but only have "<<fMoney<<"\n";
-
-
+      
+      fTheOwner->AddMoney(fMoney);
+      this->SubtractMoney(fMoney);
       //Can't pay that going bankrupt
       fTheEconomicActorManager->MarkForDeath(this);
       ret=ActorActions::Died;
