@@ -1,4 +1,4 @@
-
+#include <iomanip>
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -119,11 +119,50 @@ bp::list GetDemands(){
 
 
 
+void MoreTests(){
+
+  EconomicActorManager * man =new EconomicActorManager();
+  double totalMoney=0;
+  Person *lucky;
+  Settings::CanStarveToDeath=false;
+  for (int i=0;i<10;i++){
+    Person *aPerson1 = new Person(man);
+    aPerson1->Initialize();
+    man->MakeActor(aPerson1);
+    totalMoney+=aPerson1->GetMoney();
+    lucky=aPerson1;
+  }
+
+  for (int i=0;i<2;i++){
+    totalMoney+=10000;
+    Manufacturer * m = new Manufacturer(10000,man,lucky,0);
+    m->SetActorLogger(new ActorLogger(m->GetBaseId()));
+    man->MakeActor(m);
+  }
+  cout<<setprecision(20);
+
+
+  for (int i=0;i<1000;i++){
+    man->DoAStep();
+    MarketManager::Get()->ClearMarket();
+    Calendar::DayNumber++;
+  }
+
+  double endingMoney=0;
+  for (auto i : *man->GetList()){
+    endingMoney+=i.second->GetMoney();
+  }
+
+  DoTest(abs(endingMoney-totalMoney)<0.0000001,"Money should be conserved");
+  delete man;
+}
+
 
 
 void UnitTests(){
 
   EconomicActorManager * man =new EconomicActorManager();
+
 
   //Basic People Tests
   Person aPerson1(man);
@@ -266,6 +305,8 @@ BOOST_PYTHON_MODULE(libWrapper){
   bp::def("UnitTests",UnitTests);
   bp::def("GetPopulation",GetPopulation);
   bp::def("GetNumManufacturers", GetNumManufacturers);
+
+  bp::def("MoreTests",MoreTests);
 
   //  bp::class_<std::vector<double> > ("AVec").def(bp::vector_indexing_suite<std::vector<double> >());
 
