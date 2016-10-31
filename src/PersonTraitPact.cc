@@ -69,5 +69,7 @@ void PersonTraitPact::MutateCopy(const PersonTraitPact & RHS){
   BoundZeroToOne(InvestmentLevel);
   BoundZeroToOne(Restlessness);
   
-    
+  if (Gluttoness ==0){
+    Gluttoness=1;
+  }
 }

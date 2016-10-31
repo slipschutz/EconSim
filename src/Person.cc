@@ -147,7 +147,7 @@ ActorActions Person::BeginningOfStep(){
   int amtOfDemand=0;
   int HighestDemandGoodNum = GoodManager::Get()->FindHighestDemandGood(amtOfDemand);
   if (RandomManager::GetRand(10000)< 10 &&
-      HighestDemandGoodNum!=-1 && amtOfDemand > 10){//10 here is to prevent too many companies from spawning 
+      HighestDemandGoodNum!=-1 && amtOfDemand > 0){//10 here is to prevent too many companies from spawning 
 
     int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
     
@@ -168,8 +168,6 @@ ActorActions Person::BeginningOfStep(){
   
   //Randomly spawn more people
   if (RandomManager::GetRand(1000) < 2 &&     fSupplies[0].GetNumberOfCopies() >20){
-
-
 
     Person * aPerson = new Person(fTheEconomicActorManager,false);
     fTheEconomicActorManager->MakeActor(aPerson);
@@ -323,7 +321,7 @@ ActorActions Person::EndOfStep(){
   ActorActions ret;
   if (fSupplies[0].GetNumberOfCopies() < rMyTraits.Gluttoness){
     s<<"I have died :( "<<endl;
-
+    
     //KillActor does not delete it right away.
     //it removes it from the 
     fTheEconomicActorManager->MarkForDeath(this);
@@ -338,7 +336,7 @@ ActorActions Person::EndOfStep(){
     s<<"I ate "<<rMyTraits.Gluttoness<<" foods "<<endl;
     ret=ActorActions::None;
   }
-  
+
   
   if (fMyActorLogger!=NULL){
     fMyActorLogger->LogAfterStepState(this);
@@ -349,13 +347,12 @@ ActorActions Person::EndOfStep(){
   //Randomly add new demands
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
     int n=RandomManager::GetRand(Settings::MaxGoodNumber);
-
     if (n!=0){
       //AddDemand(n,RandomManager::GetRand(1000));
     }
-
+    
   }
-
+  
   return ret;
 }
 

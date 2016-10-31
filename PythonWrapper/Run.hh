@@ -38,16 +38,6 @@ void Run(){
 	break;
       }
 
-      if(i > 1000){
-	if (i % 100 ==0){
-	  // if (
-	  //   Settings::FoodProductionPerWorker=10;
-	  // }else {
-	  //   Settings::FoodProductionPerWorker=2;
-	  // }
-	}
-
-      }
 
       theManager->DoAStep();
       // MarketManager::Get()->Dump();
