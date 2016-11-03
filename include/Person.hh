@@ -81,6 +81,7 @@ private:
 
   vector <Company*> rOwnedCompanies;
 
+  double rPreviousSalary;
   
   bool rWasFiredInPreviousStep;
 

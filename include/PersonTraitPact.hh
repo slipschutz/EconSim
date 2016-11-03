@@ -35,7 +35,8 @@ public:
   int Food2BuyAtOnce;
   float InvestmentLevel;
 
-
+  float QuitProbability;
+  float ProbabilityForPayCut;
 };
 
 

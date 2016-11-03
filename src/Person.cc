@@ -29,6 +29,8 @@ Person::Person(EconomicActorManager* man, bool DoInitialize) : EconomicActor(man
   fGoodPriorities[0]=Settings::MaxGoodPriority;
 
 
+  rPreviousSalary=0;///Start off with salary 0
+  
   if (DoInitialize){
     Initialize();
   }
@@ -297,12 +299,16 @@ void Person::DoStep(){
     if (jInfo.EmployerID==-1){
       //No jobs silently do nothing
     }else{
-      rHaveAJob=true;//Now has job
-      Company * theCompany = fTheEconomicActorManager->FindCompany(jInfo.EmployerID);
-      MarketManager::Get()->BrokerJob(this,theCompany,jInfo.salary);
-      rEmployer=theCompany;
-      rEmployerId=jInfo.EmployerID;
-      dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<endl;
+      if (jInfo.salary > rPreviousSalary || RandomManager::GetUniform()<rMyTraits.ProbabilityForPayCut){
+	rHaveAJob=true;//Now has job
+	Company * theCompany = fTheEconomicActorManager->FindCompany(jInfo.EmployerID);
+	MarketManager::Get()->BrokerJob(this,theCompany,jInfo.salary);
+	rEmployer=theCompany;
+	rEmployerId=jInfo.EmployerID;
+	dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<
+	  " PreviousSalary was "<<rPreviousSalary<<endl;
+	rPreviousSalary=jInfo.salary;
+      }
     }
   }
 
@@ -339,11 +345,7 @@ ActorActions Person::EndOfStep(){
   }
 
   
-  if (fMyActorLogger!=NULL){
-    fMyActorLogger->LogAfterStepState(this);
-    fMyActorLogger->EndMessage(s.str());
-  }
-  
+
 
   //Randomly add new demands
   if ( RandomManager::GetUniform() < rMyTraits.Restlessness){
@@ -351,8 +353,24 @@ ActorActions Person::EndOfStep(){
     if (n!=0){
       AddDemand(n,RandomManager::GetRand(1000));
     }
-    
   }
+
+  if (RandomManager::GetUniform()<rMyTraits.QuitProbability&&
+      rEmployer!=NULL){
+    s<<"Fuck it I am quiting current compnay is "<<rEmployer->GetBaseId()<<endl;
+    rEmployer->RemoveEmployee(this);
+    rHaveAJob=false;
+    rEmployer=NULL;
+
+
+  }
+
+
+  if (fMyActorLogger!=NULL){
+    fMyActorLogger->LogAfterStepState(this);
+    fMyActorLogger->EndMessage(s.str());
+  }
+  
   
   return ret;
 }

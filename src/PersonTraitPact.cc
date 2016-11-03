@@ -45,6 +45,8 @@ void PersonTraitPact::InitializeTraits(){
   Food2BuyAtOnce=RandomManager::GetRand(100)+10;
   InvestmentLevel=RandomManager::GetUniform();
 
+  QuitProbability=RandomManager::GetUniform();
+  ProbabilityForPayCut=RandomManager::GetUniform();
 }
 
 void PersonTraitPact::MutateCopy(const PersonTraitPact & RHS){
@@ -58,10 +60,17 @@ void PersonTraitPact::MutateCopy(const PersonTraitPact & RHS){
     DiscreteTraitMutationRate/2;
 
 
-  InvestmentLevel     =RHS.InvestmentLevel + RandomManager::GetGaus(0,0.05);
+  InvestmentLevel     =RHS.InvestmentLevel + RandomManager::GetGaus(0,TraitMutationRate);
   Restlessness        =RHS.Restlessness + RandomManager::GetGaus(0,TraitMutationRate);
 
 
+  QuitProbability    =RHS.QuitProbability+ RandomManager::GetGaus(0,TraitMutationRate);
+  ProbabilityForPayCut    =RHS.ProbabilityForPayCut+ RandomManager::GetGaus(0,TraitMutationRate);
+
+
+  
+  BoundAboveZero(QuitProbability);
+  BoundAboveZero(ProbabilityForPayCut);
   BoundAboveZero(Gluttoness);
   BoundAboveZero(FoodBuyingThreshold);
   BoundAboveZero(Food2BuyAtOnce);
