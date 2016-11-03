@@ -36,10 +36,6 @@ using namespace  std;
 
 int main(int argv, char ** argc){
 
-  for (int i=0;i<10;i++){
-    cout<<RandomManager::GetRand(10)<<endl;
-  }
-  return 0;
   Run();
   return 0;
 }
