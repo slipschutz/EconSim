@@ -38,6 +38,19 @@ void Run(){
 	break;
       }
 
+      if ( i >1000){
+	// if (i%500==0){
+	//   if (Settings::FoodProductionPerWorker==0){
+	//     cout<<"----> Food now at 12 "<<endl;
+	//     Settings::FoodProductionPerWorker=12;
+	//   }else{
+	//     Settings::FoodProductionPerWorker=0;
+	//     cout<<"----> Food now at 0 "<<endl;
+	//   }
+
+	// }
+      }
+      
 
       theManager->DoAStep();
       // MarketManager::Get()->Dump();
