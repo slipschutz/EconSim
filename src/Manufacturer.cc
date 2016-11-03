@@ -32,6 +32,8 @@ void Manufacturer::Initialize(){
   MaxVolume = RandomManager::GetRand(500)+10;///CAN"T BE 0
   rPriceChangeLevel= RandomManager::GetRand(100)/100.;
 
+  rSalaryChangeLikelyhood=RandomManager::GetUniform();
+  
   int temp=floor(0.1*fMoney);
   if (temp ==0){
     temp=1;
@@ -165,6 +167,14 @@ ActorActions Manufacturer::EndOfStep(){
     
   }
 
+
+  if (RandomManager::GetUniform() < rSalaryChangeLikelyhood){
+    ss<<"I am changing my salary from "<<rStartingSalary<<" to ";
+    rStartingSalary*=RandomManager::GetUniform(0,2);
+    ss<<rStartingSalary<<endl;
+  }
+
+  
   if (RandomManager::GetUniform() > rSteadfastness){
     if (thisStepSoldVolume < 10){
 

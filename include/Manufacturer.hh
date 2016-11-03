@@ -56,10 +56,12 @@ private:
   double rConservativeness;//How likely company is too sell all of its supply
   double rSteadfastness;//How likely company will lower it's price
   double rPriceChangeLevel;//percent that change of price that is done when price is changed 
+
+  float rSalaryChangeLikelyhood;
   
   int MaxVolume;//Max amount of good that company can make
   
-  int rStartingSalary;
+  float rStartingSalary;
   
   int rTotalVolumeCreated;
 
