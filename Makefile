@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall -I./include -std=c++11 
-PYLIBFLAGS=-L/usr/lib/x86_64-linux-gnu/ -lboost_python-py27 -I/usr/include/python2.7/
+PYLIBFLAGS=-I./pybind11/ `python-config --cflags --ldflags`
 
 CXX=g++
 EXECUTABLE=Sim
@@ -19,11 +19,12 @@ all: $(EXECUTABLE) PyWrap
 
 $(EXECUTABLE) : $(LIBS) Sim.C
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) $(CFLAGS) ./$(MAIN) -lEverything -L./lib/  -Wl,-rpath=./lib/ -o $@ 
+	$(CXX) $(CFLAGS) ./$(MAIN) -lEverything -L./lib/  -o $@ 
 	@echo "Build succeed"
 
+
 PyWrap: $(LIBS)
-	g++ -shared -fPIC ./PythonWrapper/PythonWrapper.cc $(CFLAGS) $(PYLIBFLAGS) -lEverything -L./lib/ -I./include/  -std=c++11 -Wl,-rpath=../lib/ -o ./PythonWrapper/libWrapper.so
+	g++ -shared -fPIC ./PythonWrapper/PythonWrapper.cc $(CFLAGS) $(PYLIBFLAGS) -lEverything -L./lib/ -I./include/  -std=c++11  -o ./PythonWrapper/libWrapper.so
 
 
 ./lib/lib%.so: $(OBJECTS)

@@ -1,7 +1,5 @@
 #include <iomanip>
 
-#include <boost/python.hpp>
-#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 //Generral Headers
 #include <iostream>
@@ -35,12 +33,13 @@
 #include "Run.hh"
 using namespace std;
 
+#include "pybind11.h"
+namespace py = pybind11;
 
 
 
 
-namespace bp = boost::python;
-
+/*
 template<class T>
 bp::list std_vector_to_py_list(const std::vector<T>& v)
 {
@@ -65,6 +64,7 @@ bp::list GetPriceData(){
   return std_vector_to_py_list(price);
 
 }
+
 
 bp::list GetVolumeData(){
   vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
@@ -108,7 +108,7 @@ bp::list GetDemands(){
 
 }
 
-
+*/
 
 #include <assert.h>
 #include <string>
@@ -293,21 +293,30 @@ void UnitTests(){
 }
 
 
+PYBIND11_PLUGIN(example) {
+  py::module m("example", "pybind11 example plugin");
 
+  m.def("Run", &Run, "Run Simulation");
 
-BOOST_PYTHON_MODULE(libWrapper){
-  bp::def("Run",Run);
-  bp::def("GetPriceData",GetPriceData);
-  bp::def("GetVolumeData",GetVolumeData);
-  bp::def("GetSupplies",GetSupplies);
-  bp::def("GetDemands",GetDemands);
-
-  bp::def("UnitTests",UnitTests);
-  bp::def("GetPopulation",GetPopulation);
-  bp::def("GetNumManufacturers", GetNumManufacturers);
-
-  bp::def("MoreTests",MoreTests);
-
-  //  bp::class_<std::vector<double> > ("AVec").def(bp::vector_indexing_suite<std::vector<double> >());
-
+  return m.ptr();
 }
+
+
+
+
+// BOOST_PYTHON_MODULE(libWrapper){
+//   bp::def("Run",Run);
+//   bp::def("GetPriceData",GetPriceData);
+//   bp::def("GetVolumeData",GetVolumeData);
+//   bp::def("GetSupplies",GetSupplies);
+//   bp::def("GetDemands",GetDemands);
+
+//   bp::def("UnitTests",UnitTests);
+//   bp::def("GetPopulation",GetPopulation);
+//   bp::def("GetNumManufacturers", GetNumManufacturers);
+
+//   bp::def("MoreTests",MoreTests);
+
+//   //  bp::class_<std::vector<double> > ("AVec").def(bp::vector_indexing_suite<std::vector<double> >());
+
+// }

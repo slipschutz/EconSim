@@ -2,7 +2,6 @@
 #define __TRAITPACT_HH
 
 #include <vector>
-#include <boost/any.hpp>
 
 /**
    Abstract parent class for containers to hold traits for the actors
@@ -45,10 +44,10 @@ public:
   }
 
   template <typename T> void GetTrait(int index,T & val){
-    val=boost::any_cast<T>(theTraits.at(index));
+    //    val=boost::any_cast<T>(theTraits.at(index));
   }
 
-  boost::any GetTrait(int index){
+  void *GetTrait(int index){
     return theTraits.at(index);
   }
 
@@ -58,7 +57,7 @@ public:
 
 private:
   //a vector of boost any objects will hold the traits
-  std::vector <boost::any> theTraits;  
+  std::vector <void*> theTraits;  
 };
 
 #endif /* __TRAITPACT_HH */
