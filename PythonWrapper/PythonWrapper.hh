@@ -34,8 +34,28 @@
 using namespace std;
 
 #include "pybind11.h"
+
+///Allows for automatic conversion between STL containers and python types
+///However requires a copy everytime types are converted
+#include "stl.h" 
 namespace py = pybind11;
 
+
+
+
+vector<double> GetVolumeData(){
+
+  vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
+  vector  <double> price;
+  cout<<"The size is "<<theGoodPrices->size()<<endl;
+  for ( auto i : *theGoodPrices){
+    price.push_back(i.Supply);
+  }
+
+
+
+  return price;
+}
 
 
 
@@ -66,19 +86,6 @@ bp::list GetPriceData(){
 }
 
 
-bp::list GetVolumeData(){
-  vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
-  vector  <double> price;
-  cout<<"The size is "<<theGoodPrices->size()<<endl;
-  for ( auto i : *theGoodPrices){
-    price.push_back(i.Supply);
-  }
-
-  // vector <double> * prices = DataLogger::Get()->GetTheSalaries();
-
-  return std_vector_to_py_list(price);
-
-}
 
 
 bp::list GetSupplies(){
@@ -298,6 +305,7 @@ PYBIND11_PLUGIN(PyEconSim) {
 
   m.def("Run", &Run, "Run Simulation");
   m.def("UnitTests", &UnitTests, "Run Tests");
+  m.def("GetVolumeData", &GetVolumeData, "GetVolumeData");
 
   return m.ptr();
 }
