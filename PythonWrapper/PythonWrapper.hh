@@ -293,30 +293,14 @@ void UnitTests(){
 }
 
 
-PYBIND11_PLUGIN(example) {
-  py::module m("example", "pybind11 example plugin");
+PYBIND11_PLUGIN(PyEconSim) {
+  py::module m("PyEconSim", "pybind11 example plugin");
 
   m.def("Run", &Run, "Run Simulation");
+  m.def("UnitTests", &UnitTests, "Run Tests");
 
   return m.ptr();
 }
 
 
 
-
-// BOOST_PYTHON_MODULE(libWrapper){
-//   bp::def("Run",Run);
-//   bp::def("GetPriceData",GetPriceData);
-//   bp::def("GetVolumeData",GetVolumeData);
-//   bp::def("GetSupplies",GetSupplies);
-//   bp::def("GetDemands",GetDemands);
-
-//   bp::def("UnitTests",UnitTests);
-//   bp::def("GetPopulation",GetPopulation);
-//   bp::def("GetNumManufacturers", GetNumManufacturers);
-
-//   bp::def("MoreTests",MoreTests);
-
-//   //  bp::class_<std::vector<double> > ("AVec").def(bp::vector_indexing_suite<std::vector<double> >());
-
-// }

@@ -1,6 +1,6 @@
 CFLAGS=-g -Wall -I./include -std=c++11 
 PYLIBFLAGS=-I./pybind11/ `python-config --cflags --ldflags`
-
+LIBFLAG=-Wl,-rpath=./lib
 CXX=g++
 EXECUTABLE=Sim
 SOURCES=$(shell ls ./src/*.cc)
@@ -19,12 +19,12 @@ all: $(EXECUTABLE) PyWrap
 
 $(EXECUTABLE) : $(LIBS) Sim.C
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) $(CFLAGS) ./$(MAIN) -lEverything -L./lib/  -o $@ 
+	$(CXX) $(CFLAGS) $(LIBFLAG) ./$(MAIN) -lEverything -L./lib/  -o $@ 
 	@echo "Build succeed"
 
 
 PyWrap: $(LIBS)
-	g++ -shared -fPIC ./PythonWrapper/PythonWrapper.cc $(CFLAGS) $(PYLIBFLAGS) -lEverything -L./lib/ -I./include/  -std=c++11  -o ./PythonWrapper/libWrapper.so
+	g++ -shared -fPIC ./PythonWrapper/PythonWrapper.cc -Wl,-rpath=../lib $(CFLAGS) $(PYLIBFLAGS) -lEverything -L./lib/ -I./include/  -std=c++11  -o ./PythonWrapper/PyEconSim.so
 
 
 ./lib/lib%.so: $(OBJECTS)
