@@ -12,6 +12,16 @@ void my_handler(int s){
 }
 
 
+void DoEndOfDay(){
+
+  DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
+  MarketManager::Get()->ClearMarket();
+  Calendar::DayNumber++;
+
+
+
+}
+
 void Run(){
   killLoop=false;
 
@@ -30,14 +40,14 @@ void Run(){
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
 
-  
+    
     for (int i=0;i<Settings::NumberOfSteps;i++){
       sigaction(SIGINT, &sigIntHandler, NULL);    
       if (killLoop){
 	printf("killing loop \n");
 	break;
       }
-
+      
       if ( i >1000){
 	// if (i%500==0){
 	//   if (Settings::FoodProductionPerWorker==0){
@@ -65,35 +75,21 @@ void Run(){
 
 	
       }
-      if (i==Settings::NumberOfSteps-1){
-	// cout<<"\n\n\n";
-	// GoodManager::Get()->Dump();
-	
-	// cin.get();
-      }
-      DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
-
-      MarketManager::Get()->ClearMarket();
-      Calendar::DayNumber++;
-
+      DoEndOfDay();
     }
 
-
+    
  
     
 
-    //theManager.PrintMoney();
-    // theManager.PrintHavesWants();
-    DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
+
+    //DataLogger::Get()->LogEndingMoneyDistribution(theManager->GetList());
 
     delete theManager;
-    //    GoodManager::Get()->Dump();
+
     
 
-
-    // if (DataLogger::Get() != NULL){
-    //   delete DataLogger::Get();
-    // }
+    
   } catch (exception &e){
     cout<<"*******************************************************"<<endl;
     cout<<"Fatal Exception Must exit"<<endl;

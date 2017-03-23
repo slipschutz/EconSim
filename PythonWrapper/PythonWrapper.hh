@@ -304,9 +304,17 @@ PYBIND11_PLUGIN(PyEconSim) {
   py::module m("PyEconSim", "pybind11 example plugin");
 
   m.def("Run", &Run, "Run Simulation");
+  m.def("DoEndOfDay", &DoEndOfDay, "Clean Up");
   m.def("UnitTests", &UnitTests, "Run Tests");
   m.def("GetVolumeData", &GetVolumeData, "GetVolumeData");
 
+  
+  py::class_<EconomicActorManager>(m, "EconomicActorManager")
+    .def(py::init<>())
+    .def("DoAStep", &EconomicActorManager::DoAStep)
+    .def("BuildCompleteNetwork", &EconomicActorManager::BuildCompleteNetwork);
+  
+  
   return m.ptr();
 }
 

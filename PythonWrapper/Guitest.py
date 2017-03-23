@@ -13,15 +13,24 @@ from PyQt4.QtCore import QThread
 
 
 class RunSimThread(QThread):
-        def __init__(self):
+        def __init__(self,MainWin):
             QThread.__init__(self)
+            self.EconManager = PyEconSim.EconomicActorManager()
+            self.MainWindow=MainWin
         def __del__(self):
             self.wait()
+
+
         def run(self):
-            print "I am gonna RUN"
-            while True:
-                print "Running"
-                self.sleep(2)
+                self.EconManager.BuildCompleteNetwork(self.MainWindow.NumPeople)
+                for i in range(self.MainWindow.NumSteps):
+                        self.EconManager.DoAStep()
+                        PyEconSim.DoEndOfDay()
+                        if i % 100 ==0:
+                                print "on step",i
+                                self.sleep(5)
+                                print "done"
+
 
 
 # Load the GUI class from the .ui file
@@ -35,12 +44,35 @@ class MainWindow(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.TotalNumberOfSteps=0
+        self.NumPeople=0
+        self.NumSteps=0
+
+        self.ui.TotalNumStepLabel.setText(QString("Total Steps "+str(self.TotalNumberOfSteps)))
 
         # Connect a function to be run when a button is pressed.
         self.ui.StartSim.clicked.connect(self.StartSimFunction)
-        self.runThread = RunSimThread()
+        self.runThread = RunSimThread(self)
         self.ui.stop.clicked.connect(self.StopBotton)
-                
+
+        #Connect the input feilds for the number of people and such
+        self.ui.numPeopleInput.editingFinished.connect(self.SetNumPeople)
+        self.ui.numStepsInput.editingFinished.connect(self.SetNumSteps)
+        
+
+
+
+    def SetNumPeople(self):
+            x=self.ui.numPeopleInput.text()
+            x=int(x)
+            self.NumPeople=x
+            print "Updated Num People"
+
+    def SetNumSteps(self):
+            x=self.ui.numStepsInput.text()
+            x=int(x)
+            self.NumSteps=x
+            print "Updated Num Steps"
         
     def StartSimFunction(self):
         self.runThread.start()
