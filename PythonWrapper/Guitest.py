@@ -22,6 +22,7 @@ class RunSimThread(QThread):
 
 
         def run(self):
+                # this if is important.  Makes sure that the netowrk of people is only made once
                 if self.MainWindow.TotalNumberOfSteps == 0:
                         self.EconManager.BuildCompleteNetwork(self.MainWindow.NumPeople)
                 for i in range(self.MainWindow.NumSteps):
@@ -29,9 +30,9 @@ class RunSimThread(QThread):
                         PyEconSim.DoEndOfDay()
                         self.MainWindow.TotalNumberOfSteps=self.MainWindow.TotalNumberOfSteps+1
                         if i % 100 ==0:
-                                print "on step",i
-                        self.MainWindow.Update()
-
+                                print "on step",self.MainWindow.TotalNumberOfSteps
+                                self.MainWindow.Update()
+                self.MainWindow.Update()
 
 
 # Load the GUI class from the .ui file
@@ -46,8 +47,10 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
         self.TotalNumberOfSteps=0
-        self.NumPeople=0
-        self.NumSteps=0
+        self.NumPeople=1000
+        self.NumSteps=100
+        self.ui.numPeopleInput.setText(str(self.NumPeople))
+        self.ui.numStepsInput.setText(str(self.NumSteps))
 
         self.Update()
 
@@ -83,10 +86,10 @@ class MainWindow(QtGui.QMainWindow):
     def PlotBotton(self):
         print "Plot"
 
-        price = plt.plot(PyEconSim.GetPriceData(),"ro",label="Price")
-        people = plt.plot(PyEconSim.GetPopulation(),label="Population")
-        demand = plt.plot(PyEconSim.GetDemands(),"g^",label="demand")
-        supply=plt.plot(PyEconSim.GetSupplies(),label="supply")
+        price = plt.plot(self.runThread.EconManager.GetPriceData(),"ro",label="Price")
+        people = plt.plot(self.runThread.EconManager.GetPopulation(),label="Population")
+        demand = plt.plot(self.runThread.EconManager.GetDemands(),"g^",label="demand")
+        supply=plt.plot(self.runThread.EconManager.GetSupplies(),label="supply")
 
 
         plt.yscale('log')

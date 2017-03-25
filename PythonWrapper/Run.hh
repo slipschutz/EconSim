@@ -14,7 +14,7 @@ void my_handler(int s){
 
 void DoEndOfDay(){
 
-  DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
+  //  DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
   MarketManager::Get()->ClearMarket();
   Calendar::DayNumber++;
 
@@ -28,7 +28,6 @@ void Run(){
   try{
     EconomicActorManager *  theManager = new EconomicActorManager();
     
-    DataLogger::Get();
     
     theManager->BuildCompleteNetwork(Settings::NumberOfPeople);
   

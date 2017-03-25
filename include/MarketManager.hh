@@ -13,6 +13,7 @@ class EconomicActor;
 class Company;
 class Person;
 
+#include "DataLogger.hh"
 
 /**Small container class to hold in formation on market orders
 
@@ -58,6 +59,8 @@ public:
   static MarketManager * theManager;
   static MarketManager * Get();
 
+  void SetData(DataLogger * d){rTheDataLogger=d;}
+
   void PlaceSellOrder(int GoodNumber,int SellerID, int Quantity,double Price);
   
   int GetCheapestSeller(int GoodNumber,OrderInfo & Info);
@@ -79,6 +82,8 @@ public:
   
 private:
   MarketManager();
+
+  DataLogger * rTheDataLogger;
 
   //For each good make a map of prices
   vector < multimap <double,OrderInfo> > rSellPrices;

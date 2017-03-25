@@ -43,7 +43,7 @@ void MarketManager::ClearMarket(){
   if (rNumberOfDailySales !=0){
     temp=rAveragePrice/rNumberOfDailySales;
   }
-  DataLogger::Get()->PushGoodPrice(0,temp,rNumberOfDailySales);
+  rTheDataLogger->PushGoodPrice(0,temp,rNumberOfDailySales);
   rAveragePrice=0;
   rNumberOfDailySales=0;
 
@@ -133,7 +133,7 @@ void MarketManager::PlaceJobPosting(double salary, int EmployerId){
 }
 
 void MarketManager::BrokerJob(Person * employee, Company * employer,double salary){
-  DataLogger::Get()->PushJobInfo(salary);
+  rTheDataLogger->PushJobInfo(salary);
 
 
   employer->AddEmployee(employee,salary);

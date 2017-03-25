@@ -21,7 +21,7 @@ class EconomicActor;
 class Manufacturer;
 class Person;
 class Company;
-
+class DataLogger;
 
 class EconomicActorManager : public Base {
 public:
@@ -60,6 +60,17 @@ public:
   
   int GetNumberOfPeople(){return Settings::NumberOfPeople-rNumberOfPeopleDeaths;}
 
+  DataLogger * GetDataLogger(){return rTheDataLogger;}
+
+
+  vector<double> GetPriceData();
+  vector<double> GetSupplies();
+  vector<int> GetPopulation();
+  vector<int> GetNumManufacturers();
+  vector<double> GetDemands();
+
+
+
 private:
   int rInitialTopConectivity;
   int rNumInteractingPeoplePerStep;
@@ -67,9 +78,11 @@ private:
   
   int rNumCurrentCompanies;
   std::unordered_map <int,EconomicActor*> rTheListOfActors;
-
   vector <int> rTheIds;///<Vector that is used to determine the order that the Actors act in
   vector <int> rToBeKilled;
+
+
+  DataLogger *rTheDataLogger;
 
   int rPersonToLog;
 

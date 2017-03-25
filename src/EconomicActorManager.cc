@@ -28,6 +28,13 @@ EconomicActorManager::EconomicActorManager() {
   rInitialTopConectivity=20;
   rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
 
+  rTheDataLogger = new DataLogger();
+
+  //Quick hack needs to be fixed when market manager is 
+  //De-Singletoned
+  MarketManager::Get()->SetData(rTheDataLogger);
+
+
   rNumberOfPeopleDeaths=0;
   rNumberOfPeopleBirths=0;
   rNumberOfCompanyBirths=0;
@@ -142,8 +149,8 @@ void EconomicActorManager::BuildTestNetwork(){
 
 void EconomicActorManager::DoAStep(){
 
-  DataLogger::Get()->LogPopulation(rNumberOfPeople);
-  DataLogger::Get()->LogManufacturerNumber(rNumberOfManufacturers);
+  rTheDataLogger->LogPopulation(rNumberOfPeople);
+  rTheDataLogger->LogManufacturerNumber(rNumberOfManufacturers);
 
   cout<<"-------> the number of people "<<rNumberOfPeople<<endl;
   
@@ -165,8 +172,8 @@ void EconomicActorManager::DoAStep(){
   }
   
   //Log some stuf for the Data logger
-  DataLogger::Get()->theSupplies.push_back(GoodManager::Get()->supply[0]);
-  DataLogger::Get()->theDemands.push_back(GoodManager::Get()->demand[0]);
+  rTheDataLogger->theSupplies.push_back(GoodManager::Get()->supply[0]);
+  rTheDataLogger->theDemands.push_back(GoodManager::Get()->demand[0]);
 
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
@@ -213,7 +220,7 @@ void EconomicActorManager::DoAStep(){
   rTheIds.clear();
 
 
-  DataLogger::Get()->FinalizePrices();
+  rTheDataLogger->FinalizePrices();
 
 }
 
@@ -329,4 +336,47 @@ Company * EconomicActorManager::FindCompany(int id){
     }
   }
 }
+
+
+
+
+vector<double> EconomicActorManager::GetPriceData(){
+  vector <TransactionRecord>* theGoodPrices=  rTheDataLogger->GetThePrices();
+  vector  <double> price;
+  cout<<"The size is "<<theGoodPrices->size()<<endl;
+
+  for ( auto i : *theGoodPrices){
+    price.push_back(i.Price);
+  }
+
+  return price;
+}
+
+
+vector<double> EconomicActorManager::GetSupplies(){
+  
+  return rTheDataLogger->theSupplies;
+
+}
+
+vector<int> EconomicActorManager::GetPopulation(){
+
+  return rTheDataLogger->GetNumberOfPeople();
+
+}
+
+vector<int> EconomicActorManager::GetNumManufacturers(){
+
+  return rTheDataLogger->GetNumberOfManufacturers();
+
+}
+
+
+vector<double> EconomicActorManager::GetDemands(){
+
+  return rTheDataLogger->theDemands;
+
+}
+
+
 

@@ -56,45 +56,6 @@ namespace py = pybind11;
 // }
 
 
-vector<double> GetPriceData(){
-  vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
-  vector  <double> price;
-  cout<<"The size is "<<theGoodPrices->size()<<endl;
-  for ( auto i : *theGoodPrices){
-    price.push_back(i.Price);
-  }
-
-  return price;
-}
-
-
-vector<double> GetSupplies(){
-
-  return DataLogger::Get()->theSupplies;
-
-}
-
-vector<int> GetPopulation(){
-
-  return DataLogger::Get()->GetNumberOfPeople();
-
-}
-
-vector<int> GetNumManufacturers(){
-
-  return DataLogger::Get()->GetNumberOfManufacturers();
-
-}
-
-
-vector<double> GetDemands(){
-
-
-  return DataLogger::Get()->theDemands;
-
-}
-
-
 
 
 /*
@@ -305,17 +266,18 @@ PYBIND11_PLUGIN(PyEconSim) {
   m.def("Run", &Run, "Run Simulation");
   m.def("DoEndOfDay", &DoEndOfDay, "Clean Up");
   m.def("UnitTests", &UnitTests, "Run Tests");
-  m.def("GetPriceData", &GetPriceData, "GetPriceData");
-  m.def("GetSupplies", &GetSupplies, "GetSupplies");
-  m.def("GetDemands", &GetDemands, "GetDemands");
-  m.def("GetPopulation", &GetPopulation, "GetPopulation");
-
+  
   
   py::class_<EconomicActorManager>(m, "EconomicActorManager")
     .def(py::init<>())
     .def("DoAStep", &EconomicActorManager::DoAStep)
-    .def("BuildCompleteNetwork", &EconomicActorManager::BuildCompleteNetwork);
-  
+    .def("BuildCompleteNetwork", &EconomicActorManager::BuildCompleteNetwork)
+    .def("GetPriceData", &EconomicActorManager::GetPriceData, "GetPriceData")
+    .def("GetSupplies", &EconomicActorManager::GetSupplies, "GetSupplies")
+    .def("GetDemands", &EconomicActorManager::GetDemands, "GetDemands")
+    .def("GetPopulation", &EconomicActorManager::GetPopulation, "GetPopulation");
+
+
   
   return m.ptr();
 }

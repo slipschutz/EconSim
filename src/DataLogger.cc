@@ -10,7 +10,6 @@
 #include "Settings.hh"
 
 
-DataLogger * DataLogger::theLogger = NULL;
 
 
 DataLogger::DataLogger() : pBufferSize(1000){
@@ -50,15 +49,6 @@ DataLogger::~DataLogger(){
   pFileForGoodPrices.close();
   pFileForEndingMoneyDistribution.close();
 
-}
-
-
-DataLogger * DataLogger::Get(){
-  if (theLogger == NULL){
-    theLogger = new DataLogger();
-  }
-
-  return theLogger;
 }
 
 

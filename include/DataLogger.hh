@@ -10,7 +10,8 @@
 #include <string>
 #include <fstream>
 
-class TransactionRecord;
+#include "TransactionRecord.hh"
+
 class EconomicActor;
 class MarketManager;
 class GoodManager;
@@ -21,11 +22,8 @@ class DataLogger
 {
 public:
 
+  DataLogger();
   virtual ~DataLogger();
-
-  static DataLogger* theLogger;
-
-  static DataLogger * Get();
 
 
   void PushGoodPrice(int GoodNumber,double price,int supply);
@@ -41,7 +39,6 @@ public:
   void LogManufacturerNumber(int num);
 
 
-
   vector <TransactionRecord >* GetThePrices(){return &theGoodPrices;}
   
   vector <double> * GetTheSalaries(){return &theSalaries;}
@@ -53,8 +50,9 @@ public:
   vector <double> theDemands;
   
 
+
 private:
-  DataLogger();
+
 
   ofstream pFileForGoodPrices;
   ofstream pFileForEndingMoneyDistribution;
