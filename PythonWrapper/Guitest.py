@@ -22,7 +22,8 @@ class RunSimThread(QThread):
 
 
         def run(self):
-                self.EconManager.BuildCompleteNetwork(self.MainWindow.NumPeople)
+                if self.MainWindow.TotalNumberOfSteps == 0:
+                        self.EconManager.BuildCompleteNetwork(self.MainWindow.NumPeople)
                 for i in range(self.MainWindow.NumSteps):
                         self.EconManager.DoAStep()
                         PyEconSim.DoEndOfDay()
@@ -54,7 +55,7 @@ class MainWindow(QtGui.QMainWindow):
         # Connect a function to be run when a button is pressed.
         self.ui.StartSim.clicked.connect(self.StartSimFunction)
         self.runThread = RunSimThread(self)
-        self.ui.stop.clicked.connect(self.StopBotton)
+        self.ui.Plot.clicked.connect(self.PlotBotton)
 
         #Connect the input feilds for the number of people and such
         self.ui.numPeopleInput.editingFinished.connect(self.SetNumPeople)
@@ -77,11 +78,22 @@ class MainWindow(QtGui.QMainWindow):
         
     def StartSimFunction(self):
         self.runThread.start()
-        self.ui.stop.setEnabled(True)
+        self.ui.numPeopleInput.setEnabled(False)
         
-    def StopBotton(self):
-        print "Stop"
-        self.runThread.terminate()
+    def PlotBotton(self):
+        print "Plot"
+
+        price = plt.plot(PyEconSim.GetPriceData(),"ro",label="Price")
+        people = plt.plot(PyEconSim.GetPopulation(),label="Population")
+        demand = plt.plot(PyEconSim.GetDemands(),"g^",label="demand")
+        supply=plt.plot(PyEconSim.GetSupplies(),label="supply")
+
+
+        plt.yscale('log')
+        plt.legend()
+        plt.show(block=True)
+
+
 
     def Update(self):
             self.ui.TotalNumStepLabel.setText(QString("Total Steps "+str(self.TotalNumberOfSteps)))

@@ -145,6 +145,7 @@ void EconomicActorManager::DoAStep(){
   DataLogger::Get()->LogPopulation(rNumberOfPeople);
   DataLogger::Get()->LogManufacturerNumber(rNumberOfManufacturers);
 
+  cout<<"-------> the number of people "<<rNumberOfPeople<<endl;
   
   //First thing to to is clear the ID list as people may have been killed at end
   //of last step

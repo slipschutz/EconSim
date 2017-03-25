@@ -43,19 +43,57 @@ namespace py = pybind11;
 
 
 
-vector<double> GetVolumeData(){
+// vector<double> GetVolumeData(){
 
+//   vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
+//   vector  <double> price;
+//   cout<<"The size is "<<theGoodPrices->size()<<endl;
+//   for ( auto i : *theGoodPrices){
+//     price.push_back(i.Supply);
+//   }
+
+//   return price;
+// }
+
+
+vector<double> GetPriceData(){
   vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
   vector  <double> price;
   cout<<"The size is "<<theGoodPrices->size()<<endl;
   for ( auto i : *theGoodPrices){
-    price.push_back(i.Supply);
+    price.push_back(i.Price);
   }
-
-
 
   return price;
 }
+
+
+vector<double> GetSupplies(){
+
+  return DataLogger::Get()->theSupplies;
+
+}
+
+vector<int> GetPopulation(){
+
+  return DataLogger::Get()->GetNumberOfPeople();
+
+}
+
+vector<int> GetNumManufacturers(){
+
+  return DataLogger::Get()->GetNumberOfManufacturers();
+
+}
+
+
+vector<double> GetDemands(){
+
+
+  return DataLogger::Get()->theDemands;
+
+}
+
 
 
 
@@ -71,49 +109,10 @@ bp::list std_vector_to_py_list(const std::vector<T>& v)
 }
 
 
-bp::list GetPriceData(){
-  vector <TransactionRecord>* theGoodPrices=  DataLogger::Get()->GetThePrices();
-  vector  <double> price;
-  cout<<"The size is "<<theGoodPrices->size()<<endl;
-  for ( auto i : *theGoodPrices){
-    price.push_back(i.Price);
-  }
-
-  // vector <double> * prices = DataLogger::Get()->GetTheSalaries();
-
-  return std_vector_to_py_list(price);
-
-}
 
 
 
 
-bp::list GetSupplies(){
-
-
-  return std_vector_to_py_list(DataLogger::Get()->theSupplies);
-
-}
-
-bp::list GetPopulation(){
-
-  return std_vector_to_py_list(DataLogger::Get()->GetNumberOfPeople());
-
-}
-
-bp::list GetNumManufacturers(){
-
-  return std_vector_to_py_list(DataLogger::Get()->GetNumberOfManufacturers());
-
-}
-
-
-bp::list GetDemands(){
-
-
-  return std_vector_to_py_list(DataLogger::Get()->theDemands);
-
-}
 
 */
 
@@ -306,7 +305,10 @@ PYBIND11_PLUGIN(PyEconSim) {
   m.def("Run", &Run, "Run Simulation");
   m.def("DoEndOfDay", &DoEndOfDay, "Clean Up");
   m.def("UnitTests", &UnitTests, "Run Tests");
-  m.def("GetVolumeData", &GetVolumeData, "GetVolumeData");
+  m.def("GetPriceData", &GetPriceData, "GetPriceData");
+  m.def("GetSupplies", &GetSupplies, "GetSupplies");
+  m.def("GetDemands", &GetDemands, "GetDemands");
+  m.def("GetPopulation", &GetPopulation, "GetPopulation");
 
   
   py::class_<EconomicActorManager>(m, "EconomicActorManager")

@@ -64,11 +64,11 @@ void ActorLogger::DumpLog(){
   int size = rBeforeState.size();
   int size2 =rAfterState.size();
 
-  cout<<"Size of beforeState "<<rBeforeState.size()<<endl;
-  cout<<"Size of AfterState "<<rBeforeState.size()<<endl;
-  cout<<"Before state message "<<rBeforeMessage.size()<<endl;
-  cout<<"during state message "<<rDuringMessage.size()<<endl;
-  cout<<"after message size "<< rAfterMessage.size()<<endl;
+  // cout<<"Size of beforeState "<<rBeforeState.size()<<endl;
+  // cout<<"Size of AfterState "<<rBeforeState.size()<<endl;
+  // cout<<"Before state message "<<rBeforeMessage.size()<<endl;
+  // cout<<"during state message "<<rDuringMessage.size()<<endl;
+  // cout<<"after message size "<< rAfterMessage.size()<<endl;
 
 
   if (size !=size2){
