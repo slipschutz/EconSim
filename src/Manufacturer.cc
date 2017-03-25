@@ -94,16 +94,16 @@ ActorActions Manufacturer::BeginningOfStep(){
   //Put sell orders on to market  
   if (fSupplies.size() !=0 && fSupplies[GoodToManufacture].GetNumberOfCopies()!=0){
     
-    MarketManager::Get()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
-					 fSupplies[GoodToManufacture].GetNumberOfCopies(),
-					 rGoodPrice);/////
+    fTheEconomicActorManager->GetMarketManager()->PlaceSellOrder(GoodToManufacture,this->GetBaseId(),
+								 fSupplies[GoodToManufacture].GetNumberOfCopies(),
+								 rGoodPrice);/////
   }
   
 
   //Hire more people if in the last steps EndOfStep set HireMorePeople to true
   if (rHireMorePeople || Employees2Salary.size()==0){
     for (int i=0;i<5;i++){
-      MarketManager::Get()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
+      fTheEconomicActorManager->GetMarketManager()->PlaceJobPosting(rStartingSalary,this->GetBaseId());
     }
     rHireMorePeople=false;
   }

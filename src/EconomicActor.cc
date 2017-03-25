@@ -7,10 +7,12 @@
 #include "DataLogger.hh"
 #include "GoodManager.hh"
 #include "Settings.hh"
+#include "MarketManager.hh"
 
 #include "ActorLogger.hh"
 
 EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMyActorLogger(NULL),fTheEconomicActorManager(man){
+
   fConnections.clear();
   fDemands.clear();
   fSupplies.clear();

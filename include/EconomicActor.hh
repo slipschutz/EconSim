@@ -18,6 +18,7 @@ using namespace std;
 //Foward Declerations
 class EconomicActorManager;
 class ActorLogger;
+class MarketManager;
 
 enum class ActorActions{
   Died,
@@ -89,8 +90,7 @@ public:
 protected:
   int fNumConnections;
   ActorLogger * fMyActorLogger;
-
-  
+    
 
   map <int,EconomicActor*> fConnections;
   double fMoney;

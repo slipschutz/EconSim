@@ -47,19 +47,21 @@ public:
 
 
 /**This class will be responsible for holding by and sell orders from companies and 
-   maybe people too?
+   maybe people too
 
-   Will be a static singleton
  */
+
+
 class MarketManager 
 {
 public:
+
+  MarketManager(DataLogger *);
   virtual ~MarketManager();
   
-  static MarketManager * theManager;
-  static MarketManager * Get();
 
-  void SetData(DataLogger * d){rTheDataLogger=d;}
+
+
 
   void PlaceSellOrder(int GoodNumber,int SellerID, int Quantity,double Price);
   
@@ -77,12 +79,11 @@ public:
   void Dump();
   void DumpCurrentGoodsForSale();
 
-
   vector <int> * GetCurrentGoodsForSale(){return &rCurrentGoodsForSale;}
+
   
 private:
-  MarketManager();
-
+ 
   DataLogger * rTheDataLogger;
 
   //For each good make a map of prices

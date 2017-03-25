@@ -11,9 +11,9 @@
 #include "Exceptions.hh"
 //Initialize the singleton pointer
 
-MarketManager * MarketManager::theManager=NULL;
 
-MarketManager::MarketManager(){
+MarketManager::MarketManager(DataLogger *d): rTheDataLogger(d)
+{
   //Constructor
   rSellPrices.resize(Settings::MaxGoodNumber);
   rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
@@ -50,16 +50,7 @@ void MarketManager::ClearMarket(){
 
 }
 
-MarketManager * MarketManager::Get(){
-  
-  if (theManager== NULL){
-    cout<<"MarketManager Made"<<endl;
-    theManager=new MarketManager();
-  }
-  return theManager;
-
-}
-
+ 
 
 void MarketManager::PlaceSellOrder(int GoodNumber,int SellerId, int Quantity,double Price){
 

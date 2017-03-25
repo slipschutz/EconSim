@@ -27,7 +27,8 @@ public:
     if (DoInitialize){
       Initialize();
     }
-  };
+  }
+
   virtual ~Manufacturer(){
     
   }

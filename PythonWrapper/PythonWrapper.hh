@@ -111,7 +111,7 @@ void MoreTests(){
 
   for (int i=0;i<1000;i++){
     man->DoAStep();
-    MarketManager::Get()->ClearMarket();
+    man->GetMarketManager()->ClearMarket();
     Calendar::DayNumber++;
   }
 
@@ -127,6 +127,7 @@ void MoreTests(){
 
 
 void UnitTests(){
+  //  MoreTests();
 
   EconomicActorManager * man =new EconomicActorManager();
 
@@ -187,11 +188,11 @@ void UnitTests(){
   aPerson3.BeginningOfStep();
 
 
-  MarketManager::Get()->PlaceSellOrder(0,aManufac->GetBaseId(),
+  man->GetMarketManager()->PlaceSellOrder(0,aManufac->GetBaseId(),
 				       totalAmtForManu,aManufac->GetGoodPriority(0)); 
 
 
-  auto goods4SaleBefore =*(MarketManager::Get()->GetCurrentGoodsForSale());
+  auto goods4SaleBefore =*(man->GetMarketManager()->GetCurrentGoodsForSale());
 
 
   DoTest(int(goods4SaleBefore.size())==Settings::MaxGoodNumber,"The goods for sale vector in market manager should be of length Settings::MaxGoodNumber");
@@ -201,7 +202,7 @@ void UnitTests(){
   double preStepMoney=aPerson3.GetMoney();
   aPerson3.DoStep();
 
-  auto goods4Sale =*(MarketManager::Get()->GetCurrentGoodsForSale());
+  auto goods4Sale =*(man->GetMarketManager()->GetCurrentGoodsForSale());
   DoTest(goods4Sale.at(0)==15,"There should be 25-10 of good 0 still left for sale");
   
 
@@ -240,8 +241,8 @@ void UnitTests(){
   Person aPerson4(man);
   aPerson4.Initialize();
   DoTest(aPerson4.GetHasJob()==false,"Person should not have a job yet");
-  MarketManager::Get()->PlaceJobPosting(10,aManufac->GetBaseId());
-  JobInfo jInfo= MarketManager::Get()->GetBestJob();
+  man->GetMarketManager()->PlaceJobPosting(10,aManufac->GetBaseId());
+  JobInfo jInfo= man->GetMarketManager()->GetBestJob();
   DoTest(jInfo.EmployerID!=-1,"There should be a job available on the market");
   aPerson4.DoStep();
   DoTest(aPerson4.GetHasJob()==true,"Person should Now have a job");

@@ -30,9 +30,10 @@ EconomicActorManager::EconomicActorManager() {
 
   rTheDataLogger = new DataLogger();
 
-  //Quick hack needs to be fixed when market manager is 
-  //De-Singletoned
-  MarketManager::Get()->SetData(rTheDataLogger);
+  rTheMarketManager = new MarketManager(rTheDataLogger);
+  
+
+
 
 
   rNumberOfPeopleDeaths=0;
@@ -117,7 +118,6 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     m->SetActorLogger(new ActorLogger(m->GetBaseId()));
     this->MakeActor(m);
   }
-
 
 
   for (auto i : rTheListOfActors){
@@ -221,6 +221,8 @@ void EconomicActorManager::DoAStep(){
 
 
   rTheDataLogger->FinalizePrices();
+
+  rTheMarketManager->ClearMarket();
 
 }
 

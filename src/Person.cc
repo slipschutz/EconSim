@@ -151,7 +151,7 @@ ActorActions Person::BeginningOfStep(){
   if (RandomManager::GetRand(10000)< 10 &&
       HighestDemandGoodNum!=-1 && amtOfDemand > 0){//10 here is to prevent too many companies from spawning 
 
-    int theSupply=(*MarketManager::Get()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
+    int theSupply=(*fTheEconomicActorManager->GetMarketManager()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
     
     int theDemand = GoodManager::Get()->demand[HighestDemandGoodNum];
     
@@ -241,7 +241,7 @@ void Person::DoStep(){
     while (AmountOfGoodIWant >0){
 
       OrderInfo info;
-      int Seller=MarketManager::Get()->GetCheapestSeller(Good2Buy,info);
+      int Seller=fTheEconomicActorManager->GetMarketManager()->GetCheapestSeller(Good2Buy,info);
 
       // if (Calendar::DayNumber > 1000){
       // 	cout<<"-------> "<< Calendar::DayNumber <<" good "<<Good2Buy<<" seller "<<Seller<< endl;
@@ -295,14 +295,14 @@ void Person::DoStep(){
   //Check to see if this person is employed
   if (!rHaveAJob){
     //Get a job
-    JobInfo jInfo= MarketManager::Get()->GetBestJob();
+    JobInfo jInfo= fTheEconomicActorManager->GetMarketManager()->GetBestJob();
     if (jInfo.EmployerID==-1){
       //No jobs silently do nothing
     }else{
       if (jInfo.salary > rPreviousSalary || RandomManager::GetUniform()<rMyTraits.ProbabilityForPayCut){
 	rHaveAJob=true;//Now has job
 	Company * theCompany = fTheEconomicActorManager->FindCompany(jInfo.EmployerID);
-	MarketManager::Get()->BrokerJob(this,theCompany,jInfo.salary);
+	fTheEconomicActorManager->GetMarketManager()->BrokerJob(this,theCompany,jInfo.salary);
 	rEmployer=theCompany;
 	rEmployerId=jInfo.EmployerID;
 	dayNotes<<"I Got a job working for "<<jInfo.EmployerID<<" at salary "<<jInfo.salary<<
@@ -386,7 +386,7 @@ void Person::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int 
   //Remove the Supply from seller
   
   GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
-  MarketManager::Get()->CleanUpOrder(Good2Buy,price,Seller,AmountOfGoodIWant);
+  fTheEconomicActorManager->GetMarketManager()->CleanUpOrder(Good2Buy,price,Seller,AmountOfGoodIWant);
 
 }
 

@@ -22,6 +22,7 @@ class Manufacturer;
 class Person;
 class Company;
 class DataLogger;
+class MarketManager;
 
 class EconomicActorManager : public Base {
 public:
@@ -40,6 +41,7 @@ public:
   void PrintMoney();
 
   void DoAStep();
+
 
   void MarkForDeath(EconomicActor*);
   void MakeActor(EconomicActor*);
@@ -61,6 +63,7 @@ public:
   int GetNumberOfPeople(){return Settings::NumberOfPeople-rNumberOfPeopleDeaths;}
 
   DataLogger * GetDataLogger(){return rTheDataLogger;}
+  MarketManager * GetMarketManager(){return rTheMarketManager;}
 
 
   vector<double> GetPriceData();
@@ -83,6 +86,7 @@ private:
 
 
   DataLogger *rTheDataLogger;
+  MarketManager *rTheMarketManager; 
 
   int rPersonToLog;
 

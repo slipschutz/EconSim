@@ -14,9 +14,9 @@ void my_handler(int s){
 
 void DoEndOfDay(){
 
-  //  DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
-  MarketManager::Get()->ClearMarket();
-  Calendar::DayNumber++;
+  // //  DataLogger::Get()->LogMarketState(MarketManager::Get(), GoodManager::Get());
+  // MarketManager::Get()->ClearMarket();
+  // Calendar::DayNumber++;
 
 
 
@@ -74,7 +74,7 @@ void Run(){
 
 	
       }
-      DoEndOfDay();
+
     }
 
     

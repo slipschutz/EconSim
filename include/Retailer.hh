@@ -16,7 +16,8 @@ using namespace std;
 class Retailer : public Company 
 {
 public:
-  Retailer(EconomicActorManager *man):Company(man){}
+  /*
+  Retailer(EconomicActorManager *man,MarketManager *mm):Company(man,mm){}
   virtual ~Retailer(){}
   
   void Initialize(){
@@ -32,7 +33,7 @@ public:
   void DoStep(){}
   bool CheckTransactionMatch(int, EconomicActor*){return true;}
   int GetActorType(){return 111;}
-
+  */
 };
 
 
