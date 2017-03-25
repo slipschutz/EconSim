@@ -26,10 +26,10 @@ class RunSimThread(QThread):
                 for i in range(self.MainWindow.NumSteps):
                         self.EconManager.DoAStep()
                         PyEconSim.DoEndOfDay()
+                        self.MainWindow.TotalNumberOfSteps=self.MainWindow.TotalNumberOfSteps+1
                         if i % 100 ==0:
                                 print "on step",i
-                                self.sleep(5)
-                                print "done"
+                        self.MainWindow.Update()
 
 
 
@@ -48,7 +48,8 @@ class MainWindow(QtGui.QMainWindow):
         self.NumPeople=0
         self.NumSteps=0
 
-        self.ui.TotalNumStepLabel.setText(QString("Total Steps "+str(self.TotalNumberOfSteps)))
+        self.Update()
+
 
         # Connect a function to be run when a button is pressed.
         self.ui.StartSim.clicked.connect(self.StartSimFunction)
@@ -61,7 +62,7 @@ class MainWindow(QtGui.QMainWindow):
         
 
 
-
+        
     def SetNumPeople(self):
             x=self.ui.numPeopleInput.text()
             x=int(x)
@@ -81,6 +82,9 @@ class MainWindow(QtGui.QMainWindow):
     def StopBotton(self):
         print "Stop"
         self.runThread.terminate()
+
+    def Update(self):
+            self.ui.TotalNumStepLabel.setText(QString("Total Steps "+str(self.TotalNumberOfSteps)))
 
 
 
