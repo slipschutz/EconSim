@@ -26,40 +26,69 @@ class MarketManager;
 
 class EconomicActorManager : public Base {
 public:
+
+  /**Constructor
+   */
   EconomicActorManager();
 
+  /**Destructor
+   */
   ~EconomicActorManager();
 
-  void BuildList(int NumberOfPeople);
+  /**Main function to build the people/companies that make up the simualtion
+   */
   void BuildCompleteNetwork(int NumberOfPeople);
 
+  /**Mandatory methods from Base class
+   */
   void Initialize();
 
-  void PrintConnections();
-  void PrintHavesWants();
-  void PrintHavesWants(int);
-  void PrintMoney();
 
+  /**Old method to print the supplies and 
+     demands for all the actors*/
+  void PrintHavesWants();
+  /**Prints supplies and demands for an actor with given
+     ID*/
+  void PrintHavesWants(int);
+
+
+  /**Moves the simulation foward 1 step.  IE the
+     main bit of code for the sim*/
   void DoAStep();
 
 
+  /**Adds an actor the list of actors to be deleted at the end of the 
+     time step.  The Base Id is added to the vector rToBeKilled
+  */
   void MarkForDeath(EconomicActor*);
+
+  /**Function to add an actor to the main list of actors
+   */
   void MakeActor(EconomicActor*);
 
-  //  void SetPersonToLog(int v);
+
+  /**Returns a raw pointer to the hash that contains the all the actor IDs
+     and pointers*/
   unordered_map <int,EconomicActor*> * GetList(){return &rTheListOfActors;}
 
-  void Test(){
-    cout<<"Size of list "<<rTheListOfActors.size()<<endl;
-  }
-  
+
+  /**Obvious
+   */
   Person * FindPerson(int Id);
+  /**Obvious
+   */
   Company * FindCompany(int Id);
-  
+
+  /**Builds small test network
+   */
   void BuildTestNetwork();
 
+  /**Old printing function
+   */
   void PrintAllInfo();
   
+  /**Obvious
+   */
   int GetNumberOfPeople(){return Settings::NumberOfPeople-rNumberOfPeopleDeaths;}
 
   DataLogger * GetDataLogger(){return rTheDataLogger;}
@@ -75,8 +104,6 @@ public:
 
 
 private:
-  int rInitialTopConectivity;
-  int rNumInteractingPeoplePerStep;
   int rNumberOfPeople;
   
   int rNumCurrentCompanies;
@@ -88,7 +115,7 @@ private:
   DataLogger *rTheDataLogger;
   MarketManager *rTheMarketManager; 
 
-  int rPersonToLog;
+
 
   int rNumberOfPeopleDeaths;
   int rNumberOfPeopleBirths;

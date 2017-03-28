@@ -25,16 +25,11 @@
 
 EconomicActorManager::EconomicActorManager() {
   //  srand(0);
-  rInitialTopConectivity=20;
-  rNumInteractingPeoplePerStep=Settings::NumberOfInteractionsPerStep;
-
+  
   rTheDataLogger = new DataLogger();
 
   rTheMarketManager = new MarketManager(rTheDataLogger);
   
-
-
-
 
   rNumberOfPeopleDeaths=0;
   rNumberOfPeopleBirths=0;
@@ -54,7 +49,11 @@ EconomicActorManager::~EconomicActorManager(){
 
   }
 
+  delete rTheDataLogger;
+  delete rTheMarketManager;
+
   rTheListOfActors.clear();
+
   cout<<"There were "<<rNumberOfPeopleDeaths<<" People deaths"<<endl;
   cout<<"There were "<<rNumberOfCompanyDeaths<<" Company deaths"<<endl;
 
@@ -62,37 +61,22 @@ EconomicActorManager::~EconomicActorManager(){
   cout<<"There were "<<rNumberOfCompanyBirths<<" Company births"<<endl;
 
   cout<<"There were "<<rNumberOfBirths<<" births"<<endl;
-}
+
+  }
 
 void EconomicActorManager::PrintAllInfo(){
-  for (auto i : rTheListOfActors){i.second->PrintInfo();
+
+  for (auto i : rTheListOfActors){
+    i.second->PrintInfo();
   }
 }
+
 void EconomicActorManager::Initialize(){
 
 
 }
 
 
-void EconomicActorManager::BuildList(int NumberOfPeople){
-  rTheListOfActors.clear();//Clear the list 
-  rNumberOfPeople=NumberOfPeople;
- 
-  //rTheListOfActors.resize(NumberOfPeople);
-
-  // for (int i=0;i<NumberOfPeople;i++){
-  //   rTheListOfActors[i]->Initialize();
-  //   int thisEntriesNumConnections = RandomManager::GetRand(rInitialTopConectivity);
-  //   for (int j=0;j<thisEntriesNumConnections;j++){
-  //     int n= RandomManager::GetRand(NumberOfPeople);
-  //     if (n != i ){
-  // 	rTheListOfActors[i]->MakeConnection(rTheListOfActors[n]);
-  //     }
-  //   }
-  // }
-
-
-}
 
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
@@ -152,8 +136,7 @@ void EconomicActorManager::DoAStep(){
   rTheDataLogger->LogPopulation(rNumberOfPeople);
   rTheDataLogger->LogManufacturerNumber(rNumberOfManufacturers);
 
-  cout<<"-------> the number of people "<<rNumberOfPeople<<endl;
-  
+    
   //First thing to to is clear the ID list as people may have been killed at end
   //of last step
   rTheIds.clear();
@@ -172,6 +155,7 @@ void EconomicActorManager::DoAStep(){
   }
   
   //Log some stuf for the Data logger
+
   rTheDataLogger->theSupplies.push_back(GoodManager::Get()->supply[0]);
   rTheDataLogger->theDemands.push_back(GoodManager::Get()->demand[0]);
 
@@ -265,13 +249,7 @@ void EconomicActorManager::MakeActor(EconomicActor* act){
   rNumberOfBirths++;
 }
 
-void EconomicActorManager::PrintConnections(){
 
-  for (auto i: rTheListOfActors){
-    i.second->DumpConnections();
-  }
-
-}
 
 void EconomicActorManager::PrintHavesWants(){
   for (unsigned int i=0;i<rTheListOfActors.size();i++){
@@ -285,19 +263,7 @@ void EconomicActorManager::PrintHavesWants(int index){
   //rTheListOfActors[index]->DumpHavesWants();
 }
 
-void EconomicActorManager::PrintMoney(){
-  // for ( auto &i : rTheListOfActors){
-  //   cout<<"Person "<<i->GetBaseId()<<" "<<i->GetMoney()<<endl;
-  // }
 
-}
-// void PersonManager::SetPersonToLog(int v){
-//   rTheLogger->SetPerson(v);
-// }
-
-// PersonLogger* PersonManager::GetLogger(){
-//   return rTheLogger;
-// }
 
 Person * EconomicActorManager::FindPerson(int id){
   auto it = rTheListOfActors.find(id);
@@ -329,7 +295,7 @@ Company * EconomicActorManager::FindCompany(int id){
   } else {
     int t =it->second->GetActorType();
     if ( t == ActorTypes::Company || t==ActorTypes::Manufacturer){
-      //Confirmed that this is a person. Preform reinterpret cast
+      //Confirmed that this is a Company. Preform reinterpret cast
       return reinterpret_cast<Company*>(it->second);
     }else {
       s<<"<EconomicActorManager::FindCompany> id is not a company"<<endl;
