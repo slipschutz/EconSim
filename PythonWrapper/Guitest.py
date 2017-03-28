@@ -52,6 +52,9 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.numPeopleInput.setText(str(self.NumPeople))
         self.ui.numStepsInput.setText(str(self.NumSteps))
 
+        self.Good2Plot=0
+        self.ui.Good2PlotInput.setText(str(self.Good2Plot))
+
         self.Update()
 
 
@@ -63,10 +66,17 @@ class MainWindow(QtGui.QMainWindow):
         #Connect the input feilds for the number of people and such
         self.ui.numPeopleInput.editingFinished.connect(self.SetNumPeople)
         self.ui.numStepsInput.editingFinished.connect(self.SetNumSteps)
+
+        self.ui.Good2PlotInput.editingFinished.connect(self.SetGood2Plot)
         
 
 
-        
+    def SetGood2Plot(self):
+            x=self.ui.Good2PlotInput.text()
+            x=int(x)
+            self.Good2Plot=x
+            print "Updated good 2 plot"
+
     def SetNumPeople(self):
             x=self.ui.numPeopleInput.text()
             x=int(x)
@@ -88,8 +98,8 @@ class MainWindow(QtGui.QMainWindow):
 
         price = plt.plot(self.runThread.EconManager.GetPriceData(),"ro",label="Price")
         people = plt.plot(self.runThread.EconManager.GetPopulation(),label="Population")
-        demand = plt.plot(self.runThread.EconManager.GetDemands(),"g^",label="demand")
-        supply=plt.plot(self.runThread.EconManager.GetSupplies(),label="supply")
+        demand = plt.plot(self.runThread.EconManager.GetDemands(self.Good2Plot),"g^",label="demand")
+        supply=plt.plot(self.runThread.EconManager.GetSupplies(self.Good2Plot),label="supply")
 
 
         plt.yscale('log')

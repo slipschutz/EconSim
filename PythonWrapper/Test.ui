@@ -45,6 +45,20 @@
       </widget>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Good2Plot</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="Good2PlotInput"/>
+       </item>
+      </layout>
+     </item>
+     <item>
       <widget class="QPushButton" name="Plot">
        <property name="text">
         <string>Plot</string>

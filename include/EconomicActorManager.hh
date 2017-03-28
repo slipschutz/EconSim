@@ -96,11 +96,11 @@ public:
 
 
   vector<double> GetPriceData();
-  vector<double> GetSupplies();
+
   vector<int> GetPopulation();
   vector<int> GetNumManufacturers();
-  vector<double> GetDemands();
-
+  vector<int> GetDemands(int n);
+  vector<int> GetSupplies(int n);
 
 
 private:

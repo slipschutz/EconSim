@@ -154,10 +154,13 @@ void EconomicActorManager::DoAStep(){
     rTheIds.push_back(i.first);
   }
   
-  //Log some stuf for the Data logger
+  //Log the demand and supply for all the goods
+  for (int i=0;i<Settings::MaxGoodNumber;i++){
 
-  rTheDataLogger->theSupplies.push_back(GoodManager::Get()->supply[0]);
-  rTheDataLogger->theDemands.push_back(GoodManager::Get()->demand[0]);
+    rTheDataLogger->PushSupply(i,GoodManager::Get()->supply[i]);
+    rTheDataLogger->PushDemand(i,GoodManager::Get()->demand[i]);
+  }
+
 
 
   //RANDOMLY SORT THE LIST BEFOR EACH STEP
@@ -204,7 +207,7 @@ void EconomicActorManager::DoAStep(){
   rTheIds.clear();
 
 
-  rTheDataLogger->FinalizePrices();
+  //  rTheDataLogger->FinalizePrices();
 
   rTheMarketManager->ClearMarket();
 
@@ -321,11 +324,15 @@ vector<double> EconomicActorManager::GetPriceData(){
 }
 
 
-vector<double> EconomicActorManager::GetSupplies(){
+vector<int> EconomicActorManager::GetSupplies(int n){
   
-  return rTheDataLogger->theSupplies;
+  return rTheDataLogger->GetSupplyData(n);
 
 }
+vector<int> EconomicActorManager::GetDemands(int n){
+  return rTheDataLogger->GetDemandsData(n);
+}
+
 
 vector<int> EconomicActorManager::GetPopulation(){
 
@@ -340,11 +347,6 @@ vector<int> EconomicActorManager::GetNumManufacturers(){
 }
 
 
-vector<double> EconomicActorManager::GetDemands(){
-
-  return rTheDataLogger->theDemands;
-
-}
 
 
 

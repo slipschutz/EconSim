@@ -26,12 +26,12 @@ public:
   virtual ~DataLogger();
 
 
+  /**Add a transcation record to the "theGoodPrices" vector
+   */
   void PushGoodPrice(int GoodNumber,double price,int supply);
 
   void PushJobInfo(double salary);
-  void FinalizePrices();
 
-  void LogEndingMoneyDistribution( unordered_map <int,EconomicActor*>* list);
   
   void LogMarketState(MarketManager *,GoodManager*);
 
@@ -46,17 +46,30 @@ public:
   vector <int>  &GetNumberOfPeople(){return rNumberOfPeople;}
   vector <int>  &GetNumberOfManufacturers(){return rNumberOfManufacturers;}
 
-  vector <double> theSupplies;
-  vector <double> theDemands;
   
+  // vector <double> theSupplies;
+  // vector <double> theDemands;
+  
+  void PushDemand(int GoodNumber,int value){
+    rDemands[GoodNumber].push_back(value);
+  }
+  void PushSupply(int GoodNumber,int value){
+    rSupplies[GoodNumber].push_back(value);
+  }
 
-
+  vector <int> & GetDemandsData(int GoodNumber){
+    return rDemands[GoodNumber];
+  }
+    
+  vector <int> & GetSupplyData(int GoodNumber){
+    return rSupplies[GoodNumber];
+  }
+    
 private:
 
-
   ofstream pFileForGoodPrices;
-  ofstream pFileForEndingMoneyDistribution;
-  
+  ofstream rFileForPopulation;
+
   vector <TransactionRecord> theGoodPrices;
 
   vector < vector <int> > rDemands;
@@ -67,13 +80,18 @@ private:
   vector <ofstream*> rFilesForSupply;
   vector <ofstream*> rFilesForDemand;
 
-  ofstream rFileForPopulation;
 
+
+
+  /** Day by day number of people alive in sim
+   */
   vector <int> rNumberOfPeople;
+  /**Day by day number of Manufacturers in sim
+   */
   vector <int> rNumberOfManufacturers;
   
   int pBufferSize;
-  void pWriteToDisk();
+
 };
 
 

@@ -15,7 +15,7 @@
 DataLogger::DataLogger() : pBufferSize(1000){
 
   pFileForGoodPrices.open("./data/GoodPrices.dat");
-  pFileForEndingMoneyDistribution.open("./data/EndingMoneyDistribution.dat");
+
 
   rFilesForSupply.resize(Settings::MaxGoodNumber);
   rFilesForDemand.resize(Settings::MaxGoodNumber);
@@ -32,6 +32,7 @@ DataLogger::DataLogger() : pBufferSize(1000){
     rFilesForDemand[i]= new ofstream(n.str());
 
   }
+
   rDemands.resize(Settings::MaxGoodNumber);
   rSupplies.resize(Settings::MaxGoodNumber);
 
@@ -41,13 +42,9 @@ DataLogger::DataLogger() : pBufferSize(1000){
 
 DataLogger::~DataLogger(){
 
-  if (theGoodPrices.size() !=0){
-    pWriteToDisk();
-    theGoodPrices.clear();
-  }
+  theGoodPrices.clear();
 
   pFileForGoodPrices.close();
-  pFileForEndingMoneyDistribution.close();
 
 }
 
@@ -57,37 +54,15 @@ void DataLogger::PushGoodPrice(int GoodNumber,double price, int supply){
 
   theGoodPrices.push_back(TransactionRecord(GoodNumber,price,supply));
 
-  // if (theGoodPrices.size() >= pBufferSize){
-  //   pWriteToDisk();
-  //   theGoodPrices.clear();
-  // }
-
-}
-
-void DataLogger::pWriteToDisk(){
-  
-  for (auto & i : theGoodPrices){
-    pFileForGoodPrices<<i.Price<<" "<<i.Supply<<endl;
-
-  }
-
 
 }
 
 
-
-void DataLogger::LogEndingMoneyDistribution(unordered_map <int,EconomicActor*>* list){
-  
-  for (auto & i : *list){
-    pFileForEndingMoneyDistribution<<i.second->GetActorType()<<" " <<i.second->GetMoney()<<endl;
-  }
-
-
-}
 
 
 void DataLogger::LogMarketState(MarketManager *MarketMan,GoodManager * GoodMan){
-
+  /*
+  
   vector<int>* vec = MarketMan->GetCurrentGoodsForSale();
 
   for (unsigned int i=0;i< vec->size();i++){
@@ -120,7 +95,7 @@ void DataLogger::LogMarketState(MarketManager *MarketMan,GoodManager * GoodMan){
     rDemands.resize(Settings::MaxGoodNumber);
     rSupplies.resize(Settings::MaxGoodNumber);
   }//end if writing to disk
-
+  */
 }
 
 
@@ -137,6 +112,4 @@ void DataLogger::LogManufacturerNumber(int num){
 void DataLogger::PushJobInfo(double salary){
 
 }
-void DataLogger::FinalizePrices(){
 
-}
