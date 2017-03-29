@@ -181,8 +181,8 @@ ActorActions Manufacturer::EndOfStep(){
 
       double oldPrice=rGoodPrice;
       rGoodPrice=oldPrice - oldPrice*rPriceChangeLevel;
-      if (rGoodPrice<0){
-	rGoodPrice=0;
+      if (rGoodPrice<10){
+	rGoodPrice=10;
       }
 
 

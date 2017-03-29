@@ -30,25 +30,6 @@ GoodManager* GoodManager::Get(){
 
 
 
-void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buyer,int good,int quantity){
-  //The Seller needs to have the goods removed from it's supplies and the buyer needs
-  //to have the good removed from its demand
-
-  if (good ==0){
-    // //    DataLogger::Get()->theSupplies.push_back(supply[good]);
-    // DataLogger::Get()->theSupplies.push_back((*MarketManager::Get()->GetCurrentGoodsForSale())[0]);
-    // DataLogger::Get()->theDemands.push_back(demand[good]);
-  }
-
-  Seller->RemoveSupply(good,quantity);
-  Buyer->AddSupply(good,quantity);
-  Buyer->RemoveDemand(good,quantity);
-  
-
-
-}
-
-
 void GoodManager::RemoveSupply(int id, int copies){
   if (supply.count(id)== 0){
     //Something has gone wrong. The supply isn't there

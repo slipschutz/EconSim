@@ -23,17 +23,12 @@ public:
 
   void Initialize(){}
 
-  void ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buyer,int good,int quantity);
 
   //Maps from good number to total supply/total demand
   map<int,int> supply;
   map<int,int> demand;
   
   void Dump();
-
-  //Methods to add supplies or demands to the economy
-  //These will add things to the map if they are not already there
-
   
   
   //These methods assume that the GOOD id is already in the maps

@@ -385,7 +385,13 @@ void Person::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int 
   
   //Remove the Supply from seller
   
-  GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
+  //  GoodManager::Get()->ReconcileTransaction(theSeller,this,Good2Buy,AmountOfGoodIWant);
+
+  theSeller->RemoveSupply(Good2Buy,AmountOfGoodIWant);
+  this->AddSupply(Good2Buy,AmountOfGoodIWant);
+  this->RemoveDemand(Good2Buy,AmountOfGoodIWant);
+
+
   fTheEconomicActorManager->GetMarketManager()->CleanUpOrder(Good2Buy,price,Seller,AmountOfGoodIWant);
 
 }

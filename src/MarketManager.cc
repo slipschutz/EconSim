@@ -94,8 +94,9 @@ void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int q
   if (GoodNumber==0){
     rAveragePrice+=price;
     rNumberOfDailySales++;
-    
   }
+
+  ///Need to remove the order from the list of SellPrices
   multimap<double,OrderInfo> * theMap = &rSellPrices[GoodNumber];
 
   //Find the range of entries that have the price 
@@ -113,6 +114,7 @@ void MarketManager::CleanUpOrder(int GoodNumber,double price, int SellerId,int q
     }
   }
 
+  ///Lower the Current Goods For Sale 
   rCurrentGoodsForSale[GoodNumber]-=quantity;
 
 }

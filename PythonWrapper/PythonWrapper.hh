@@ -127,7 +127,7 @@ void MoreTests(){
 
 
 void UnitTests(){
-  //  MoreTests();
+  MoreTests();
 
   EconomicActorManager * man =new EconomicActorManager();
 
