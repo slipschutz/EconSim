@@ -2,15 +2,22 @@
 #include "GoodManager.hh"
 using namespace std;
 
+std::ostream& operator << (std::ostream& os, const GoodType & obj)
+{
+  os << static_cast<std::underlying_type<GoodType>::type >(obj);
+  return os;
+}
+
+
 Good::Good(){
   rGoodId=-1;
   rPriority=0;
   rCopiesOfGood=0;
-  rType="!!!__";
-
+  rType=GoodType::None;
 }
 
-Good::Good(int id, int copies,int prior,string t){// : rGoodId(id), rCopiesOfGood(copies),rPriority(prior),rType(t){
+
+Good::Good(int id, int copies,int prior,GoodType t){// : rGoodId(id), rCopiesOfGood(copies),rPriority(prior),rType(t){
 
   rGoodId=id;
   rCopiesOfGood=copies;
@@ -24,7 +31,6 @@ Good::~Good(){
 
 }
 void Good::Clear(){
-
 
   rUpdateManagerRemove(rCopiesOfGood);
 }
@@ -46,14 +52,6 @@ void Good::Clear(){
 //   return *this;
 // }
 
-
-void Good::Initialize(){
-  
-  rGoodId=-1;
-  rPriority=0;
-  rCopiesOfGood=0;
-  rType="!!!__";
-}
 
 
 void Good::AddCopies(int num){
@@ -82,9 +80,9 @@ void Good::RemoveCopies(int num){
 
 
 void Good::rUpdateManagerAdd(int change){
-  if (rType == "demand"){
+  if (rType == GoodType::Demand){
     GoodManager::Get()->AddDemand(rGoodId,change);
-  }else if (rType == "supply"){
+  }else if (rType == GoodType::Supply){
     GoodManager::Get()->AddSupply(rGoodId,change);
   }else {
     cout<<"<Good::rUpdateManagerAdd> Invaid type "<<rType<<endl;
@@ -93,9 +91,9 @@ void Good::rUpdateManagerAdd(int change){
 }
 
 void Good::rUpdateManagerRemove(int change){
-  if (rType == "demand"){
+  if (rType == GoodType::Demand){
     GoodManager::Get()->RemoveDemand(rGoodId,change);
-  }else if (rType == "supply"){
+  }else if (rType == GoodType::Supply){
     GoodManager::Get()->RemoveSupply(rGoodId,change);
   }else {
     cout<<"<Good::rUpdateManagerRemove> Invaid type "<<rType<<endl;

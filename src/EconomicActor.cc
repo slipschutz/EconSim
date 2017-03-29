@@ -33,8 +33,8 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   //Those will be set at latter times in the
   //sub classes
   for ( int i=0;i<Settings::MaxGoodNumber;i++){
-    fSupplies[i]=Good(i,0,fGoodPriorities[i],"supply");
-    fDemands[i]=Good(i,0,fGoodPriorities[i],"demand");
+    fSupplies[i]=Good(i,0,fGoodPriorities[i],GoodType::Supply);
+    fDemands[i]=Good(i,0,fGoodPriorities[i],GoodType::Demand);
   }
 
 }
@@ -142,7 +142,7 @@ void EconomicActor::AddDemand(int GoodNumber,int copies){
   auto theDemand = fDemands.find(GoodNumber);
   if (theDemand == fDemands.end()){//The demand wasn't there
     //    fDemands[GoodNumber]=temp;
-    Good temp(GoodNumber,copies,fGoodPriorities[GoodNumber],"demand");
+    Good temp(GoodNumber,copies,fGoodPriorities[GoodNumber],GoodType::Demand);
     fDemands.insert(make_pair(GoodNumber,temp));
   }else {// the good was there
     theDemand->second.AddCopies(copies);
@@ -196,7 +196,7 @@ void EconomicActor::AddSupply(int GoodNumber,int Quantity){
   
   if (fSupplies.count(GoodNumber) == 0){
     //The supply wasn't in the map so just add it
-    Good temp(GoodNumber,Quantity,fGoodPriorities[GoodNumber],"supply");
+    Good temp(GoodNumber,Quantity,fGoodPriorities[GoodNumber],GoodType::Supply);
     //    fSupplies[GoodNumber]=temp;
     //    stlMap.insert( map< string, X >::value_type( "test", x ) );
     fSupplies.insert( map<int,Good>::value_type(GoodNumber,temp));

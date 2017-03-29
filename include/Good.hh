@@ -3,25 +3,30 @@
 #define __GOOD_HH
 
 
-#include "Base.hh"
 #include "Settings.hh"
 #include <string>
+#include <type_traits>
+#include <istream>
+
+
+enum class GoodType
+{ Demand,Supply,None};
+
+
+
 using namespace std;
-class Good : public Base {
+class Good  {
 public:
   Good();
-  Good(int id, int copies,int,string);
+  Good(int id, int copies,int,GoodType);
   ~Good();
-  //  Good(const Good &aGood);//Copy constructor
-  void Clear();
-  //  Good& operator= (const Good &aGood);
 
-  void Initialize();
+  void Clear();
 
   inline int GetGoodId(){return rGoodId;}
-  inline void SetGoodIdAndType(int v,string t){rGoodId=v;rType=t;}
 
   inline void IncrementPriority(){SetPriority(rPriority+1);}
+
   inline void SetPriority(int v){
     if (v>Settings::MaxGoodPriority){
       rPriority=Settings::MaxGoodPriority;
@@ -32,20 +37,16 @@ public:
   
   inline int GetPriority(){return rPriority;}
 
-  inline double GetNormPriority(){return (Settings::MaxGoodPriority-rPriority)/(Settings::MaxGoodPriority);}
-
   inline int GetNumberOfCopies(){return rCopiesOfGood;}
-  
 
   void AddCopies(int num);
   void RemoveCopies(int num);
-
 
 private:
   int rGoodId;
   int rCopiesOfGood;
   int rPriority;
-  string rType;
+  GoodType rType;
 
   void rUpdateManagerAdd(int change);
   void rUpdateManagerRemove(int change);

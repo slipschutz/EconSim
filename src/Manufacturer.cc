@@ -77,7 +77,7 @@ ActorActions Manufacturer::BeginningOfStep(){
   // if the company has employees it can manufacture goods  //
   ////////////////////////////////////////////////////////////
   if (fSupplies.find(GoodToManufacture) == fSupplies.end()){
-    Good temp(GoodToManufacture,0,fGoodPriorities[GoodToManufacture],"supply");
+    Good temp(GoodToManufacture,0,fGoodPriorities[GoodToManufacture],GoodType::Supply);
     fSupplies[GoodToManufacture]=temp;
   }
 
