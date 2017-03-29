@@ -16,7 +16,6 @@ class EconomicActor;
 class GoodManager : public Base {
 public:
 
-
   virtual ~GoodManager();
   //Methods to Get the static singleton
   static GoodManager *theManager;
@@ -29,24 +28,14 @@ public:
   //Maps from good number to total supply/total demand
   map<int,int> supply;
   map<int,int> demand;
-
-
   
   void Dump();
-
-
-  //Oldish methods 
-  double GetWorthToBuyer(EconomicActor * theEconomicActor,int GoodID);
-  double GetWorthToSeller(EconomicActor * theEconomicActor,int GoodID);
-
 
   //Methods to add supplies or demands to the economy
   //These will add things to the map if they are not already there
 
-  Good MakeDemand(int id, int copies,EconomicActor*);
-  Good MakeSupply(int id, int copies,EconomicActor*);
-
-
+  
+  
   //These methods assume that the GOOD id is already in the maps
   //They change the values in the map
   void RemoveSupply(int id, int copies);

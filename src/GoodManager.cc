@@ -30,39 +30,6 @@ GoodManager* GoodManager::Get(){
 
 
 
-
-//int sigma=10;
-Good GoodManager::MakeDemand(int id, int copies,EconomicActor* act){
-  /*  if (demand.count(id) == 0){
-    demand[id]=copies;
-  }else{
-    demand[id]+=copies;
-  }
-  Good g(id,copies);
-  g.SetPriority(act->GetGoodPriority(id));//Priority must be set by each individual actor based on thier preferences
-  return g;*/
-  return Good();
-}
-
-
-
-Good GoodManager::MakeSupply(int id, int copies,EconomicActor* act){
-  /*  if (act->GetActorType() != ActorTypes::Manufacturer){
-    cout<<"ONLY Manufacturers can make goods"<<endl;
-    throw 1;
-  }
-
-  if (supply.count(id) == 0){
-    supply[id]=copies;
-  }else{
-    supply[id]+=copies;
-  }
-  Good g(id,copies);
-  g.SetPriority(act->GetGoodPriority(id));//Priority must be set by each individual actor based on thier preferences
-  return g;*/
-  return Good();
-}
-
 void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buyer,int good,int quantity){
   //The Seller needs to have the goods removed from it's supplies and the buyer needs
   //to have the good removed from its demand
@@ -80,25 +47,6 @@ void GoodManager::ReconcileTransaction(EconomicActor *Seller,EconomicActor *Buye
 
 
 }
-
-// void GoodManager::AddSupply(int id, int copies){
-//   auto s = supply.find(id);
-
-//   if (s == supply.end()){
-//     //something is wrong
-//     throw 3;
-//   }
-//   s->second = s->second + copies;
-  
-// }
-// void GoodManager::AddDemand(int id, int copies){
-//   auto d = demand.find(id);
-  
-//   if ( d == demand.end()){
-//     throw 3;
-//   }
-//   d->second = d->second + copies;
-// }
 
 
 void GoodManager::RemoveSupply(int id, int copies){
@@ -119,7 +67,6 @@ void GoodManager::RemoveSupply(int id, int copies){
 
 }
 void GoodManager::RemoveDemand(int id, int copies){
-
   if (demand.count(id) == 0){
     //something has gone wrong. that demand isn't here
     cout<<"<GoodManager::RemoveDemand> there is no demand with id "<<id<<endl;
@@ -137,6 +84,7 @@ void GoodManager::RemoveDemand(int id, int copies){
 }
 
 void GoodManager::AddSupply(int id, int copies){
+
   auto theSupply = supply.find(id);
   if (theSupply == supply.end()){
     //Supply is not in the map
@@ -199,58 +147,3 @@ int GoodManager::FindHighestDemandGood(int &amtOfDemand){
 
 
 
-double Demand2Money=(1.1/Settings::NumberOfPeople);
-double Supply2Money=(-1.1/Settings::NumberOfPeople);
-double Priority2Money=1.0;
-double GoodManager::GetWorthToBuyer(EconomicActor * theEconomicActor,int GoodId){
-  /** How much the person is willing to pay inorder to buy the good
-      Should depend on:
-      Overall demand
-      this persons priority in getting the good
-   */
-
-  Good theGood = (*theEconomicActor->GetDemands())[GoodId];
-
-  double Priority = theGood.GetNormPriority();
-  
-  //  cout<<"BUYER WORTH "<<demand[GoodId]<<" "<<supply[GoodId]<<" "<<Priority<<endl;
-  double val=(demand[GoodId]*Demand2Money+supply[GoodId]*Supply2Money)/(Priority);
-
-  if (val<0){
-    return 0;
-  }else{
-    return val;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-double GoodManager::GetWorthToSeller(EconomicActor * theEconomicActor,int GoodId){
-  /**How muh the person wants before they are willing to sell the good
-
-   */
-  
-  Good theGood = (*theEconomicActor->GetSupplies())[GoodId];
-  
-  double Priority = theGood.GetNormPriority();
- 
-
-  double val= (demand[GoodId]*Demand2Money+supply[GoodId]*Supply2Money)/Priority;
-
-  if (val<0){
-    return 0;
-  }else{
-    return val;
-  }
-
-
-}
