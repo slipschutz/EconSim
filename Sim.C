@@ -29,6 +29,7 @@
 
 #include "PythonWrapper/Run.hh"
 
+
 using namespace  std;
 
 
@@ -36,6 +37,8 @@ using namespace  std;
 
 int main(int argv, char ** argc){
 
-  Run();
+  UnitTests();
+
+  //  Run();
   return 0;
 }

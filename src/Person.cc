@@ -151,20 +151,20 @@ ActorActions Person::BeginningOfStep(){
   if (RandomManager::GetRand(10000)< 10 &&
       HighestDemandGoodNum!=-1 && amtOfDemand > 0){//10 here is to prevent too many companies from spawning 
 
-    int theSupply=(*fTheEconomicActorManager->GetMarketManager()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
+    // int theSupply=(*fTheEconomicActorManager->GetMarketManager()->GetCurrentGoodsForSale()).at(HighestDemandGoodNum);
     
-    int theDemand = GoodManager::Get()->demand[HighestDemandGoodNum];
-    
-    if (theDemand > 1.2*theSupply){
+    // int theDemand = GoodManager::Get()->demand[HighestDemandGoodNum];
+    //    if (theDemand > 1.2*theSupply){
       
-      double startup=this->GetCompanyInvestment();
-      this->SubtractMoney(startup);
+    double startup=this->GetCompanyInvestment();
+    this->SubtractMoney(startup);
 
-      Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,HighestDemandGoodNum);
-      s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
-      rOwnedCompanies.push_back(c);
-      fTheEconomicActorManager->MakeActor(c);
-    }
+    Company * c =new Manufacturer(startup,fTheEconomicActorManager,this,HighestDemandGoodNum);
+
+    s<<"Diary it is time i started a compnay it is a "<<c->GetBaseId()<<" i am investing "<<startup<<endl;
+    rOwnedCompanies.push_back(c);
+    fTheEconomicActorManager->MakeActor(c);
+      //    }
   }
 
   

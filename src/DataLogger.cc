@@ -36,6 +36,8 @@ DataLogger::DataLogger() : pBufferSize(1000){
   rDemands.resize(Settings::MaxGoodNumber);
   rSupplies.resize(Settings::MaxGoodNumber);
 
+  rForSaleSupplies.resize(Settings::MaxGoodNumber);
+
   rFileForPopulation.open("./data/Population.data");
 }
 

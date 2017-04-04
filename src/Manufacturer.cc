@@ -174,6 +174,9 @@ ActorActions Manufacturer::EndOfStep(){
     ss<<rStartingSalary<<endl;
   }
 
+  if (rStartingSalary < 100 ){
+    rStartingSalary=100;
+  }
   
   if (RandomManager::GetUniform() > rSteadfastness){
     if (thisStepSoldVolume < 10){

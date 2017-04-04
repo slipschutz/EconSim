@@ -57,6 +57,10 @@ public:
     rSupplies[GoodNumber].push_back(value);
   }
 
+  void PushForSaleSupply(int GoodNumber,int value){
+    rForSaleSupplies[GoodNumber].push_back(value);
+  }
+
   vector <int> & GetDemandsData(int GoodNumber){
     return rDemands[GoodNumber];
   }
@@ -64,7 +68,12 @@ public:
   vector <int> & GetSupplyData(int GoodNumber){
     return rSupplies[GoodNumber];
   }
-    
+
+
+  vector <int>  & GetForSaleSupply(int GoodNumber){
+    return rForSaleSupplies[GoodNumber];
+  }    
+
 private:
 
   ofstream pFileForGoodPrices;
@@ -74,6 +83,8 @@ private:
 
   vector < vector <int> > rDemands;
   vector < vector <int> > rSupplies;
+
+  vector < vector <int> > rForSaleSupplies;
 
   vector <double> theSalaries;
 

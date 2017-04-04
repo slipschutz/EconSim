@@ -20,7 +20,6 @@ MarketManager::MarketManager(DataLogger *d): rTheDataLogger(d)
   rAveragePrice=0;
   rNumberOfDailySales=1;
 
-
 }
 
 MarketManager::~MarketManager(){
@@ -36,7 +35,8 @@ void MarketManager::ClearMarket(){
   rSellPrices.resize(Settings::MaxGoodNumber);
 
   rCurrentGoodsForSale.clear();
-  rCurrentGoodsForSale.resize(Settings::MaxGoodNumber);
+  //The Current goods for sale needs to zero-ed
+  rCurrentGoodsForSale.resize(Settings::MaxGoodNumber,0);
 
 
   double temp=0;
@@ -72,7 +72,8 @@ void MarketManager::PlaceSellOrder(int GoodNumber,int SellerId, int Quantity,dou
   
   //Put the inforamtion from the sale in the list of current goods for sale
   //this will keep track of the FOR SALE supply of things 
-  rCurrentGoodsForSale[GoodNumber]=Quantity;
+
+  rCurrentGoodsForSale[GoodNumber]+=Quantity;
 
 
 }
@@ -181,9 +182,9 @@ void MarketManager::Dump(){
 void MarketManager::DumpCurrentGoodsForSale(){
 
 
-  for (unsigned int i=0;i<rCurrentGoodsForSale.size();i++){
-    cout<<"Good "<<i<<" has supply for sale "<<rCurrentGoodsForSale.at(i)<<endl;
+  // for (unsigned int i=0;i<rCurrentGoodsForSale.size();i++){
+  //   cout<<"Good "<<i<<" has supply for sale "<<rCurrentGoodsForSale.at(i)<<endl;
     
-  }
+  // }
 
 }

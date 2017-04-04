@@ -154,11 +154,17 @@ void EconomicActorManager::DoAStep(){
     rTheIds.push_back(i.first);
   }
   
+
+  auto tempForSaleList = rTheMarketManager->GetCurrentGoodsForSale();
+
   //Log the demand and supply for all the goods
   for (int i=0;i<Settings::MaxGoodNumber;i++){
 
     rTheDataLogger->PushSupply(i,GoodManager::Get()->supply[i]);
     rTheDataLogger->PushDemand(i,GoodManager::Get()->demand[i]);
+
+    rTheDataLogger->PushForSaleSupply(i,tempForSaleList[i]);
+
   }
 
 
@@ -326,9 +332,11 @@ vector<double> EconomicActorManager::GetPriceData(){
 
 vector<int> EconomicActorManager::GetSupplies(int n){
   
-  return rTheDataLogger->GetSupplyData(n);
-
+  //  return rTheDataLogger->GetSupplyData(n);
+  return rTheDataLogger->GetForSaleSupply(n);
 }
+
+
 vector<int> EconomicActorManager::GetDemands(int n){
   return rTheDataLogger->GetDemandsData(n);
 }

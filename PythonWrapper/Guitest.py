@@ -96,7 +96,7 @@ class MainWindow(QtGui.QMainWindow):
     def PlotBotton(self):
         print "Plot"
 
-        price = plt.plot(self.runThread.EconManager.GetPriceData(),"ro",label="Price")
+        price = plt.plot(self.runThread.EconManager.GetPriceData(),"ro",linestyle="-",label="Price")
         people = plt.plot(self.runThread.EconManager.GetPopulation(),label="Population")
         demand = plt.plot(self.runThread.EconManager.GetDemands(self.Good2Plot),"g^",label="demand")
         supply=plt.plot(self.runThread.EconManager.GetSupplies(self.Good2Plot),label="supply")

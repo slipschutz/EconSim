@@ -61,8 +61,6 @@ public:
   
 
 
-
-
   void PlaceSellOrder(int GoodNumber,int SellerID, int Quantity,double Price);
   
   int GetCheapestSeller(int GoodNumber,OrderInfo & Info);
@@ -79,8 +77,8 @@ public:
   void Dump();
   void DumpCurrentGoodsForSale();
 
-  vector <int> * GetCurrentGoodsForSale(){return &rCurrentGoodsForSale;}
 
+  const vector <int> & GetCurrentGoodsForSale(){return rCurrentGoodsForSale;}
   
 private:
  
