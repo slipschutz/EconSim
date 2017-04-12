@@ -1,4 +1,10 @@
 
+#ifndef __NETWORK_HH
+#define __NETWORK_HH
+
+
+
+
 
 #include "Eigen/Dense"
 using Eigen::MatrixXd;
@@ -60,3 +66,4 @@ private:
 };
 
 
+#endif /* __NETWORK_HH */

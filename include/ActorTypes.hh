@@ -6,7 +6,9 @@ namespace ActorTypes{
   extern int Person;
   extern int Company;
   extern int Manufacturer;
+  extern int PersonWithNeural;
 }
+
 
 
 #endif /* __ACTORTYPES_HH */

@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "Person.hh"
+#include "PersonWithNeural.hh"
 
 #include "Manufacturer.hh"
 #include "Retailer.hh"
@@ -80,6 +81,7 @@ void EconomicActorManager::Initialize(){
 
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
+  PersonWithNeural a(this);
 
   rNumberOfPeople=NumberOfActors;
   Person * luckyPerson;  
