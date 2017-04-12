@@ -6,7 +6,7 @@
 #include "MarketManager.hh"
 #include "Calendar.hh"
 
-
+#include "Network.hh"
 
 #include "Company.hh"
 #include "Manufacturer.hh"
@@ -27,6 +27,8 @@ Person::Person(EconomicActorManager* man, bool DoInitialize) : EconomicActor(man
 
   //Good ID 0 is food and should have the highest prioriry 
   fGoodPriorities[0]=Settings::MaxGoodPriority;
+
+
 
 
   rPreviousSalary=0;///Start off with salary 0
