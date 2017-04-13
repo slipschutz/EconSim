@@ -40,7 +40,9 @@ Matrix<T,Dynamic,1> Vector2Eigen(vector <T> in){
 }
 
 
-
+Network::Network(){
+  
+}
 
 Network::Network(vector <int> sizes){
   rSizes=sizes;
@@ -95,6 +97,23 @@ void Network::AddInputNode(){
 }
 
 
+void Network::AddOutputNode(){
+
+  //Need to change the weight matrix going to the last layer so that 
+  //it has an extra row
+  //also need to increase the biases vector for the last row
+
+  int lastLayer=rNumberLayers-1;
+
+  weights2[lastLayer].conservativeResize(weights2[0].rows() +1, weights2[0].cols());
+  VectorXd vec=VectorXd::Random(rSizes[1]);
+
+  weights2[lastLayer].row(weights2[lastLayer].rows()-1)=vec;
+  rSizes[lastLayer]=rSizes[lastLayer]+1;
+
+  bia
+
+}
 
 
 void Network::SGD(vector < pair < VectorXd,VectorXd > > data,

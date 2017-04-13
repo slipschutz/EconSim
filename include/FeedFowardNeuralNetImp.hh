@@ -6,6 +6,7 @@
 #include "Network.hh"
 
 #include <vector>
+#include <memory>
 
 class FeedFowardNeuralNetImp : public NeuralNetworkInterface
 {
@@ -18,9 +19,8 @@ public:
   void Think();
 
 private:
-
-Network * rTheNetwork;
-
+  //Hold a pointer to the neural network imp
+  Network* rTheNetwork;
 };
 
 

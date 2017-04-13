@@ -22,11 +22,13 @@ using namespace std;
 
 class Network{
 public:
+  Network();
   Network(vector <int>);
   ~Network();
 
 
   void AddInputNode();
+  void AddOutputNode();
 
   void SGD(vector <pair<VectorXd,VectorXd> > data,
 	   int epochs, int mini_batch_size,double eta,int num=-1);
