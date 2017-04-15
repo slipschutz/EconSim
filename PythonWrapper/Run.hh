@@ -177,8 +177,6 @@ void NetworkTests(){
   input = 1/(1+exp(-input));
   DoTest(input==ans[0],"The result for this network should work for this simple example");
 
-
-
   
   
 }
