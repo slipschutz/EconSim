@@ -8,6 +8,7 @@ bool DoTest(bool test,std::string message){
 
   if(!test){
     std::cout<<"*******Test Fail********* "<<message<<std::endl;
+    throw 1;
     return false;
   }else{
     std::cout<<"Passed "<<message<<std::endl;
