@@ -27,6 +27,8 @@
 #include "Exceptions.hh"
 
 
+#include "Network.hh"
+
 #include "PythonWrapper/Run.hh"
 
 

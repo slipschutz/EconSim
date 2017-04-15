@@ -142,9 +142,50 @@ void MoreTests(){
 
 
 
+void NetworkTests(){
+
+  //a defaults to 1--30--1 network structure
+  Network a;
+
+  DoTest(a.GetBiases().size()==2,"The Network biases should be size 2");
+  DoTest(a.GetWeights().size()==2,"The Network weights should size 2");
+
+  
+  DoTest(a.GetWeights()[0].cols()==1,"The Network should defualt to 1 input argument");
+  //Add an input argument
+  a.AddInputNode();
+  DoTest(a.GetWeights()[0].cols()==2,"The Network should now have 2 input arguments");
+
+  DoTest(a.GetWeights()[1].rows()==1,"The Network should have one output node seen in the weights");
+  DoTest(a.GetBiases()[1].rows()==1,"The Network should have one output node seen in the biases");
+
+  a.AddOutputNode();
+  DoTest(a.GetWeights()[1].rows()==2,"The Network should have two output node seen in the weights");
+  DoTest(a.GetBiases()[1].rows()==2,"The Network should have two output node seen in the biases");
+
+
+  Network b({1,1,1});
+  b.MakeEveryThing1();
+
+  double input=1;
+  vector<double> in = {input};
+  auto ans =b.FeedFoward(in);
+
+  input=input+1;
+  input = 1/(1+exp(-input));
+  input=input+1;
+  input = 1/(1+exp(-input));
+  DoTest(input==ans[0],"The result for this network should work for this simple example");
+
+
+
+  
+  
+}
+
 void UnitTests(){
   MoreTests();
-
+  NetworkTests();
   EconomicActorManager * man =new EconomicActorManager();
 
 

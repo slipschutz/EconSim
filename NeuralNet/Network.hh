@@ -38,8 +38,6 @@ public:
 		       vector <MatrixXd>&);
 
 
-  vector <VectorXd> biases2;
-  vector <MatrixXd> weights2;
 
 
   VectorXd FeedFoward(vector<double>);
@@ -57,14 +55,27 @@ public:
 		vector <MatrixXd> &nw);
 
 
+  void MakeEveryThing1();
 
   VectorXd cost_derivative(VectorXd output,
 			   VectorXd y);
+
+  const vector<VectorXd> & GetBiases(){
+    return biases2;
+  }
+  const vector<MatrixXd> & GetWeights(){
+    return weights2;
+  }
   
 private:
   int rNumberLayers;
   vector <int> rSizes;
 
+  vector <VectorXd> biases2;
+  vector <MatrixXd> weights2;
+
+
+  
 };
 
 

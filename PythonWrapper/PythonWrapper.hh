@@ -29,11 +29,15 @@
 
 #include "TransactionRecord.hh"
 
+#include "Network.hh"
+
 
 #include "Run.hh"
 using namespace std;
 
 #include "pybind11.h"
+
+
 
 ///Allows for automatic conversion between STL containers and python types
 ///However requires a copy everytime types are converted

@@ -32,7 +32,7 @@ template <typename T>
 Matrix<T,Dynamic,1> Vector2Eigen(vector <T> in){
 
   Matrix<T,Dynamic,1> ret(in.size());
-  for (int i=0;i<in.size();i++){
+  for (int i=0;i<(int)in.size();i++){
     ret[i]=in[i];
   }
   return ret;
@@ -40,8 +40,8 @@ Matrix<T,Dynamic,1> Vector2Eigen(vector <T> in){
 }
 
 
-Network::Network(){
-  
+Network::Network() :
+  Network({1,30,1}){
 }
 
 Network::Network(vector <int> sizes){
@@ -105,16 +105,32 @@ void Network::AddOutputNode(){
 
   int lastLayer=rNumberLayers-1;
 
-  weights2[lastLayer].conservativeResize(weights2[0].rows() +1, weights2[0].cols());
+  weights2[lastLayer].conservativeResize(weights2[lastLayer].rows() +1, weights2[lastLayer].cols());
   VectorXd vec=VectorXd::Random(rSizes[1]);
 
   weights2[lastLayer].row(weights2[lastLayer].rows()-1)=vec;
   rSizes[lastLayer]=rSizes[lastLayer]+1;
 
-  bia
+  biases2[lastLayer].conservativeResize(biases2[lastLayer].rows()+1);
 
 }
 
+
+void Network::MakeEveryThing1(){
+  for (auto& i : weights2){
+    for (int r=0;r<i.rows();r++){
+      for (int c=0;c<i.cols();c++){
+	i.coeffRef(r,c)=1.0;
+      }
+    }
+  }
+  for (auto &i : biases2){
+    for (int r=0;r<i.rows();r++){
+      i.coeffRef(r)=1.0;
+    }
+  }
+
+}
 
 void Network::SGD(vector < pair < VectorXd,VectorXd > > data,
 		  int epochs, int mini_batch_size,double eta,int num){
@@ -180,9 +196,6 @@ void Network::UpdateMiniBatch(vector <pair<VectorXd,VectorXd> > data,
   //ready to change the weights and biases in the network
 
 }
-
-
-
 
 
 
