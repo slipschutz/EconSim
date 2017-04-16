@@ -66,6 +66,15 @@ public:
   const vector<MatrixXd> & GetWeights(){
     return weights2;
   }
+
+  int GetNumberOfInputNodes(){
+    return rSizes[0];
+  }
+  int GetNumberOfOutputNodes(){
+    return rSizes[rSizes.size()-1];
+  }
+
+
   
 private:
   int rNumberLayers;
@@ -73,6 +82,7 @@ private:
 
   vector <VectorXd> biases2;
   vector <MatrixXd> weights2;
+
 
 
   
