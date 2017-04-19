@@ -86,11 +86,11 @@ public:
   void SetGoodPriority(int GoodId,double priority){fGoodPriorities[GoodId]=priority;}
 
   void SetActorLogger(ActorLogger* a){fMyActorLogger=a;}
-  
+
+  void CalculateDemandLevels();
 protected:
   int fNumConnections;
   ActorLogger * fMyActorLogger;
-    
 
   map <int,EconomicActor*> fConnections;
   double fMoney;
@@ -99,6 +99,8 @@ protected:
   map <int,Good> fSupplies;
 
 
+  
+
   //Multi Map of priorties 
   //Using a MultiMap to allow things to have the 
   //same priorities 
@@ -106,6 +108,8 @@ protected:
     
   vector <int>   fGoodPriorities;
 
+  vector <double> fGoodDemandLevels;
+  
   EconomicActorManager * fTheEconomicActorManager;
 
 public:
