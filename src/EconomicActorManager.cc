@@ -81,14 +81,14 @@ void EconomicActorManager::Initialize(){
 
 void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
 
-  PersonWithNeural a(this);
+
 
   rNumberOfPeople=NumberOfActors;
   Person * luckyPerson;  
   for (int i=0;i<NumberOfActors;i++){
     Person * a = new Person(this);
     if (i<20){
-      a->SetActorLogger(new ActorLogger(a->GetBaseId()));
+      //      a->SetActorLogger(new ActorLogger(a->GetBaseId()));
     }
     
     rTheListOfActors.insert(make_pair(a->GetBaseId(),a));
@@ -101,10 +101,13 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
   rNumberOfManufacturers=numSeedCompanies;
   for (int i=0;i<numSeedCompanies;i++){
     Manufacturer * m = new Manufacturer(100000,this,luckyPerson,0);
-    m->SetActorLogger(new ActorLogger(m->GetBaseId()));
+    //    m->SetActorLogger(new ActorLogger(m->GetBaseId()));
     this->MakeActor(m);
   }
 
+  PersonWithNeural * a = new PersonWithNeural(this);
+  a->SetActorLogger(new ActorLogger(a->GetBaseId()));
+  this->MakeActor(a);
 
   for (auto i : rTheListOfActors){
     i.second->Initialize();
@@ -218,7 +221,7 @@ void EconomicActorManager::DoAStep(){
   //  rTheDataLogger->FinalizePrices();
 
   rTheMarketManager->ClearMarket();
-
+  Calendar::DayNumber++;
 }
 
 void EconomicActorManager::MarkForDeath(EconomicActor* act){

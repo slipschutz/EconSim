@@ -9,7 +9,7 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-
+#include <iostream>
 
 class FeedFowardNeuralNetImp : public NeuralNetworkInterface
 {
@@ -17,18 +17,20 @@ public:
   FeedFowardNeuralNetImp();
   virtual ~FeedFowardNeuralNetImp();
   
-  void AddInput(string );
-  void AddAction(string );
+  void AddInput(string,double * val_add);
+  void AddAction(string,std::function<void()> );
   void Think();
 
-
+  void Print();
+  void Train();
   
 private:
-  //Hold a pointer to the neural network imp
-  Network* rTheNetwork;
+
+  Network rTheNetwork;
   unordered_map<int,string> InputNumber2Name;
   unordered_map<int,string> OutputNumber2Name;
-  
+  unordered_map<int,std::function<void() > > OutputNumber2Function;
+  vector<double*> InputReferences;
 };
 
 

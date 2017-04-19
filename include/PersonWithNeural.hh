@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include "EconomicActor.hh"
 #include "ActorTypes.hh"
 
@@ -31,9 +32,11 @@ public:
 
   int GetActorType(){return ActorTypes::PersonWithNeural;}
 
+  void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
+  
 private:
   NeuralNetworkInterface * rBrain;
-
+  stringstream rMessage;
 };
 
 
