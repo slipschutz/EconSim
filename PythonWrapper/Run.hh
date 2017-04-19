@@ -128,7 +128,7 @@ void MoreTests(){
   for (int i=0;i<1000;i++){
     man->DoAStep();
     man->GetMarketManager()->ClearMarket();
-    Calendar::DayNumber++;
+    //    Calendar::DayNumber++;
   }
 
   double endingMoney=0;

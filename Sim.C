@@ -41,6 +41,6 @@ int main(int argv, char ** argc){
 
   UnitTests();
 
-  //  Run();
+  Run();
   return 0;
 }
