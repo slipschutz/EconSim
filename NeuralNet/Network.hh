@@ -88,5 +88,16 @@ private:
   
 };
 
+template <typename T>
+Matrix<T,Dynamic,1> Vector2Eigen(vector <T> in){
+
+  Matrix<T,Dynamic,1> ret(in.size());
+  for (int i=0;i<(int)in.size();i++){
+    ret[i]=in[i];
+  }
+  return ret;
+
+}
+
 
 #endif /* __NETWORK_HH */
