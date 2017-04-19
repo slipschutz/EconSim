@@ -131,18 +131,26 @@ void EconomicActor::PrintInfo(){
 }
 
 
-void EconomicActor::CalculateDemandLevels(){
+void EconomicActor::CalculateDemandSupplyLevels(){
 
-  vector <double> retVec(Settings::MaxGoodNumber);
 
   int total=0;
+  int totalSupply=0;
+
   for ( auto i : fDemands){
     double dem=i.second.GetNumberOfCopies();
     total+=dem;
     fGoodDemandLevels[i.first]=dem;
   }
-  for (auto & i : fGoodDemandLevels){
-    i/=total;
+  for (auto i : fSupplies){
+    double sup=i.second.GetNumberOfCopies();
+    totalSupply+=sup;
+    fGoodSupplyLevels[i.first]=sup;
+  }
+
+  for (int i=0;i<fGoodSupplyLevels.size();i++){
+    fGoodSupplyLevels[i]/=totalSupply;
+    fGoodDemandLevels[i]/=total;;
   }
 
 }

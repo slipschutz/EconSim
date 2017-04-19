@@ -35,7 +35,8 @@ public:
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
   
 private:
-  NeuralNetworkInterface * rBrain;
+  NeuralNetworkInterface * rDuringStepBrain;
+  NeuralNetworkInterface * rBeforeStepBrain;
   stringstream rMessage;
 };
 

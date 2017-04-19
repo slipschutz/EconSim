@@ -87,7 +87,7 @@ public:
 
   void SetActorLogger(ActorLogger* a){fMyActorLogger=a;}
 
-  void CalculateDemandLevels();
+  void CalculateDemandSupplyLevels();
 protected:
   int fNumConnections;
   ActorLogger * fMyActorLogger;
@@ -108,7 +108,10 @@ protected:
     
   vector <int>   fGoodPriorities;
 
+  //The vectors exist to hold some form of normlized
+  //values for the amount of demand and or supply for various goods
   vector <double> fGoodDemandLevels;
+  vector <double> fGoodSupplyLevels;
   
   EconomicActorManager * fTheEconomicActorManager;
 

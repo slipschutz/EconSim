@@ -10,15 +10,31 @@
 PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(man){
 
   //Set the persons brain to the FeedFoward neutron network implementation
-  rBrain = new FeedFowardNeuralNetImp();
+  rDuringStepBrain = new FeedFowardNeuralNetImp();
+  rBeforeStepBrain = new FeedFowardNeuralNetImp();
+  
 
-  rBrain->AddInput("FoodDemand",&fGoodDemandLevels[0]);
-  rBrain->AddInput("OtherDemand",&fGoodDemandLevels[1]);
+  /**Add inputs in the neural networks for the amounts of the current supplies 
+     and demands. The input nodes point to the values of the normlized supply and
+     demand vectors fGoodDemandLevels/fGoodSupplyLevels
+  */
+  
+  for (int i=0;i<fGoodDemandLevels.size();i++){
+    stringstream temp;
+    temp<<"Demand"<<i;
+    rDuringStepBrain->AddInput(temp.str(),&fGoodDemandLevels[i]);
 
-  rBrain->AddAction("BuyFood",[this](){
+    ////////////  
+    temp.str("");
+    temp<<"Supply"<<i;
+    rBeforeStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
+  }
+
+  
+  rDuringStepBrain->AddAction("BuyFood",[this](){
       OrderInfo info;
       int seller=this->fTheEconomicActorManager->GetMarketManager()->GetCheapestSeller(0,info);
-
+      
       if (seller !=-1){
 	int amount=std::min(this->fDemands[0].GetNumberOfCopies(),info.Quantity);
 	double totalCost=info.Price*amount;
@@ -31,7 +47,9 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
 	
     } );
 
-  rBrain->Train();
+  
+
+  rDuringStepBrain->Train();
   fMoney=100000;
   AddSupply(0,100);
 }
@@ -57,7 +75,7 @@ void PersonWithNeural::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double 
 
 
 PersonWithNeural::~PersonWithNeural(){
-  delete rBrain;
+  delete rDuringStepBrain;
 }
 
 ActorActions PersonWithNeural::BeginningOfStep(){
@@ -80,8 +98,8 @@ void PersonWithNeural::DoStep(){
   rMessage<<"HI from do step it is day "<<Calendar::DayNumber<<endl;;
 
 
-  CalculateDemandLevels();
-  rBrain->Think();
+  CalculateDemandSupplyLevels();
+  rDuringStepBrain->Think();
 
   
   if (fMyActorLogger!=NULL){
