@@ -21,6 +21,8 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   fMoney=0;
   
   fGoodPriorities.resize(Settings::MaxGoodNumber);
+  fGoodDemandLevels.resize(Settings::MaxGoodNumber);
+  
   for (auto & i : fGoodPriorities){
     i=RandomManager::GetRand(Settings::MaxGoodPriority - 4);//-4 to keep things away from 100%
   }
@@ -126,6 +128,23 @@ void EconomicActor::PrintInfo(){
   PrintLine('v',30);
   cout<<"Info for <EconomicActor> Base Id "<<this->GetBaseId()<<" it is a "<<this->GetActorType()<<endl;
   PrintLine('^',30);
+}
+
+
+void EconomicActor::CalculateDemandLevels(){
+
+  vector <double> retVec(Settings::MaxGoodNumber);
+
+  int total=0;
+  for ( auto i : fDemands){
+    double dem=i.second.GetNumberOfCopies();
+    total+=dem;
+    fGoodDemandLevels[i.first]=dem;
+  }
+  for (auto & i : fGoodDemandLevels){
+    i/=total;
+  }
+
 }
 
 void EconomicActor::AddDemand(int GoodNumber,int copies){
