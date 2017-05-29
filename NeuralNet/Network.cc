@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <ctime>
 
-
+#include <iomanip>
 
 
 
@@ -31,7 +31,7 @@ double BareSigmoid_Prime(double z){
 
 
 Network::Network() :
-  Network({1,30,1}){
+  Network({1,10,1}){
 }
 
 Network::Network(vector <int> sizes){
@@ -95,13 +95,21 @@ void Network::AddOutputNode(){
 
   int lastLayer=rNumberLayers-1;
 
+  
   weights2[lastLayer].conservativeResize(weights2[lastLayer].rows() +1, weights2[lastLayer].cols());
-  VectorXd vec=VectorXd::Random(rSizes[1]);
+  
+  rSizes[lastLayer+1]=rSizes[lastLayer+1]+1;
+  VectorXd vec=VectorXd::Random(rSizes[lastLayer]);// the rSizes vector includes the input nodes unlinke the biases and weights
 
+
+
+  //  auto temp = vec.transpose();
   weights2[lastLayer].row(weights2[lastLayer].rows()-1)=vec;
-  rSizes[lastLayer]=rSizes[lastLayer]+1;
-
+  //  cin.get();
   biases2[lastLayer].conservativeResize(biases2[lastLayer].rows()+1);
+
+  biases2[lastLayer].coeffRef(biases2[lastLayer].size()-1)=VectorXd::Random(1).coeff(0);
+
 
 }
 
