@@ -1,4 +1,4 @@
-CFLAGS=-g -Wall -I./include -std=c++11 -I./NeuralNet
+CFLAGS=-g -Wall -I./include -std=c++11 -I./NeuralNet -O0
 PYLIBFLAGS=-I./pybind11/ `python-config --cflags --ldflags`
 LIBFLAG=-Wl,-rpath=./lib
 CXX=g++
