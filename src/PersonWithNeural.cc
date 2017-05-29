@@ -12,44 +12,60 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
   //Set the persons brain to the FeedFoward neutron network implementation
   rDuringStepBrain = new FeedFowardNeuralNetImp();
   rBeforeStepBrain = new FeedFowardNeuralNetImp();
-  
 
+  
   /**Add inputs in the neural networks for the amounts of the current supplies 
      and demands. The input nodes point to the values of the normlized supply and
      demand vectors fGoodDemandLevels/fGoodSupplyLevels
   */
   
-  for (int i=0;i<fGoodDemandLevels.size();i++){
+  for (int i=0;i<(int)fGoodDemandLevels.size();i++){
     stringstream temp;
     temp<<"Demand"<<i;
     rDuringStepBrain->AddInput(temp.str(),&fGoodDemandLevels[i]);
-
+    
+    
     ////////////  
     temp.str("");
     temp<<"Supply"<<i;
     rBeforeStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
+
+
+    ////////;lkszjdfal;ksjflajs;fl
+    // rDuringStepBrain->DoThing();
+    // cin.get();
+
+    
+    temp.str("");
+    temp<<"BuyGood"<<i;
+    rDuringStepBrain->AddAction(temp.str(),[&](){
+	OrderInfo info;
+	int seller=this->fTheEconomicActorManager->GetMarketManager()->GetCheapestSeller(i,info);
+      
+	if (seller !=-1){
+	  int amount=std::min(this->fDemands[i].GetNumberOfCopies(),info.Quantity);
+	  double totalCost=info.Price*amount;
+	
+	  if (totalCost <=this->fMoney){
+	    rMessage<<"I am buying "<<info.Quantity<<" of good "<<i<<" for "<<totalCost<<" from "<<seller<<endl;
+	    this->rDoTransaction(i,amount,info.Price,seller);
+	  }
+	}
+      } );
+
+    temp.str("");
+    temp<<"AddDemandForGood"<<i;
+    rDuringStepBrain->AddAction(temp.str(),[&](){
+	this->AddDemand(i,10);
+	rMessage<<"I am adding demands for good "<<i<<" the end "<<endl;
+      }
+      );
   }
 
   
-  rDuringStepBrain->AddAction("BuyFood",[this](){
-      OrderInfo info;
-      int seller=this->fTheEconomicActorManager->GetMarketManager()->GetCheapestSeller(0,info);
-      
-      if (seller !=-1){
-	int amount=std::min(this->fDemands[0].GetNumberOfCopies(),info.Quantity);
-	double totalCost=info.Price*amount;
-	
-	if (totalCost <=this->fMoney){
-	  rMessage<<"I am buying "<<info.Quantity<<" of good 0 for "<<totalCost<<" from "<<seller<<endl;
-	  this->rDoTransaction(0,amount,info.Price,seller);
-	}
-      }
-	
-    } );
-
   
 
-  rDuringStepBrain->Train();
+  //  rDuringStepBrain->Train();
   fMoney=100000;
   AddSupply(0,100);
 }

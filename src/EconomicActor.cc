@@ -22,6 +22,7 @@ EconomicActor::EconomicActor(EconomicActorManager* man) : fNumConnections(0),fMy
   
   fGoodPriorities.resize(Settings::MaxGoodNumber);
   fGoodDemandLevels.resize(Settings::MaxGoodNumber);
+  fGoodSupplyLevels.resize(Settings::MaxGoodNumber);
   
   for (auto & i : fGoodPriorities){
     i=RandomManager::GetRand(Settings::MaxGoodPriority - 4);//-4 to keep things away from 100%
