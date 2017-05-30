@@ -38,7 +38,7 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
     
     temp.str("");
     temp<<"BuyGood"<<i;
-    rDuringStepBrain->AddAction(temp.str(),[&](){
+    rDuringStepBrain->AddAction(temp.str(),[=](){
 	OrderInfo info;
 	int seller=this->fTheEconomicActorManager->GetMarketManager()->GetCheapestSeller(i,info);
       
@@ -55,7 +55,7 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
 
     temp.str("");
     temp<<"AddDemandForGood"<<i;
-    rDuringStepBrain->AddAction(temp.str(),[&](){
+    rDuringStepBrain->AddAction(temp.str(),[=](){
 	this->AddDemand(i,10);
 	rMessage<<"I am adding demands for good "<<i<<" the end "<<endl;
       }
