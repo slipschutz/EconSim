@@ -19,6 +19,8 @@ void FeedFowardNeuralNetImp::Train(){
   int nOut=rTheNetwork.GetNumberOfOutputNodes();
   int min =std::min(nIn,nOut);
 
+
+
   ///For now it is assumed that on the input side they go
   //demand for good 0 then supply for good 0
   //demand for good 1 ....
@@ -28,7 +30,8 @@ void FeedFowardNeuralNetImp::Train(){
   // so in a world with 2 goods (don't forget the extra empty input)
   // (0,1,0,0,0) means they demand good 0
 
-  
+
+  /*
   int n=-1;
   for (auto i : InputNumber2Name){
     if (i.second =="FoodDemand"){
@@ -72,7 +75,7 @@ void FeedFowardNeuralNetImp::Train(){
   
   rTheNetwork.SGD(data,1,2,0.5);
   
-  
+  */  
 }
 
 FeedFowardNeuralNetImp::~FeedFowardNeuralNetImp(){

@@ -23,17 +23,18 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
     stringstream temp;
     temp<<"Demand"<<i;
     rDuringStepBrain->AddInput(temp.str(),&fGoodDemandLevels[i]);
+
+    
+    temp<<"Supply"<<i;
+    rDuringStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
+
     
     
     ////////////  
     temp.str("");
     temp<<"Supply"<<i;
-    rBeforeStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
+    //    rBeforeStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
 
-
-    ////////;lkszjdfal;ksjflajs;fl
-    // rDuringStepBrain->DoThing();
-    // cin.get();
 
     
     temp.str("");
@@ -98,7 +99,7 @@ ActorActions PersonWithNeural::BeginningOfStep(){
   rMessage.str("");
   rMessage<<"HI from begining of step"<<endl;
       
-  AddDemand(0,10);
+
 
   //Log the information
   if (fMyActorLogger!=NULL){
