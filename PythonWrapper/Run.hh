@@ -89,10 +89,10 @@ void Run(){
     
 
     
-  } catch (exception &e){
+  } catch (char e){// catch (exception &e){
     cout<<"*******************************************************"<<endl;
     cout<<"Fatal Exception Must exit"<<endl;
-    cout<<e.what()<<endl;
+    //    cout<<e.what()<<endl;
     cout<<"*******************************************************"<<endl;
   }
   
@@ -138,6 +138,7 @@ void MoreTests(){
 
   DoTest(abs(endingMoney-totalMoney)<0.0000001,"Money should be conserved");
   delete man;
+  Settings::CanStarveToDeath=true;
 }
 
 
