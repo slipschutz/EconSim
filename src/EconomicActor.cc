@@ -134,7 +134,6 @@ void EconomicActor::PrintInfo(){
 
 void EconomicActor::CalculateDemandSupplyLevels(){
 
-
   int total=0;
   int totalSupply=0;
 
@@ -150,11 +149,19 @@ void EconomicActor::CalculateDemandSupplyLevels(){
   }
 
   for (int i=0;i<fGoodSupplyLevels.size();i++){
-    fGoodSupplyLevels[i]/=totalSupply;
-    fGoodDemandLevels[i]/=total;;
+    if (totalSupply !=0){
+      //      fGoodSupplyLevels[i]/=totalSupply;
+    }else {
+      fGoodSupplyLevels[i]=0;
+    }
+    if (total !=0){
+      fGoodDemandLevels[i]/=total;;
+    }else{
+      fGoodDemandLevels[i]=0;
+    }
   }
-
 }
+
 
 void EconomicActor::AddDemand(int GoodNumber,int copies){
   //Regardless of wether the actor has this demand already
@@ -191,7 +198,6 @@ void EconomicActor::AddDemand(int GoodNumber,int copies){
   //it made it through the search.  Therefore it the demand
   //is not already there.  Add it
   fDemandPriorities2GoodNum.insert(make_pair(tempNum,GoodNumber));
-  
   
 }
 
