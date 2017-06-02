@@ -60,10 +60,10 @@ public:
   VectorXd cost_derivative(VectorXd output,
 			   VectorXd y);
 
-  const vector<VectorXd> & GetBiases(){
+  vector<VectorXd> & GetBiases(){
     return biases2;
   }
-  const vector<MatrixXd> & GetWeights(){
+  vector<MatrixXd> & GetWeights(){
     return weights2;
   }
 
@@ -73,6 +73,7 @@ public:
   int GetNumberOfOutputNodes(){
     return rSizes[rSizes.size()-1];
   }
+
 
 
   
