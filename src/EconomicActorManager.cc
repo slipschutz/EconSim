@@ -105,15 +105,16 @@ void EconomicActorManager::BuildCompleteNetwork(int NumberOfActors){
     this->MakeActor(m);
   }
 
-  PersonWithNeural * a = new PersonWithNeural(this);
-  a->SetActorLogger(new ActorLogger(a->GetBaseId()));
-  this->MakeActor(a);
-
+  for (int i=0;i<1000;i++){
+    PersonWithNeural * a = new PersonWithNeural(this);
+    a->SetActorLogger(new ActorLogger(a->GetBaseId()));
+    this->MakeActor(a);
+  }
   for (auto i : rTheListOfActors){
     i.second->Initialize();
   }
- 
 }
+
 
 void EconomicActorManager::BuildTestNetwork(){
   rNumberOfPeople=2;
