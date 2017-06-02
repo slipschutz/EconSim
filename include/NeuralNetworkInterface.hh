@@ -23,7 +23,7 @@ public:
   virtual Eigen::VectorXd Think()=0;
   virtual void Print()=0;
   virtual void Train()=0;
-  virtual NeuralNetworkInterface* MutateCopy(double)=0;
+  virtual NeuralNetworkInterface* MutateCopy(double x=10)=0;
   
 };
 
