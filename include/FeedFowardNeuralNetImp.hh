@@ -11,6 +11,8 @@
 #include <string>
 #include <iostream>
 
+
+
 class FeedFowardNeuralNetImp : public NeuralNetworkInterface
 {
 public:
@@ -19,14 +21,22 @@ public:
   
   void AddInput(string,double * val_add);
   void AddAction(string,std::function<void()> );
-  void Think();
+
+  void SetInputReferences(std::vector<double> &);
+
+  VectorXd Think();
 
   void Print();
   void Train();
-  
-private:
 
-  Network rTheNetwork;
+  NeuralNetworkInterface * MutateCopy(double MutationScale=10);
+  
+
+
+
+private:
+  Network rTheNetwork;  
+
   unordered_map<int,string> InputNumber2Name;
   unordered_map<int,string> OutputNumber2Name;
   unordered_map<int,std::function<void() > > OutputNumber2Function;

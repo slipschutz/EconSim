@@ -1,5 +1,7 @@
 
 #include "FeedFowardNeuralNetImp.hh"
+#include "RandomManager.hh"
+#include <iomanip>
 using std::cout;
 using std::end;
 
@@ -14,12 +16,85 @@ FeedFowardNeuralNetImp::FeedFowardNeuralNetImp(){
 
 }
 
+NeuralNetworkInterface * FeedFowardNeuralNetImp::MutateCopy(double MutationScale){
+
+  //First copy everything
+  FeedFowardNeuralNetImp *theNewImp= new FeedFowardNeuralNetImp(*this);
+  
+  //now change the neural net inside the implementation
+  
+  vector<MatrixXd> & ref2WeightsVec=theNewImp->rTheNetwork.GetWeights();
+  vector<VectorXd> & ref2BiasesVec=theNewImp->rTheNetwork.GetBiases();
+  
+  
+  for (int i=0;i<ref2WeightsVec.size();i++){
+    auto temp =MatrixXd::Random(ref2WeightsVec[i].rows(),ref2WeightsVec[i].cols())/MutationScale;
+
+    //    cout<<ref2WeightsVec[i]<<endl;
+    // cout<<"================aadsf;lfasfa========"<<endl;
+    ref2WeightsVec[i]+=temp;
+
+    //    cout<<ref2WeightsVec[i]<<endl;
+    //    cout<<"================aadsf;lfasfa========"<<endl;
+    //    cin.get();
+
+    auto temp2 =VectorXd::Random(ref2BiasesVec[i].rows())/MutationScale;
+    ref2BiasesVec[i]+=temp2;
+  }
+
+  theNewImp->InputReferences.clear();
+
+  return theNewImp;
+}
+
+
 void FeedFowardNeuralNetImp::Train(){
   int nIn= rTheNetwork.GetNumberOfInputNodes();
   int nOut=rTheNetwork.GetNumberOfOutputNodes();
   int min =std::min(nIn,nOut);
 
+  
+  vector <pair <VectorXd,VectorXd> > data;
+  //Match the demand good input with the buy that good outputs
+  //
+  // 0 (do nothing)
+  // 1 (demand good 0) ---> 1 (buy the good)
+  //   (supply good 0)
+  //
+  //
+  //
+  //  cout<<"asfdsdfasdfasfadsfs"<<endl;
 
+  for (int i=1;i<min;i+=2){
+    for (int j=0;j<100;j++){
+      vector <double> tempIn(min,0.);
+      vector <double> tempOut(min,0.);
+      
+      tempIn[i]=RandomManager::GetUniform(0.9,1);
+      tempOut[i]=RandomManager::GetUniform(0.9,1);
+      
+      auto in =Vector2Eigen(tempIn);
+      auto out=Vector2Eigen(tempOut);
+      data.push_back(make_pair(in,out));
+    }
+  }
+
+  //now connect the low supply to add demand for a good
+  for (int i=2;i<min;i+=2){
+    for (int j=0;j<100;j++){
+      vector <double> tempIn(min,0.);
+      vector <double> tempOut(min,0.);
+      tempIn[i]=RandomManager::GetUniform(50,55);
+      tempOut[i]=RandomManager::GetUniform(0.9,1);
+      
+      auto in =Vector2Eigen(tempIn);
+      auto out=Vector2Eigen(tempOut);
+      data.push_back(make_pair(in,out));
+    }
+  }
+
+  
+  rTheNetwork.SGD(data,1,2,2);
 
   ///For now it is assumed that on the input side they go
   //demand for good 0 then supply for good 0
@@ -65,15 +140,6 @@ void FeedFowardNeuralNetImp::Train(){
       }
     }
   }
-  auto in =Vector2Eigen(temp);
-  auto out=Vector2Eigen(temp2);
-  vector <pair <VectorXd,VectorXd> > data;
-  
-  for (int i=0;i<50;i++){
-    data.push_back(make_pair(in,out));
-  }
-  
-  rTheNetwork.SGD(data,1,2,0.5);
   
   */  
 }
@@ -93,8 +159,18 @@ void FeedFowardNeuralNetImp::Print(){
 
 }
 
+void FeedFowardNeuralNetImp::SetInputReferences(std::vector<double> &in){
+
+  for (int i=0;i<in.size();i++){
+    InputReferences.push_back(&in[i]);
+  }
+
+}
+
 void FeedFowardNeuralNetImp::AddInput(string str,double *val_add){
+
   int theInputNumber= rTheNetwork.GetNumberOfInputNodes();
+
   InputNumber2Name[theInputNumber]=str;
 
   //The underlying network does not keep track of the names
@@ -118,7 +194,7 @@ void FeedFowardNeuralNetImp::AddAction(string str,std::function<void()> func){
 }
 
 
-void FeedFowardNeuralNetImp::Think(){
+VectorXd FeedFowardNeuralNetImp::Think(){
 
   vector <double> input;
 
@@ -133,8 +209,19 @@ void FeedFowardNeuralNetImp::Think(){
     input.push_back(*i);
   }
 
+
+
   
   auto result =rTheNetwork.FeedFoward(input);
+
+//   for (auto i : input ){
+//     printf("%6.2lf ",i);
+//   }
+//   cout<<endl;
+//   for (int i=0;i<result.rows();i++){
+//     printf("%6.2lf ",result[i]);
+//   }
+//   cout<<endl;
 
   double max =-1000;
   int index=-99;
@@ -145,6 +232,10 @@ void FeedFowardNeuralNetImp::Think(){
     }
   }
 
+  //  cout<<index<<" "<<OutputNumber2Name[index]<<endl;
+  //  cin.get();
   OutputNumber2Function[index]();
+
+  return result;
 }
 
