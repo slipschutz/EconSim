@@ -23,7 +23,6 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
     stringstream temp;
     temp<<"Demand"<<i;
     rDuringStepBrain->AddInput(temp.str(),&fGoodDemandLevels[i]);
-
     
     temp<<"Supply"<<i;
     rDuringStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
@@ -31,8 +30,8 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
     
     
     ////////////  
-    temp.str("");
-    temp<<"Supply"<<i;
+    //     temp.str("");
+    //     temp<<"Supply"<<i;
     //    rBeforeStepBrain->AddInput(temp.str(),&fGoodSupplyLevels[i]);
 
 
@@ -70,6 +69,15 @@ PersonWithNeural::PersonWithNeural(EconomicActorManager *man ) : EconomicActor(m
   fMoney=100000;
   AddSupply(0,100);
 }
+PersonWithNeural::PersonWithNeural(EconomicActorManager* man,
+				   NeuralNetworkInterface * interface)
+  : EconomicActor(man){
+  rDuringStepBrain=interface;
+  //  rDuringStepBrain->SetInputReferences(t
+  
+}
+
+
 
 void PersonWithNeural::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller){
   double totalCost=(AmountOfGoodIWant)*price;
@@ -88,6 +96,11 @@ void PersonWithNeural::rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double 
 
 }
 
+void PersonWithNeural::Reproduce(){
+  NeuralNetworkInterface * temp = rDuringStepBrain->MutateCopy(10.0);
+  PersonWithNeural * offspring = new PersonWithNeural(fTheEconomicActorManager,temp);
+
+}
 
 
 
@@ -133,16 +146,17 @@ ActorActions PersonWithNeural::EndOfStep(){
 
   ActorActions ret=ActorActions::None;
 
-  cout<<"HI from guy "<<Calendar::DayNumber<<endl;
-  if (Calendar::DayNumber > 500){
+  // cout<<"HI from guy "<<Calendar::DayNumber<<endl;
+//   if (Calendar::DayNumber > 500){
 
-    rMessage<<"I have been smotten"<<endl;
-    fTheEconomicActorManager->MarkForDeath(this);
-    ret= ActorActions::Died;
-  }
+//     rMessage<<"I have been smotten"<<endl;
+//     fTheEconomicActorManager->MarkForDeath(this);
+//     ret= ActorActions::Died;
+//   }
 
-
-  if (fSupplies[0].GetNumberOfCopies() < 1&&
+//  cout<<"->"<<fSupplies[0].GetNumberOfCopies()<<endl;
+//  cout<<Settings::CanStarveToDeath<<endl;
+  if (fSupplies[0].GetNumberOfCopies() < 1 &&
       Settings::CanStarveToDeath){
     rMessage<<"I have died :( "<<endl;
     
@@ -162,7 +176,7 @@ ActorActions PersonWithNeural::EndOfStep(){
   }
 
   if (fMyActorLogger!=NULL){
-    fMyActorLogger->LogAfterStepState(this);
+    //    fMyActorLogger->LogAfterStepState(this);
     fMyActorLogger->EndMessage(rMessage.str());
   }
 

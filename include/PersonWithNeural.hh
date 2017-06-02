@@ -21,6 +21,9 @@ class PersonWithNeural : public EconomicActor
 public:
 
   PersonWithNeural(EconomicActorManager*);
+
+  PersonWithNeural(EconomicActorManager*,NeuralNetworkInterface *);
+
   virtual ~PersonWithNeural();
 
   void Initialize(){}
@@ -33,11 +36,15 @@ public:
   int GetActorType(){return ActorTypes::PersonWithNeural;}
 
   void rDoTransaction(int Good2Buy,int AmountOfGoodIWant,double price,int Seller);
-  
+
+  void Reproduce();
+
 private:
   NeuralNetworkInterface * rDuringStepBrain;
   NeuralNetworkInterface * rBeforeStepBrain;
   stringstream rMessage;
+
+  
 };
 
 
