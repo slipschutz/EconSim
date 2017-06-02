@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include "NeuralNetworkInterface.hh"
+#include "FeedFowardNeuralNetImp.hh"
 
 bool killLoop;
 void my_handler(int s){
@@ -178,7 +179,45 @@ void NetworkTests(){
   input = 1/(1+exp(-input));
   DoTest(input==ans[0],"The result for this network should work for this simple example");
 
-  
+
+  {
+    NeuralNetworkInterface * aInterface = new FeedFowardNeuralNetImp();
+    vector <double> input= {1,2,3,4,5};
+    for (int i=0;i<input.size();i++){
+      stringstream ss;
+      ss<<"test"<<i;
+      aInterface->AddInput(ss.str(),&input[i]);
+    }
+    aInterface->AddAction("DoIt",[](){cout<<"HI"<<endl;});
+    
+    auto result =aInterface->Think();
+    
+
+    NeuralNetworkInterface * mutatedByTinyAmount =aInterface->MutateCopy(10000000.0);
+    NeuralNetworkInterface * mutatedByALot =aInterface->MutateCopy(1);
+
+
+    mutatedByTinyAmount->SetInputReferences(input);
+    mutatedByALot->SetInputReferences(input);
+
+    auto result2=mutatedByTinyAmount->Think();
+    auto result3=mutatedByALot->Think();
+
+    DoTest(result.size()==result2.size(),"The sizes of the two outputs should be the same");
+    DoTest(result.size()==result3.size(),"The sizes of the two outputs should be the same");
+
+    for (int i=0;i<result.size();i++){
+      DoTest(abs(result.coeff(i)-result2.coeff(i)) <0.001,
+	     "The outputs for these two networks should be the same");
+    }
+
+    for (int i=0;i<result.size();i++){
+      DoTest(result.coeff(i)!=result3.coeff(i),
+	     "The outputs for these two networks should NOT be the same");
+    }
+
+  }
+
   
 }
 
