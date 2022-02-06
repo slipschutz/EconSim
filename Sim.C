@@ -1,6 +1,6 @@
 
 
-//Generral Headers
+//General Headers
 #include <iostream>
 #include <string>
 #include <vector>
@@ -31,17 +31,25 @@
 
 #include "PythonWrapper/Run.hh"
 
+#include <gtest/gtest.h>
 
 using namespace  std;
 
 
 #include "PersonTraitPact.hh"
 
-int main(int argv, char ** argc){
 
-  UnitTests();
 
-  //  Run();
-  return 0;  
-} 
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+
+// int main(int argv, char ** argc){
+
+//   UnitTests();
+
+//   //  Run();
+//   return 0;  
+// } 
  

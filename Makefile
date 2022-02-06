@@ -1,5 +1,8 @@
-CFLAGS=-g -Wall -I./include -std=c++11 -I./NeuralNet -O0
-PYLIBFLAGS=-I./pybind11/ `python-config --cflags --ldflags`
+
+GOOGLE_TEST_DIR = ../googletest
+GOOGLE_TEST_LIBS = -L ${GOOGLE_TEST_DIR}/build/lib -lgtest -lgmock -lgmock_main -lgtest_main -lpthread
+CFLAGS=-g  -I./include -std=c++11 -I./NeuralNet -O0 -fno-lto -I${GOOGLE_TEST_DIR}/googletest/include
+PYLIBFLAGS=-I./pybind11/ `python3-config --cflags --ldflags`
 LIBFLAG=-Wl,-rpath=./lib
 CXX=g++
 EXECUTABLE=Sim
@@ -12,14 +15,16 @@ MAINO=./src/$(addsuffix .o,$(EXECUTABLE))
 
 LIBS=./lib/libEverything.so ./lib/libNeuralNet.so
 
+
+
 .PHONY: clean get put all test sclean
 
-all: $(EXECUTABLE) PyWrap
+all: $(EXECUTABLE) #PyWrap
 
 
 $(EXECUTABLE) : $(LIBS) Sim.C
 	@echo "Building $(EXECUTABLE)"
-	$(CXX) $(CFLAGS) $(LIBFLAG) ./$(MAIN) -lEverything -lNeuralNet -L./lib/  -o $@ 
+	$(CXX) $(CFLAGS) $(LIBFLAG) ./$(MAIN) $(GOOGLE_TEST_LIBS) -lEverything -lNeuralNet -L./lib/  -o $@ 
 	@echo "Build succeed"
 
 
